@@ -1,283 +1,282 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>เว็บไซต์กำลังปิดปรับปรุง</title>
-  <style>
-    /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>YANZZ - Improving</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0c0f16 0%, #1e2430 60%, #0a0d16 100%);
+    font-family: 'Orbitron', sans-serif;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 15px;
+    background: linear-gradient(90deg, #ff3860, #ffb36b);
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1rem;
+    letter-spacing: 1.1px;
+    text-shadow: 0 0 8px #5c0000;
+    z-index: 100;
+    box-shadow: 0 0 18px 3px #ff3860;
+    animation: warningPulse 2s ease-in-out infinite;
+    user-select: none;
+  }
 
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      color: #fff;
-      overflow: hidden;
-      position: relative;
-    }
+  @keyframes warningPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+  }
 
-    /* เพิ่มพื้นหลังลายเส้นกริดแบบโปร่ง */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      background-size: 40px 40px;
-      z-index: 0;
-      animation: gridShift 60s linear infinite;
-    }
+  .message-box {
+    position: relative;
+    background: rgba(15, 20, 30, 0.85);
+    padding: 35px 40px;
+    border-radius: 20px;
+    box-shadow:
+      0 0 18px 6px rgba(70, 100, 255, 0.45),
+      inset 0 0 30px 5px rgba(255, 80, 120, 0.5);
+    max-width: 90vw;
+    max-height: 80vh;
+    text-align: center;
+    z-index: 10;
+    animation: fadeInUp 1.5s ease forwards;
+    opacity: 0;
+    overflow-wrap: break-word;
+  }
 
-    @keyframes gridShift {
-      0% {
-        background-position: 0 0, 0 0;
-      }
-      100% {
-        background-position: 40px 40px, 40px 40px;
-      }
-    }
+  .title {
+    font-size: 2.2rem;
+    margin-bottom: 18px;
+    color: #bbe1ff;
+    text-shadow: 0 0 15px #5390d9;
+  }
 
-    .container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      height: 100%;
-      padding: 20px;
-      position: relative;
-      z-index: 1;
-    }
+  .subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #d0d8e9;
+    text-shadow: 0 0 10px #8eb1ff;
+    white-space: pre-line;
+  }
+  .footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: #777a8a;
+    font-size: 0.75rem;
+    font-weight: 500;
+    z-index: 10;
+    user-select: none;
+  }
 
+  .glow {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    filter: blur(30px);
+    opacity: 0.65;
+    animation: glowPulse 3.5s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+  .glow.pink {
+    background: #ff3860;
+    top: 30px;
+    left: -40px;
+  }
+  .glow.blue {
+    background: #5390d9;
+    bottom: 30px;
+    right: -40px;
+    animation-delay: 1.7s;
+  }
+
+  @keyframes glowPulse {
+    0% { opacity: 0.55; transform: scale(0.85); }
+    100% { opacity: 0.9; transform: scale(1.1); }
+  }
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(25px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Particle canvas */
+  canvas#particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    background: transparent;
+  }
+
+  /* Responsive for mobile */
+  @media (max-width: 480px) {
+    .warning {
+      font-size: 0.9rem;
+      padding: 8px 10px;
+      letter-spacing: 0.8px;
+    }
     .message-box {
-      max-width: 600px;
-      padding: 40px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      padding: 25px 20px;
       border-radius: 16px;
-      backdrop-filter: blur(10px);
-      background: rgba(0,0,0,0.6);
-      animation: fadeIn 1s ease-in-out 0.5s both;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      max-width: 95vw;
+      max-height: 75vh;
     }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
     .title {
-      font-size: 2rem;
-      margin-bottom: 20px;
-      position: relative;
-      animation: rgbGlow 3s infinite ease-in-out;
+      font-size: 1.6rem;
+      margin-bottom: 14px;
     }
-
-    @keyframes rgbGlow {
-      0% {
-        text-shadow: 0 0 8px rgb(255, 0, 0), 0 0 16px rgb(255, 0, 0);
-      }
-      33% {
-        text-shadow: 0 0 8px rgb(0, 255, 0), 0 0 16px rgb(0, 255, 0);
-      }
-      66% {
-        text-shadow: 0 0 8px rgb(0, 0, 255), 0 0 16px rgb(0, 0, 255);
-      }
-      100% {
-        text-shadow: 0 0 8px rgb(255, 0, 0), 0 0 16px rgb(255, 0, 0);
-      }
-    }
-
     .subtitle {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
+      font-size: 0.9rem;
       line-height: 1.5;
-      color: rgba(255, 255, 255, 0.85);
-      white-space: pre-line; /* รองรับ \n ให้ขึ้นบรรทัดใหม่ */
     }
-
+    .glow {
+      width: 100px;
+      height: 100px;
+      filter: blur(24px);
+    }
+    .glow.pink {
+      top: 15px;
+      left: -25px;
+    }
+    .glow.blue {
+      bottom: 15px;
+      right: -25px;
+    }
     .footer {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      text-align: center;
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.6);
-      animation: fadeIn 1s ease-in-out 1s both;
-      z-index: 1;
+      font-size: 0.65rem;
+      bottom: 6px;
     }
-
-    /* Language selector */
-    .lang-selector {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      gap: 10px;
-      z-index: 2;
-    }
-
-    .lang-button {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 0.9rem;
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.3s, border-color 0.3s;
-    }
-
-    .lang-button:hover,
-    .lang-button.active {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.7);
-    }
-
-    /* Floating particles */
-    .particle {
-      position: absolute;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      animation: float 8s infinite ease-in-out;
-      z-index: 0;
-    }
-
-    @keyframes float {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 0.4;
-      }
-      50% {
-        transform: translateY(-100px) scale(1.2);
-        opacity: 0.2;
-      }
-      100% {
-        transform: translateY(0) scale(1);
-        opacity: 0.4;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <div class="lang-selector" role="navigation" aria-label="Language selection">
-    <button class="lang-button" data-lang="th" aria-pressed="false">ไทย</button>
-    <button class="lang-button" data-lang="en" aria-pressed="false">English</button>
-    <button class="lang-button" data-lang="es" aria-pressed="false">Español</button>
-    <button class="lang-button" data-lang="zh" aria-pressed="false">中文</button>
-    <button class="lang-button" data-lang="jp" aria-pressed="false">日本語</button>
+
+  <!-- Warning bar -->
+  <div class="warning" role="alert" aria-live="assertive">
+    ⚠️ Warning: This website is temporarily offline for maintenance
   </div>
 
-  <div class="container" role="main">
-    <div class="message-box" aria-live="polite" aria-atomic="true">
-      <h1 id="title" class="title"></h1>
-      <p id="subtitle" class="subtitle"></p>
-    </div>
-    <div class="footer" id="footer"></div>
+  <!-- Glowing orbs -->
+  <div class="glow pink" aria-hidden="true"></div>
+  <div class="glow blue" aria-hidden="true"></div>
+
+  <!-- Main message -->
+  <div class="message-box" role="main" tabindex="0">
+    <h1 class="title">Site Under Maintenance</h1>
+    <p class="subtitle">
+      We are currently updating and improving our system.  
+      Please check back shortly.  
+      Thank you for your patience and understanding.
+    </p>
   </div>
 
-  <script>
-    // แปลข้อความสำหรับหลายภาษา
-    const translations = {
-      th: {
-        title: "ขออภัย เว็บไซต์กำลังปิดปรับปรุง",
-        subtitle: "ขณะนี้เรากำลังปรับปรุงและตรวจสอบระบบต่างๆ ของเว็บไซต์\nกรุณากลับมาใหม่ภายหลัง ขอบคุณสำหรับความเข้าใจของคุณ",
-        footer: "© 2025 YANZZ. สงวนลิขสิทธิ์"
-      },
-      en: {
-        title: "Sorry, the website is under maintenance",
-        subtitle: "We are currently updating and checking various systems.\nPlease visit again later. Thank you for your understanding.",
-        footer: "© 2025 YANZZ. All rights reserved."
-      },
-      es: {
-        title: "Lo sentimos, el sitio web está en mantenimiento",
-        subtitle: "Actualmente estamos actualizando y verificando varios sistemas del sitio.\nPor favor, vuelva más tarde. Gracias por su comprensión.",
-        footer: "© 2025 YANZZ. Todos los derechos reservados."
-      },
-      zh: {
-        title: "抱歉，网站正在维护中",
-        subtitle: "我们正在更新和检查网站的各项系统。\n请稍后再来。感谢您的理解。",
-        footer: "© 2025 YANZZ。保留所有权利。"
-      },
-      jp: {
-        title: "申し訳ありませんが、ただいまメンテナンス中です",
-        subtitle: "現在、ウェブサイトの各種システムを更新および確認しています。\n後ほど再度アクセスしてください。ご理解のほどよろしくお願いいたします。",
-        footer: "© 2025 YANZZ。全著作権所有。"
-      }
+  <!-- Footer -->
+  <div class="footer" aria-hidden="true">© 2025 YANZZ. All rights reserved.</div>
+
+  <!-- Particle canvas -->
+  <canvas id="particles"></canvas>
+
+<script>
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let particlesArray = [];
+
+  function init() {
+    resize();
+    particlesArray = [];
+    // ปรับจำนวนอนุภาคให้เหมาะกับขนาดหน้าจอ ลดแลคมือถือ
+    const count = Math.floor((width * height) / 11000);
+    for(let i=0; i<count; i++){
+      particlesArray.push(createParticle());
+    }
+  }
+
+  function createParticle() {
+    return {
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 1.3 + 0.3,
+      speedX: (Math.random() - 0.5) * 0.12,
+      speedY: (Math.random() - 0.5) * 0.12,
+      opacity: Math.random() * 0.3 + 0.1
     };
+  }
 
-    const titleEl = document.getElementById("title");
-    const subtitleEl = document.getElementById("subtitle");
-    const footerEl = document.getElementById("footer");
-    const langButtons = document.querySelectorAll(".lang-button");
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
 
-    // ฟังก์ชันในการตั้งค่าภาษา
-    function setLanguage(lang) {
-      const text = translations[lang] || translations["th"];
-      titleEl.textContent = text.title;
-      subtitleEl.textContent = text.subtitle;
-      footerEl.textContent = text.footer;
-
-      langButtons.forEach(btn => {
-        const isActive = btn.getAttribute("data-lang") === lang;
-        btn.classList.toggle("active", isActive);
-        btn.setAttribute("aria-pressed", isActive.toString());
-      });
-    }
-
-    // ตรวจสอบภาษาเบราว์เซอร์เริ่มต้น (ถ้ามี)
-    const browserLang = navigator.language.slice(0, 2);
-    if (translations[browserLang]) {
-      setLanguage(browserLang);
-    } else {
-      setLanguage("th");
-    }
-
-    // ลิสเทนเนอร์สำหรับปุ่มเลือกภาษา
-    langButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const selectedLang = btn.getAttribute("data-lang");
-        setLanguage(selectedLang);
-      });
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    particlesArray.forEach(p => {
+      const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 5);
+      gradient.addColorStop(0, `rgba(83, 144, 217, ${p.opacity})`);
+      gradient.addColorStop(1, 'rgba(83, 144, 217, 0)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius * 5, 0, Math.PI * 2);
+      ctx.fill();
     });
+  }
 
-    // สร้างอนุภาคลอย
-    const particleCount = 40;
-    const container = document.querySelector(".container");
+  function update() {
+    particlesArray.forEach(p => {
+      p.x += p.speedX;
+      p.y += p.speedY;
 
-    for (let i = 0; i < particleCount; i++) {
-      const particle = document.createElement("div");
-      particle.classList.add("particle");
+      if(p.x < 0) p.x = width;
+      else if(p.x > width) p.x = 0;
 
-      const size = Math.random() * 10 + 6; // ขนาด 6px ถึง 16px
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
+      if(p.y < 0) p.y = height;
+      else if(p.y > height) p.y = 0;
+    });
+  }
 
-      const posX = Math.random() * 100; // ตำแหน่งแนวนอน %
-      particle.style.left = `${posX}%`;
+  function animate() {
+    draw();
+    update();
+    requestAnimationFrame(animate);
+  }
 
-      const posY = Math.random() * 100; // ตำแหน่งแนวตั้ง %
-      particle.style.top = `${posY}%`;
+  window.addEventListener('resize', () => {
+    resize();
+    init();
+  });
 
-      const delay = Math.random() * 8; // หน่วงเวลาการเคลื่อนไหว
-      particle.style.animationDelay = `${delay}s`;
+  init();
+  animate();
+</script>
 
-      container.appendChild(particle);
-    }
-  </script>
 </body>
 </html>
