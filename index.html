@@ -28,6 +28,7 @@
       opacity: 1;
     }
 
+    /* ===== Preloader ===== */
     #preloader {
       position: fixed;
       top: 0; left: 0;
@@ -262,10 +263,15 @@
         max-width: 300px;
       }
       .promo-container {
-        width: 80%;
+        /* ให้เมนูบนมือถือแสดงขึ้นมาเลย ไม่ซ่อน */
+        transform: translateX(-50%) translateY(0) !important;
+        opacity: 1 !important;
+        width: 90%;
+        max-width: 400px;
       }
+      /* ซ่อนปุ่ม Hamburger เพราะไม่จำเป็นแล้ว */
       .menu-toggle {
-        display: block;
+        display: none;
       }
     }
   </style>
@@ -299,7 +305,7 @@
     <a href="https://open.spotify.com/user/31ar2mznmgwcng5a3v46y7wr5yoy" target="_blank">Spotify</a>
   </div>
 
-  <!-- Sounds -->
+  <!-- เสียงยังคงอยู่ แต่จะเงียบเพราะไม่ได้เรียกใช้ -->
   <audio id="clickSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
   <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/16/audio_8db27e4e55.mp3?filename=lofi-study-112191.mp3" loop></audio>
 
@@ -310,7 +316,6 @@
     const inviteBtn = document.getElementById('inviteBtn');
     const botLabel = document.getElementById('botLabel');
 
-    // Set text based on language
     if (userLang.startsWith('th')) {
       mainTitle.textContent = 'ยินดีต้อนรับสู่ YANZZ!';
       inviteBtn.textContent = 'เชิญบอท';
@@ -338,7 +343,9 @@
       setTimeout(() => {
         document.getElementById('preloader').style.opacity = '0';
         document.body.classList.add('loaded');
-        setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 500);
+        setTimeout(() => {
+          document.getElementById('preloader').style.display = 'none';
+        }, 500);
       }, 300);
     });
 
@@ -354,11 +361,10 @@
       starContainer.appendChild(star);
     }
 
-    // ===== Handle Sounds =====
+    // ===== Handle Sounds (จะไม่ถูกเรียกใช้ จึงเงียบ) =====
     const clickSound = document.getElementById("clickSound");
     const bgMusic = document.getElementById("bgMusic");
     let musicStarted = false;
-
     document.body.addEventListener('click', () => {
       if (!musicStarted) {
         musicStarted = true;
@@ -378,7 +384,6 @@
         }, interval);
       }
     });
-
     function playClick() {
       clickSound.currentTime = 0;
       clickSound.play();
@@ -407,11 +412,6 @@
       const options = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
       document.getElementById("updateTime").textContent = now.toLocaleString(userLang, options);
     }, 500);
-
-    // ===== Sound on Promo Links =====
-    document.querySelectorAll('.promo-container a').forEach(link => {
-      link.addEventListener('click', playClick);
-    });
 
     // ===== Hamburger Menu Toggle =====
     const menuToggle = document.getElementById("menuToggle");
