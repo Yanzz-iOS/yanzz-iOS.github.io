@@ -305,6 +305,21 @@
     <a href="https://open.spotify.com/user/31ar2mznmgwcng5a3v46y7wr5yoy" target="_blank">Spotify</a>
   </div>
 
+  <!-- Audio Player -->
+  <audio id="audio" autoplay loop>
+    <source src="https://cdn.discordapp.com/attachments/1243533119596789781/1379077576475279421/extracted_audio.m4a?ex=683eed94&is=683d9c14&hm=6cd2ec334d6910d7e5dda133e0808c95cc4dff663e0740f6677a3e0b26cdc64f&" type="audio/mp4">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    // ตั้งค่า volume หลังโหลด DOM เสร็จ
+    window.addEventListener("DOMContentLoaded", function () {
+      const audio = document.getElementById("audio");
+      if (audio) {
+        audio.volume = 0.5;
+      }
+    });
+
   <!-- เสียงยังคงอยู่ แต่จะเงียบเพราะไม่ได้เรียกใช้ -->
   <audio id="clickSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
   <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/16/audio_8db27e4e55.mp3?filename=lofi-study-112191.mp3" loop></audio>
