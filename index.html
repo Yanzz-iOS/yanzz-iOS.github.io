@@ -28,7 +28,6 @@
       opacity: 1;
     }
 
-    /* ===== Preloader ===== */
     #preloader {
       position: fixed;
       top: 0; left: 0;
@@ -52,7 +51,6 @@
       to { transform: rotate(360deg); }
     }
 
-    /* ===== Background (Stars) ===== */
     .background {
       position: fixed;
       top: 0; left: 0;
@@ -76,7 +74,6 @@
       100% { transform: translateY(110vh); opacity: 0; }
     }
 
-    /* ===== Container ===== */
     .container {
       padding: 80px 20px 40px;
       text-align: center;
@@ -148,7 +145,6 @@
       background: rgba(30, 30, 30, 0.8);
     }
 
-    /* ===== Promo Menu ===== */
     .promo-container {
       position: fixed;
       bottom: 0;
@@ -189,7 +185,6 @@
       color: #000;
     }
 
-    /* ===== Hamburger Icon (Mobile) ===== */
     .menu-toggle {
       display: none;
       position: fixed;
@@ -224,7 +219,6 @@
       transform: translateY(-7px) rotate(-45deg);
     }
 
-    /* ===== Desktop Promo Bar ===== */
     @media (min-width: 769px) {
       .promo-container {
         transform: translateX(-50%) translateY(0) !important;
@@ -253,7 +247,6 @@
       }
     }
 
-    /* ===== Mobile ===== */
     @media (max-width: 768px) {
       h1 {
         font-size: 2.5em;
@@ -263,13 +256,11 @@
         max-width: 300px;
       }
       .promo-container {
-        /* ให้เมนูบนมือถือแสดงขึ้นมาเลย ไม่ซ่อน */
         transform: translateX(-50%) translateY(0) !important;
         opacity: 1 !important;
         width: 90%;
         max-width: 400px;
       }
-      /* ซ่อนปุ่ม Hamburger เพราะไม่จำเป็นแล้ว */
       .menu-toggle {
         display: none;
       }
@@ -278,12 +269,10 @@
 </head>
 <body class="loading">
 
-  <!-- Preloader -->
   <div id="preloader">
     <div class="spinner"></div>
   </div>
 
-  <!-- Background & Stars -->
   <div class="background" id="stars"></div>
   <button class="menu-toggle" id="menuToggle">
     <span></span>
@@ -305,18 +294,10 @@
     <a href="https://open.spotify.com/user/31ar2mznmgwcng5a3v46y7wr5yoy" target="_blank">Spotify</a>
   </div>
 
-  <!-- เสียงยังคงอยู่ แต่จะเงียบเพราะไม่ได้เรียกใช้ -->
   <audio id="clickSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
   <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/16/audio_8db27e4e55.mp3?filename=lofi-study-112191.mp3" loop></audio>
-
-  <audio id="bgMusic" loop>
-    <source src="https://cdn.discordapp.com/attachments/1243533119596789781/1379077576475279421/extracted_audio.m4a?ex=683eed94&is=683d9c14&hm=6cd2ec334d6910d7e5dda133e0808c95cc4dff663e0740f6677a3e0b26cdc64f&" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-  <audio id="clickSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
-    
+ 
   <script>
-    // ===== Locale & Time Detection =====
     const userLang = navigator.language || 'en';
     const mainTitle = document.getElementById('mainTitle');
     const inviteBtn = document.getElementById('inviteBtn');
@@ -344,7 +325,6 @@
       botLabel.textContent = 'Last Bot Update: ';
     }
 
-    // ===== Preloader & Body Blur Removal =====
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('preloader').style.opacity = '0';
@@ -355,7 +335,6 @@
       }, 300);
     });
 
-    // ===== Meteor Shower =====
     const starContainer = document.getElementById("stars");
     for (let i = 0; i < 80; i++) {
       const star = document.createElement("div");
@@ -366,8 +345,6 @@
       star.style.opacity = Math.random();
       starContainer.appendChild(star);
     }
-
-    // ===== Handle Sounds (จะไม่ถูกเรียกใช้ จึงเงียบ) =====
     const clickSound = document.getElementById("clickSound");
     const bgMusic = document.getElementById("bgMusic");
     let musicStarted = false;
@@ -395,7 +372,6 @@
       clickSound.play();
     }
 
-    // ===== Invite Button =====
     inviteBtn.addEventListener("click", () => {
       playClick();
       inviteBtn.disabled = true;
@@ -412,14 +388,12 @@
       }, 800);
     });
 
-    // ===== Bot Update Timestamp =====
     setTimeout(() => {
       const now = new Date();
       const options = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
       document.getElementById("updateTime").textContent = now.toLocaleString(userLang, options);
     }, 500);
-
-    // ===== Hamburger Menu Toggle =====
+    
     const menuToggle = document.getElementById("menuToggle");
     const promoContainer = document.getElementById("promoContainer");
     menuToggle.addEventListener("click", () => {
