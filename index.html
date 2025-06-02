@@ -1,5 +1,4 @@
-</body>
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
@@ -18,28 +17,25 @@
     body {
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at center, #1a1a1a 0%, #000000 80%);
+      background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color: #fff;
       overflow: hidden;
       position: relative;
     }
 
-    /* เพิ่มลวดลายแบบ Grid Overlay */
+    /* เพิ่มพื้นหลังลายเส้นกริดแบบโปร่ง */
     body::before {
       content: "";
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
       background-image:
         linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       background-size: 40px 40px;
-      pointer-events: none;
       z-index: 0;
-      animation: gridShift 30s linear infinite;
+      animation: gridShift 60s linear infinite;
     }
 
     @keyframes gridShift {
@@ -59,7 +55,7 @@
       height: 100%;
       padding: 20px;
       position: relative;
-      z-index: 10;
+      z-index: 1;
     }
 
     .message-box {
@@ -68,11 +64,9 @@
       border: 2px solid rgba(255, 255, 255, 0.2);
       border-radius: 16px;
       backdrop-filter: blur(10px);
-      background: rgba(0, 0, 0, 0.5);
-      box-shadow:
-        0 0 20px rgba(255, 255, 255, 0.1),
-        inset 0 0 15px rgba(255, 255, 255, 0.1);
+      background: rgba(0,0,0,0.6);
       animation: fadeIn 1s ease-in-out 0.5s both;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
 
     @keyframes fadeIn {
@@ -91,7 +85,6 @@
       margin-bottom: 20px;
       position: relative;
       animation: rgbGlow 3s infinite ease-in-out;
-      user-select: none;
     }
 
     @keyframes rgbGlow {
@@ -114,8 +107,7 @@
       margin-bottom: 30px;
       line-height: 1.5;
       color: rgba(255, 255, 255, 0.85);
-      white-space: pre-line;
-      user-select: none;
+      white-space: pre-line; /* รองรับ \n ให้ขึ้นบรรทัดใหม่ */
     }
 
     .footer {
@@ -126,8 +118,7 @@
       font-size: 0.9rem;
       color: rgba(255, 255, 255, 0.6);
       animation: fadeIn 1s ease-in-out 1s both;
-      user-select: none;
-      z-index: 10;
+      z-index: 1;
     }
 
     /* Language selector */
@@ -137,7 +128,7 @@
       right: 20px;
       display: flex;
       gap: 10px;
-      z-index: 10;
+      z-index: 2;
     }
 
     .lang-button {
@@ -149,7 +140,6 @@
       color: #fff;
       cursor: pointer;
       transition: background 0.3s, border-color 0.3s;
-      user-select: none;
     }
 
     .lang-button:hover,
@@ -164,8 +154,7 @@
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
       animation: float 8s infinite ease-in-out;
-      filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
-      z-index: 5;
+      z-index: 0;
     }
 
     @keyframes float {
@@ -185,16 +174,16 @@
   </style>
 </head>
 <body>
-  <div class="lang-selector">
-    <button class="lang-button" data-lang="th">ไทย</button>
-    <button class="lang-button" data-lang="en">English</button>
-    <button class="lang-button" data-lang="es">Español</button>
-    <button class="lang-button" data-lang="zh">中文</button>
-    <button class="lang-button" data-lang="jp">日本語</button>
+  <div class="lang-selector" role="navigation" aria-label="Language selection">
+    <button class="lang-button" data-lang="th" aria-pressed="false">ไทย</button>
+    <button class="lang-button" data-lang="en" aria-pressed="false">English</button>
+    <button class="lang-button" data-lang="es" aria-pressed="false">Español</button>
+    <button class="lang-button" data-lang="zh" aria-pressed="false">中文</button>
+    <button class="lang-button" data-lang="jp" aria-pressed="false">日本語</button>
   </div>
 
-  <div class="container">
-    <div class="message-box">
+  <div class="container" role="main">
+    <div class="message-box" aria-live="polite" aria-atomic="true">
       <h1 id="title" class="title"></h1>
       <p id="subtitle" class="subtitle"></p>
     </div>
@@ -202,6 +191,7 @@
   </div>
 
   <script>
+    // แปลข้อความสำหรับหลายภาษา
     const translations = {
       th: {
         title: "ขออภัย เว็บไซต์กำลังปิดปรับปรุง",
@@ -235,6 +225,7 @@
     const footerEl = document.getElementById("footer");
     const langButtons = document.querySelectorAll(".lang-button");
 
+    // ฟังก์ชันในการตั้งค่าภาษา
     function setLanguage(lang) {
       const text = translations[lang] || translations["th"];
       titleEl.textContent = text.title;
@@ -242,10 +233,13 @@
       footerEl.textContent = text.footer;
 
       langButtons.forEach(btn => {
-        btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
+        const isActive = btn.getAttribute("data-lang") === lang;
+        btn.classList.toggle("active", isActive);
+        btn.setAttribute("aria-pressed", isActive.toString());
       });
     }
 
+    // ตรวจสอบภาษาเบราว์เซอร์เริ่มต้น (ถ้ามี)
     const browserLang = navigator.language.slice(0, 2);
     if (translations[browserLang]) {
       setLanguage(browserLang);
@@ -253,28 +247,33 @@
       setLanguage("th");
     }
 
+    // ลิสเทนเนอร์สำหรับปุ่มเลือกภาษา
     langButtons.forEach(btn => {
       btn.addEventListener("click", () => {
-        setLanguage(btn.getAttribute("data-lang"));
+        const selectedLang = btn.getAttribute("data-lang");
+        setLanguage(selectedLang);
       });
     });
 
     // สร้างอนุภาคลอย
-    const particleCount = 30;
+    const particleCount = 40;
     const container = document.querySelector(".container");
 
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement("div");
       particle.classList.add("particle");
 
-      const size = Math.random() * 8 + 4;
+      const size = Math.random() * 10 + 6; // ขนาด 6px ถึง 16px
       particle.style.width = `${size}px`;
       particle.style.height = `${size}px`;
 
-      const posX = Math.random() * 100;
+      const posX = Math.random() * 100; // ตำแหน่งแนวนอน %
       particle.style.left = `${posX}%`;
 
-      const delay = Math.random() * 8;
+      const posY = Math.random() * 100; // ตำแหน่งแนวตั้ง %
+      particle.style.top = `${posY}%`;
+
+      const delay = Math.random() * 8; // หน่วงเวลาการเคลื่อนไหว
       particle.style.animationDelay = `${delay}s`;
 
       container.appendChild(particle);
