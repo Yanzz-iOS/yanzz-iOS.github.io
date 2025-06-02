@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YANZZ</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Mitr', sans-serif;
+      scroll-behavior: smooth;
+    }
+    html, body {
+      height: 100%;
+      background: black;
+      color: white;
+      overflow-x: hidden;
+    }
+    body {
+      filter: blur(4px);
+      opacity: 0;
+      transition: opacity 0.8s ease, filter 0.8s ease;
+    }
+    body.loaded {
+      filter: blur(0);
+      opacity: 1;
+    }
+
+    /* ===== Preloader ===== */
+    #preloader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== Background (Stars) ===== */
+    .background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, #111 0%, #000 80%);
+      overflow: hidden;
+      z-index: -2;
+    }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: fall linear infinite;
+      box-shadow: 0 0 2px rgba(255,255,255,0.8);
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10px); opacity: 1; }
+      100% { transform: translateY(110vh); opacity: 0; }
+    }
+
+    /* ===== Container ===== */
+    .container {
+      padding: 80px 20px 40px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 4em;
+      margin-bottom: 30px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: linear-gradient(270deg, #ff0000, #00ff00, #0000ff, #ff0000);
+      background-size: 600% 600%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rgbCycle 3s linear infinite;
+    }
+    @keyframes rgbCycle {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .next-button {
+      max-width: 220px;
+      width: 80%;
+      margin: 20px auto;
+      padding: 1rem 2rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400% 400%;
+      animation: colorShift 3s ease infinite;
+      color: white;
+      box-shadow: 0 0 15px rgba(255,255,255,0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    .next-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(255,255,255,0.5);
+      background: linear-gradient(45deg, #cc0000, #ff0000, #cc3333, #ff6666);
+    }
+    @keyframes colorShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #botUpdate {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 0.5rem 1rem;
+      border: 1px solid #ff0000;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    #botUpdate:hover {
+      background: rgba(30, 30, 30, 0.8);
+    }
+
+    /* ===== Promo Menu ===== */
+    .promo-container {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      width: 90%;
+      max-width: 400px;
+      background: rgba(20, 20, 20, 0.9);
+      border: 2px solid #00aaff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,170,255,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 1rem;
+      z-index: 50;
+      opacity: 0;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+    .promo-container.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .promo-container a {
+      width: 100%;
+      text-align: center;
+      color: #00aaff;
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 0.5rem 0;
+      border: 1px solid #00aaff;
+      border-radius: 8px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .promo-container a:hover {
+      background: #00aaff;
+      color: #000;
+    }
+
+    /* ===== Hamburger Icon (Mobile) ===== */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(0,0,0,0.7);
+      border: 2px solid #00aaff;
+      padding: 0.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .menu-toggle span {
+      display: block;
+      width: 20px;
+      height: 3px;
+      background: #00aaff;
+      margin: 4px 0;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .menu-toggle:hover {
+      box-shadow: 0 0 15px rgba(0,170,255,0.6);
+    }
+    .menu-toggle.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .menu-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .menu-toggle.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* ===== Desktop Promo Bar ===== */
+    @media (min-width: 769px) {
+      .promo-container {
+        transform: translateX(-50%) translateY(0) !important;
+        opacity: 1 !important;
+        bottom: 0;
+        left: 50%;
+        width: 100%;
+        max-width: none;
+        border-radius: 0;
+        border-top: 2px solid #00aaff;
+        border-left: none;
+        border-right: none;
+        box-shadow: none;
+        flex-direction: row;
+        justify-content: center;
+        gap: 30px;
+        padding: 0.5rem 0;
+      }
+      .promo-container a {
+        width: auto;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+      }
+      .menu-toggle {
+        display: none;
+      }
+    }
+
+    /* ===== Mobile ===== */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5em;
+      }
+      .next-button {
+        width: 90%;
+        max-width: 300px;
+      }
+      .promo-container {
+        width: 80%;
+      }
+      .menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body class="loading">
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Background & Stars -->
+  <div class="background" id="stars"></div>
+  <button class="menu-toggle" id="menuToggle">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="container">
+    <h1 id="mainTitle">Welcome to YANZZ!</h1>
+    <button class="next-button" id="inviteBtn">INVITE BOTS</button>
+    <div id="botUpdate">
+      <span id="botLabel">Last Bot Update: </span><span id="updateTime"></span>
+    </div>
+  </div>
+
+  <div class="promo-container" id="promoContainer">
+    <a href="https://123zhuyn.github.io/" target="_blank">Website</a>
+    <a href="https://discord.com/invite/mNGeUVcjKB" target="_blank">Discord</a>
+    <a href="https://open.spotify.com/user/31ar2mznmgwcng5a3v46y7wr5yoy" target="_blank">Spotify</a>
+  </div>
+
+  <!-- Sounds -->
+  <audio id="clickSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+  <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/16/audio_8db27e4e55.mp3?filename=lofi-study-112191.mp3" loop></audio>
+
+  <script>
+    // ===== Locale & Time Detection =====
+    const userLang = navigator.language || 'en';
+    const mainTitle = document.getElementById('mainTitle');
+    const inviteBtn = document.getElementById('inviteBtn');
+    const botLabel = document.getElementById('botLabel');
+
+    // Set text based on language
+    if (userLang.startsWith('th')) {
+      mainTitle.textContent = 'ยินดีต้อนรับสู่ YANZZ!';
+      inviteBtn.textContent = 'เชิญบอท';
+      botLabel.textContent = 'อัปเดตบอทล่าสุด: ';
+    } else if (userLang.startsWith('ja')) {
+      mainTitle.textContent = 'YANZZへようこそ！';
+      inviteBtn.textContent = 'ボットを招待';
+      botLabel.textContent = '最新のボット更新: ';
+    } else if (userLang.startsWith('es')) {
+      mainTitle.textContent = '¡Bienvenido a YANZZ!';
+      inviteBtn.textContent = 'INVITAR BOT';
+      botLabel.textContent = 'Última actualización del bot: ';
+    } else if (userLang.startsWith('fr')) {
+      mainTitle.textContent = 'Bienvenue sur YANZZ !';
+      inviteBtn.textContent = 'INVITER LE BOT';
+      botLabel.textContent = 'Dernière mise à jour du bot : ';
+    } else {
+      mainTitle.textContent = 'Welcome to YANZZ!';
+      inviteBtn.textContent = 'INVITE BOTS';
+      botLabel.textContent = 'Last Bot Update: ';
+    }
+
+    // ===== Preloader & Body Blur Removal =====
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('preloader').style.opacity = '0';
+        document.body.classList.add('loaded');
+        setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 500);
+      }, 300);
+    });
+
+    // ===== Meteor Shower =====
+    const starContainer = document.getElementById("stars");
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement("div");
+      star.classList.add("star");
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.top = Math.random() * -100 + "px";
+      star.style.animationDuration = (1 + Math.random() * 4) + "s";
+      star.style.opacity = Math.random();
+      starContainer.appendChild(star);
+    }
+
+    // ===== Handle Sounds =====
+    const clickSound = document.getElementById("clickSound");
+    const bgMusic = document.getElementById("bgMusic");
+    let musicStarted = false;
+
+    document.body.addEventListener('click', () => {
+      if (!musicStarted) {
+        musicStarted = true;
+        let vol = 0;
+        bgMusic.volume = 0;
+        bgMusic.play().catch(() => {});
+        const interval = 50;
+        const step = 0.2 / (2000 / interval);
+        const fade = setInterval(() => {
+          vol += step;
+          if (vol >= 0.2) {
+            bgMusic.volume = 0.2;
+            clearInterval(fade);
+          } else {
+            bgMusic.volume = vol;
+          }
+        }, interval);
+      }
+    });
+
+    function playClick() {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
+
+    // ===== Invite Button =====
+    inviteBtn.addEventListener("click", () => {
+      playClick();
+      inviteBtn.disabled = true;
+      inviteBtn.innerHTML = `<div class="spinner"></div> ${
+        userLang.startsWith('th') ? 'กำลังโหลด...' :
+        userLang.startsWith('ja') ? '読み込み中…' :
+        userLang.startsWith('es') ? 'Cargando...' :
+        userLang.startsWith('fr') ? 'Chargement...' :
+        'Loading...'
+      }`;
+      document.getElementById("stars").style.display = 'none';
+      setTimeout(() => {
+        window.location.href = "https://discord.com/oauth2/authorize?client_id=1243606891666608269&permissions=8&scope=bot";
+      }, 800);
+    });
+
+    // ===== Bot Update Timestamp =====
+    setTimeout(() => {
+      const now = new Date();
+      const options = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+      document.getElementById("updateTime").textContent = now.toLocaleString(userLang, options);
+    }, 500);
+
+    // ===== Sound on Promo Links =====
+    document.querySelectorAll('.promo-container a').forEach(link => {
+      link.addEventListener('click', playClick);
+    });
+
+    // ===== Hamburger Menu Toggle =====
+    const menuToggle = document.getElementById("menuToggle");
+    const promoContainer = document.getElementById("promoContainer");
+    menuToggle.addEventListener("click", () => {
+      playClick();
+      menuToggle.classList.toggle("open");
+      promoContainer.classList.toggle("show");
+    });
+  </script>
+</body>
+</html>
