@@ -1,406 +1,284 @@
-<!DOCTYPE html>
+</body>
+</html><!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YANZZ</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>เว็บไซต์กำลังปิดปรับปรุง</title>
   <style>
+    /* Reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Mitr', sans-serif;
-      scroll-behavior: smooth;
     }
-    html, body {
-      height: 100%;
-      background: black;
-      color: white;
-      overflow-x: hidden;
-    }
+
+    html,
     body {
-      filter: blur(4px);
-      opacity: 0;
-      transition: opacity 0.8s ease, filter 0.8s ease;
-    }
-    body.loaded {
-      filter: blur(0);
-      opacity: 1;
-    }
-
-    #preloader {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
-    }
-    .spinner {
-      width: 30px;
-      height: 30px;
-      border: 4px solid rgba(255,255,255,0.2);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .background {
-      position: fixed;
-      top: 0; left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 50% 50%, #111 0%, #000 80%);
+      background: radial-gradient(circle at center, #1a1a1a 0%, #000000 80%);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
       overflow: hidden;
-      z-index: -2;
+      position: relative;
     }
-    .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: white;
-      border-radius: 50%;
-      animation: fall linear infinite;
-      box-shadow: 0 0 2px rgba(255,255,255,0.8);
+
+    /* เพิ่มลวดลายแบบ Grid Overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+      animation: gridShift 30s linear infinite;
     }
-    @keyframes fall {
-      0% { transform: translateY(-10px); opacity: 1; }
-      100% { transform: translateY(110vh); opacity: 0; }
+
+    @keyframes gridShift {
+      0% {
+        background-position: 0 0, 0 0;
+      }
+      100% {
+        background-position: 40px 40px, 40px 40px;
+      }
     }
 
     .container {
-      padding: 80px 20px 40px;
-      text-align: center;
       display: flex;
-      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      text-align: center;
+      height: 100%;
+      padding: 20px;
       position: relative;
-      z-index: 1;
+      z-index: 10;
     }
 
-    h1 {
-      font-size: 4em;
+    .message-box {
+      max-width: 600px;
+      padding: 40px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow:
+        0 0 20px rgba(255, 255, 255, 0.1),
+        inset 0 0 15px rgba(255, 255, 255, 0.1);
+      animation: fadeIn 1s ease-in-out 0.5s both;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .title {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      position: relative;
+      animation: rgbGlow 3s infinite ease-in-out;
+      user-select: none;
+    }
+
+    @keyframes rgbGlow {
+      0% {
+        text-shadow: 0 0 8px rgb(255, 0, 0), 0 0 16px rgb(255, 0, 0);
+      }
+      33% {
+        text-shadow: 0 0 8px rgb(0, 255, 0), 0 0 16px rgb(0, 255, 0);
+      }
+      66% {
+        text-shadow: 0 0 8px rgb(0, 0, 255), 0 0 16px rgb(0, 0, 255);
+      }
+      100% {
+        text-shadow: 0 0 8px rgb(255, 0, 0), 0 0 16px rgb(255, 0, 0);
+      }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
       margin-bottom: 30px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      background: linear-gradient(270deg, #ff0000, #00ff00, #0000ff, #ff0000);
-      background-size: 600% 600%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: rgbCycle 3s linear infinite;
-    }
-    @keyframes rgbCycle {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.85);
+      white-space: pre-line;
+      user-select: none;
     }
 
-    .next-button {
-      max-width: 220px;
-      width: 80%;
-      margin: 20px auto;
-      padding: 1rem 2rem;
-      font-size: 1.3rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(45deg, red, orange, yellow, green, cyan, blue, violet);
-      background-size: 400% 400%;
-      animation: colorShift 3s ease infinite;
-      color: white;
-      box-shadow: 0 0 15px rgba(255,255,255,0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
-    }
-    .next-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 25px rgba(255,255,255,0.5);
-      background: linear-gradient(45deg, #cc0000, #ff0000, #cc3333, #ff6666);
-    }
-    @keyframes colorShift {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    #botUpdate {
-      margin-top: 15px;
-      font-size: 0.9rem;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 0.5rem 1rem;
-      border: 1px solid #ff0000;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
-    #botUpdate:hover {
-      background: rgba(30, 30, 30, 0.8);
-    }
-
-    .promo-container {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%) translateY(100%);
-      width: 90%;
-      max-width: 400px;
-      background: rgba(20, 20, 20, 0.9);
-      border: 2px solid #00aaff;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,170,255,0.5);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      padding: 1rem;
-      z-index: 50;
-      opacity: 0;
-      transition: transform 0.5s ease, opacity 0.5s ease;
-    }
-    .promo-container.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-    .promo-container a {
+    .footer {
+      position: absolute;
+      bottom: 20px;
       width: 100%;
       text-align: center;
-      color: #00aaff;
-      text-decoration: none;
-      font-size: 1rem;
-      padding: 0.5rem 0;
-      border: 1px solid #00aaff;
-      border-radius: 8px;
-      transition: background 0.3s, color 0.3s;
-    }
-    .promo-container a:hover {
-      background: #00aaff;
-      color: #000;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      animation: fadeIn 1s ease-in-out 1s both;
+      user-select: none;
+      z-index: 10;
     }
 
-    .menu-toggle {
-      display: none;
-      position: fixed;
+    /* Language selector */
+    .lang-selector {
+      position: absolute;
       top: 20px;
       right: 20px;
-      z-index: 100;
-      background: rgba(0,0,0,0.7);
-      border: 2px solid #00aaff;
-      padding: 0.5rem;
-      border-radius: 50%;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .lang-button {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      color: #fff;
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .menu-toggle span {
-      display: block;
-      width: 20px;
-      height: 3px;
-      background: #00aaff;
-      margin: 4px 0;
-      transition: transform 0.3s, opacity 0.3s;
-    }
-    .menu-toggle:hover {
-      box-shadow: 0 0 15px rgba(0,170,255,0.6);
-    }
-    .menu-toggle.open span:nth-child(1) {
-      transform: translateY(7px) rotate(45deg);
-    }
-    .menu-toggle.open span:nth-child(2) {
-      opacity: 0;
-    }
-    .menu-toggle.open span:nth-child(3) {
-      transform: translateY(-7px) rotate(-45deg);
+      transition: background 0.3s, border-color 0.3s;
+      user-select: none;
     }
 
-    @media (min-width: 769px) {
-      .promo-container {
-        transform: translateX(-50%) translateY(0) !important;
-        opacity: 1 !important;
-        bottom: 0;
-        left: 50%;
-        width: 100%;
-        max-width: none;
-        border-radius: 0;
-        border-top: 2px solid #00aaff;
-        border-left: none;
-        border-right: none;
-        box-shadow: none;
-        flex-direction: row;
-        justify-content: center;
-        gap: 30px;
-        padding: 0.5rem 0;
-      }
-      .promo-container a {
-        width: auto;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-      }
-      .menu-toggle {
-        display: none;
-      }
+    .lang-button:hover,
+    .lang-button.active {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.7);
     }
 
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 2.5em;
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 8s infinite ease-in-out;
+      filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
+      z-index: 5;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.4;
       }
-      .next-button {
-        width: 90%;
-        max-width: 300px;
+      50% {
+        transform: translateY(-100px) scale(1.2);
+        opacity: 0.2;
       }
-      .promo-container {
-        transform: translateX(-50%) translateY(0) !important;
-        opacity: 1 !important;
-        width: 90%;
-        max-width: 400px;
-      }
-      .menu-toggle {
-        display: none;
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.4;
       }
     }
   </style>
 </head>
-<body class="loading">
-
-  <div id="preloader">
-    <div class="spinner"></div>
+<body>
+  <div class="lang-selector">
+    <button class="lang-button" data-lang="th">ไทย</button>
+    <button class="lang-button" data-lang="en">English</button>
+    <button class="lang-button" data-lang="es">Español</button>
+    <button class="lang-button" data-lang="zh">中文</button>
+    <button class="lang-button" data-lang="jp">日本語</button>
   </div>
-
-  <div class="background" id="stars"></div>
-  <button class="menu-toggle" id="menuToggle">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
 
   <div class="container">
-    <h1 id="mainTitle">Welcome to YANZZ!</h1>
-    <button class="next-button" id="inviteBtn">INVITE BOTS</button>
-    <div id="botUpdate">
-      <span id="botLabel">Last Bot Update: </span><span id="updateTime"></span>
+    <div class="message-box">
+      <h1 id="title" class="title"></h1>
+      <p id="subtitle" class="subtitle"></p>
     </div>
+    <div class="footer" id="footer"></div>
   </div>
 
-  <div class="promo-container" id="promoContainer">
-    <a href="https://123zhuyn.github.io/" target="_blank">Website</a>
-    <a href="https://discord.com/invite/mNGeUVcjKB" target="_blank">Discord</a>
-    <a href="https://open.spotify.com/user/31ar2mznmgwcng5a3v46y7wr5yoy" target="_blank">Spotify</a>
-  </div>
-
-  <audio id="clickSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
-  <audio id="bgMusic" src="https://cdn.discordapp.com/attachments/1243533119596789781/1379077576475279421/extracted_audio.m4a?ex=683eed94&is=683d9c14&hm=6cd2ec334d6910d7e5dda133e0808c95cc4dff663e0740f6677a3e0b26cdc64f&" loop></audio>
- 
   <script>
-    const userLang = navigator.language || 'en';
-    const mainTitle = document.getElementById('mainTitle');
-    const inviteBtn = document.getElementById('inviteBtn');
-    const botLabel = document.getElementById('botLabel');
-
-    if (userLang.startsWith('th')) {
-      mainTitle.textContent = 'ยินดีต้อนรับสู่ YANZZ!';
-      inviteBtn.textContent = 'เชิญบอท';
-      botLabel.textContent = 'อัปเดตบอทล่าสุด: ';
-    } else if (userLang.startsWith('ja')) {
-      mainTitle.textContent = 'YANZZへようこそ！';
-      inviteBtn.textContent = 'ボットを招待';
-      botLabel.textContent = '最新のボット更新: ';
-    } else if (userLang.startsWith('es')) {
-      mainTitle.textContent = '¡Bienvenido a YANZZ!';
-      inviteBtn.textContent = 'INVITAR BOT';
-      botLabel.textContent = 'Última actualización del bot: ';
-    } else if (userLang.startsWith('fr')) {
-      mainTitle.textContent = 'Bienvenue sur YANZZ !';
-      inviteBtn.textContent = 'INVITER LE BOT';
-      botLabel.textContent = 'Dernière mise à jour du bot : ';
-    } else {
-      mainTitle.textContent = 'Welcome to YANZZ!';
-      inviteBtn.textContent = 'INVITE BOTS';
-      botLabel.textContent = 'Last Bot Update: ';
-    }
-
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('preloader').style.opacity = '0';
-        document.body.classList.add('loaded');
-        setTimeout(() => {
-          document.getElementById('preloader').style.display = 'none';
-        }, 500);
-      }, 300);
-    });
-
-    const starContainer = document.getElementById("stars");
-    for (let i = 0; i < 80; i++) {
-      const star = document.createElement("div");
-      star.classList.add("star");
-      star.style.left = Math.random() * 100 + "vw";
-      star.style.top = Math.random() * -100 + "px";
-      star.style.animationDuration = (1 + Math.random() * 4) + "s";
-      star.style.opacity = Math.random();
-      starContainer.appendChild(star);
-    }
-    const clickSound = document.getElementById("clickSound");
-    const bgMusic = document.getElementById("bgMusic");
-    let musicStarted = false;
-    document.body.addEventListener('click', () => {
-      if (!musicStarted) {
-        musicStarted = true;
-        let vol = 0;
-        bgMusic.volume = 0;
-        bgMusic.play().catch(() => {});
-        const interval = 50;
-        const step = 0.2 / (2000 / interval);
-        const fade = setInterval(() => {
-          vol += step;
-          if (vol >= 0.2) {
-            bgMusic.volume = 0.2;
-            clearInterval(fade);
-          } else {
-            bgMusic.volume = vol;
-          }
-        }, interval);
+    const translations = {
+      th: {
+        title: "ขออภัย เว็บไซต์กำลังปิดปรับปรุง",
+        subtitle: "ขณะนี้เรากำลังปรับปรุงและตรวจสอบระบบต่างๆ ของเว็บไซต์\nกรุณากลับมาใหม่ภายหลัง ขอบคุณสำหรับความเข้าใจของคุณ",
+        footer: "© 2025 YANZZ. สงวนลิขสิทธิ์"
+      },
+      en: {
+        title: "Sorry, the website is under maintenance",
+        subtitle: "We are currently updating and checking various systems.\nPlease visit again later. Thank you for your understanding.",
+        footer: "© 2025 YANZZ. All rights reserved."
+      },
+      es: {
+        title: "Lo sentimos, el sitio web está en mantenimiento",
+        subtitle: "Actualmente estamos actualizando y verificando varios sistemas del sitio.\nPor favor, vuelva más tarde. Gracias por su comprensión.",
+        footer: "© 2025 YANZZ. Todos los derechos reservados."
+      },
+      zh: {
+        title: "抱歉，网站正在维护中",
+        subtitle: "我们正在更新和检查网站的各项系统。\n请稍后再来。感谢您的理解。",
+        footer: "© 2025 YANZZ。保留所有权利。"
+      },
+      jp: {
+        title: "申し訳ありませんが、ただいまメンテナンス中です",
+        subtitle: "現在、ウェブサイトの各種システムを更新および確認しています。\n後ほど再度アクセスしてください。ご理解のほどよろしくお願いいたします。",
+        footer: "© 2025 YANZZ。全著作権所有。"
       }
-    });
-    function playClick() {
-      clickSound.currentTime = 0;
-      clickSound.play();
+    };
+
+    const titleEl = document.getElementById("title");
+    const subtitleEl = document.getElementById("subtitle");
+    const footerEl = document.getElementById("footer");
+    const langButtons = document.querySelectorAll(".lang-button");
+
+    function setLanguage(lang) {
+      const text = translations[lang] || translations["th"];
+      titleEl.textContent = text.title;
+      subtitleEl.textContent = text.subtitle;
+      footerEl.textContent = text.footer;
+
+      langButtons.forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
+      });
     }
 
-    inviteBtn.addEventListener("click", () => {
-      playClick();
-      inviteBtn.disabled = true;
-      inviteBtn.innerHTML = `<div class="spinner"></div> ${
-        userLang.startsWith('th') ? 'กำลังโหลด...' :
-        userLang.startsWith('ja') ? '読み込み中…' :
-        userLang.startsWith('es') ? 'Cargando...' :
-        userLang.startsWith('fr') ? 'Chargement...' :
-        'Loading...'
-      }`;
-      document.getElementById("stars").style.display = 'none';
-      setTimeout(() => {
-        window.location.href = "https://discord.com/oauth2/authorize?client_id=1243606891666608269&permissions=8&scope=bot";
-      }, 800);
+    const browserLang = navigator.language.slice(0, 2);
+    if (translations[browserLang]) {
+      setLanguage(browserLang);
+    } else {
+      setLanguage("th");
+    }
+
+    langButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        setLanguage(btn.getAttribute("data-lang"));
+      });
     });
 
-    setTimeout(() => {
-      const now = new Date();
-      const options = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-      document.getElementById("updateTime").textContent = now.toLocaleString(userLang, options);
-    }, 500);
-    
-    const menuToggle = document.getElementById("menuToggle");
-    const promoContainer = document.getElementById("promoContainer");
-    menuToggle.addEventListener("click", () => {
-      playClick();
-      menuToggle.classList.toggle("open");
-      promoContainer.classList.toggle("show");
-    });
+    // สร้างอนุภาคลอย
+    const particleCount = 30;
+    const container = document.querySelector(".container");
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement("div");
+      particle.classList.add("particle");
+
+      const size = Math.random() * 8 + 4;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+
+      const posX = Math.random() * 100;
+      particle.style.left = `${posX}%`;
+
+      const delay = Math.random() * 8;
+      particle.style.animationDelay = `${delay}s`;
+
+      container.appendChild(particle);
+    }
   </script>
 </body>
 </html>
