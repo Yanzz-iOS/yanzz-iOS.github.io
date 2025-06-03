@@ -2,298 +2,807 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Site Under Maintenance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YANZZ Executors</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ==============================
-       Base & Reset
-       ============================== */
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-
-    html, body {
+    :root {
+      --bg-dark: #0d0d0d;
+      --bg-light: #f0f0f0;
+      --card-bg-dark: rgba(30, 30, 30, 0.85);
+      --card-bg-light: #ffffff;
+      --text-dark: #eee;
+      --text-light: #111;
+      --accent: #ff6ec7;
+      --accent2: #18ffff;
+      --border-radius: 12px;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+    * {
       margin: 0;
       padding: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: linear-gradient(135deg, #0c0f16 0%, #1e2430 60%, #0a0d16 100%);
-      font-family: 'Orbitron', sans-serif;
-      color: #e0e0e0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: var(--bg-dark);
+      color: var(--text-dark);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      position: relative;
+      transition: background 0.3s, color 0.3s;
     }
-
-    /* ==============================
-       Warning Bar
-       ============================== */
-    .warning {
+    [data-theme="light"] {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+    body::before {
+      content: '';
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(45deg, var(--accent), var(--accent2), var(--accent), var(--accent2));
+      background-size: 600% 600%;
+      animation: GradientBG 20s ease infinite;
+      z-index: -1;
+      opacity: 0.15;
+    }
+    @keyframes GradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    header {
       width: 100%;
-      padding: 10px 15px;
-      background: linear-gradient(90deg, #ff3860, #ffb36b);
-      color: #fff;
-      font-weight: 700;
-      text-align: center;
-      font-size: 1rem;
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
-      z-index: 100;
-      box-shadow: 0 0 18px 3px rgba(255, 56, 96, 0.7);
-      animation: warningPulse 2s ease-in-out infinite;
-      user-select: none;
+      max-width: 800px;
+      margin: 20px auto 10px;
+      background: var(--card-bg-dark);
+      backdrop-filter: blur(10px);
+      border-radius: var(--border-radius);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px var(--shadow-color);
+      transition: background 0.3s;
     }
-    @keyframes warningPulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.75; }
+    [data-theme="light"] header {
+      background: var(--card-bg-light);
     }
-
-    /* ==============================
-       Main Message Box
-       ============================== */
-    .message-box {
-      position: relative;
-      background: rgba(15, 20, 30, 0.85);
-      padding: 40px 50px;
-      border-radius: 20px;
-      box-shadow:
-        0 0 18px 6px rgba(70, 100, 255, 0.4),
-        inset 0 0 30px 5px rgba(255, 80, 120, 0.45);
-      max-width: 520px;
-      max-height: 75vh;
-      text-align: center;
-      z-index: 10;
-      animation: fadeInUp 1.2s ease-out forwards;
-      opacity: 0;
-      overflow-wrap: break-word;
+    header h1 {
+      font-size: 1.8rem;
+      color: var(--accent);
+      text-shadow: 0 0 8px var(--accent);
     }
-    @keyframes fadeInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .lang-toggle {
+      background: var(--accent2);
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 600;
+      color: #000;
+      cursor: pointer;
+      transition: background 0.3s;
     }
-
-    .title {
-      font-size: 2.4rem;
-      margin-bottom: 20px;
-      color: #bbe1ff;
-      text-shadow: 0 0 12px #5390d9;
-      line-height: 1.2;
+    .lang-toggle:hover {
+      background: #0fe8e8;
     }
-
-    .subtitle {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #d0d8e9;
-      text-shadow: 0 0 8px #8eb1ff;
-      white-space: pre-line;
-    }
-
-    /* ==============================
-       Footer
-       ============================== */
-    .footer {
-      position: fixed;
-      bottom: 10px;
+    .controls {
       width: 100%;
-      text-align: center;
-      color: #777a8a;
-      font-size: 0.75rem;
-      font-weight: 500;
-      z-index: 10;
-      user-select: none;
+      max-width: 800px;
+      margin: 10px auto 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: center;
     }
-
-    /* ==============================
-       Glowing Orbs
-       ============================== */
-    .glow {
-      position: absolute;
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      filter: blur(30px);
-      opacity: 0.7;
-      animation: glowPulse 3s ease-in-out infinite alternate;
-      z-index: 0;
-    }
-    .glow.pink {
-      background: #ff3860;
-      top: 30px;
-      left: -40px;
-    }
-    .glow.blue {
-      background: #5390d9;
-      bottom: 30px;
-      right: -40px;
-      animation-delay: 1.5s;
-    }
-    @keyframes glowPulse {
-      0% { opacity: 0.55; transform: scale(0.9); }
-      100% { opacity: 0.9; transform: scale(1.1); }
-    }
-
-    /* ==============================
-       Particle Canvas
-       ============================== */
-    canvas#particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
+    .controls input,
+    .controls select,
+    .controls button {
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      border: 2px solid var(--accent);
       background: transparent;
+      color: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .controls input::placeholder,
+    .controls select {
+      color: inherit;
+      opacity: 0.6;
+    }
+    .controls button {
+      cursor: pointer;
+      background: var(--card-bg-dark);
+    }
+    [data-theme="light"] .controls button {
+      background: var(--card-bg-light);
+    }
+    .controls button:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    main {
+      width: 100%;
+      max-width: 800px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 40px;
+      padding: 0 10px;
+    }
+    .card {
+      background: var(--card-bg-dark);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      box-shadow: 0 4px 15px var(--shadow-color);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    [data-theme="light"] .card {
+      background: var(--card-bg-light);
+    }
+    .card:hover {
+      box-shadow: 0 6px 20px var(--shadow-color);
+      transform: translateY(-5px);
+    }
+    .card h2 {
+      font-size: 1.3rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+      text-shadow: 0 0 6px var(--accent);
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+    .card .platforms {
+      margin-bottom: 8px;
+    }
+    .platform {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: var(--accent2);
+      color: #000;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      margin-right: 0.25rem;
+    }
+    .card .actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 10px;
+    }
+    .card .actions button {
+      flex: 1;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .card .actions button:hover {
+      transform: scale(1.05);
+    }
+    .btn-copy { background: var(--accent); color: #fff; }
+    .btn-edit { background: var(--accent2); color: #000; }
+    .btn-delete { background: #f44336; color: #fff; }
+    .btn-pin   { background: #ffd700; color: #000; } /* Gold for pin */
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center; justify-content: center;
+      z-index: 1000;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: var(--card-bg-dark);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      width: 90%; max-width: 500px;
+      box-shadow: 0 4px 20px var(--shadow-color);
+      animation: fadeIn 0.3s ease-out;
+      position: relative;
+      transition: background 0.3s;
+    }
+    [data-theme="light"] .modal-content {
+      background: var(--card-bg-light);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-content h2 {
+      margin-bottom: 1rem;
+      color: var(--accent);
+      text-align: center;
+    }
+    .modal-content label {
+      display: block;
+      margin: 0.5rem 0 0.25rem;
+      font-size: 0.9rem;
+      color: inherit;
+    }
+    .modal-content input,
+    .modal-content select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      background: transparent;
+      color: inherit;
+      outline: none;
+      transition: background 0.2s;
+    }
+    .modal-content select[multiple] {
+      height: 120px;
+    }
+    .modal-content .form-actions {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+    .modal-content .form-actions button {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--accent);
+      border-radius: 4px;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-content .form-actions button:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .modal-content .close-modal {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      font-size: 1.5rem;
+      color: inherit;
+      cursor: pointer;
+    }
+    #toast {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 1001;
+      text-shadow: 0 0 8px #000;
+    }
+    #toast.show {
+      opacity: 1;
+      pointer-events: auto;
     }
 
-    /* ==============================
-       Responsive (Mobile)
-       ============================== */
-    @media (max-width: 480px) {
-      .warning {
-        font-size: 0.9rem;
-        padding: 8px 10px;
-        letter-spacing: 0.8px;
-      }
-      .message-box {
-        padding: 28px 25px;
-        border-radius: 16px;
-        max-width: 90vw;
-        max-height: 75vh;
-      }
-      .title {
-        font-size: 1.8rem;
-        margin-bottom: 16px;
-      }
-      .subtitle {
-        font-size: 0.95rem;
-      }
-      .glow {
-        width: 100px;
-        height: 100px;
-        filter: blur(24px);
-      }
-      .glow.pink {
-        top: 15px;
-        left: -25px;
-      }
-      .glow.blue {
-        bottom: 15px;
-        right: -25px;
-      }
-      .footer {
-        font-size: 0.65rem;
-        bottom: 6px;
-      }
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #999;
+      font-size: 1.1rem;
+      padding: 40px;
+    }
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: center; }
+      .controls { flex-direction: column; align-items: stretch; }
+      .card { padding: 0.75rem; }
+      .modal-content { padding: 1rem; }
     }
   </style>
 </head>
-<body>
+<body data-theme="dark">
+  <header>
+    <h1 data-i18n="header">Executor Link Hub</h1>
+    <button class="lang-toggle" id="langToggle">EN</button>
+  </header>
 
-  <!-- Warning bar -->
-  <div class="warning" role="alert" aria-live="assertive">
-    ⚠️ Warning: This website is temporarily offline for maintenance
+  <div class="controls">
+    <input type="text" id="search" placeholder="" data-i18n-placeholder="searchPlaceholder" aria-label="ค้นหา Executor">
+    <select id="filter-platform" aria-label="Platform Filter">
+      <option value="All" data-i18n="filterAll">ALL</option>
+      <option value="Android">Android</option>
+      <option value="iOS">iOS</option>
+      <option value="Windows">Windows</option>
+      <option value="macOS">macOS</option>
+    </select>
+    <select id="sort-by" aria-label="เรียงลำดับ">
+      <option value="name-asc" data-i18n="sortNameAsc">ชื่อ A → Z</option>
+      <option value="name-desc" data-i18n="sortNameDesc">ชื่อ Z → A</option>
+      <option value="version-desc" data-i18n="sortVersionDesc">เวอร์ชันใหม่ → เก่า</option>
+      <option value="version-asc" data-i18n="sortVersionAsc">เวอร์ชันเก่า → ใหม่</option>
+    </select>
+    <button id="btn-add" data-i18n="btnAdd">➕ Add Executor</button>
+    <button id="btn-copy-all" data-i18n="btnCopyAll">📋 คัดลอกลิงก์ทั้งหมด</button>
+    <button id="btn-export" data-i18n="btnExport">Export JSON</button>
+    <button id="btn-import" data-i18n="btnImport">Import JSON</button>
+    <div id="toggle-theme">
+      <input type="checkbox" id="theme-checkbox" aria-label="สลับธีม">
+      <span data-i18n="toggleThemeText">Light Mode</span>
+    </div>
   </div>
 
-  <!-- Glowing orbs behind the box -->
-  <div class="glow pink" aria-hidden="true"></div>
-  <div class="glow blue" aria-hidden="true"></div>
+  <main id="card-container">
+  </main>
 
-  <!-- Main message box -->
-  <div class="message-box" role="main" tabindex="0">
-    <h1 class="title">Site Under Maintenance</h1>
-    <p class="subtitle">
-      We are currently updating and improving our system.  
-      Please check back shortly.  
-      Thank you for your patience and understanding.
-    </p>
+  <div class="modal" id="modal-form" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <span class="close-modal" id="close-modal" aria-label="ปิด">&times;</span>
+      <h2 id="modal-title" data-i18n="modalAddTitle">เพิ่ม Executor</h2>
+      <label for="executor-name" data-i18n="labelName">ชื่อตัว Executor</label>
+      <input type="text" id="executor-name" placeholder="" data-i18n-placeholder="placeholderName" aria-label="Executor Name">
+      <label for="executor-version" data-i18n="labelVersion">เวอร์ชัน</label>
+      <input type="text" id="executor-version" placeholder="" data-i18n-placeholder="placeholderVersion" aria-label="Executor Version">
+      <label for="executor-platforms" data-i18n="labelPlatforms">แพลตฟอร์ม</label>
+      <select id="executor-platforms" multiple aria-label="เลือกแพลตฟอร์ม">
+        <option value="Android">Android</option>
+        <option value="iOS">iOS</option>
+        <option value="Windows">Windows</option>
+        <option value="macOS">macOS</option>
+      </select>
+      <label for="executor-link" data-i18n="labelLink">ลิงก์</label>
+      <input type="url" id="executor-link" placeholder="https://" aria-label="Executor Link">
+      <label for="executor-status" data-i18n="labelStatus">สถานะ</label>
+      <select id="executor-status" aria-label="สถานะ">
+        <option value="Online">Online</option>
+        <option value="Offline">Offline</option>
+        <option value="Beta">Beta</option>
+      </select>
+      <div class="form-actions">
+        <button id="btn-save" data-i18n="btnSave">บันทึก</button>
+        <button id="btn-cancel" data-i18n="btnCancel">ยกเลิก</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Footer text -->
-  <div class="footer" aria-hidden="true">© 2025 YANZZ. All rights reserved.</div>
+  <input type="file" id="import-input" accept="application/json" style="display: none;">
 
-  <!-- Particle background -->
-  <canvas id="particles"></canvas>
+  <div id="toast"></div>
 
   <script>
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let particles = [];
+    const STORAGE_KEY       = 'executorLinks';
+    let executors           = [];
+    let editIndex           = null;
+    let debounceTimer       = null;
 
-    function init() {
-      resizeCanvas();
-      particles = [];
-      const count = Math.floor((width * height) / 11000);
-      for (let i = 0; i < count; i++) {
-        particles.push(createParticle());
+    const cardContainer      = document.getElementById('card-container');
+    const searchInput        = document.getElementById('search');
+    const filterPlatform     = document.getElementById('filter-platform');
+    const sortBySelect       = document.getElementById('sort-by');
+    const btnAdd             = document.getElementById('btn-add');
+    const btnCopyAll         = document.getElementById('btn-copy-all');
+    const btnExport          = document.getElementById('btn-export');
+    const btnImport          = document.getElementById('btn-import');
+    const importInput        = document.getElementById('import-input');
+    const modal              = document.getElementById('modal-form');
+    const closeModalBtn      = document.getElementById('close-modal');
+    const modalTitle         = document.getElementById('modal-title');
+    const nameInput          = document.getElementById('executor-name');
+    const versionInput       = document.getElementById('executor-version');
+    const platformsSelect    = document.getElementById('executor-platforms');
+    const linkInput          = document.getElementById('executor-link');
+    const statusSelect       = document.getElementById('executor-status');
+    const btnSave            = document.getElementById('btn-save');
+    const btnCancel          = document.getElementById('btn-cancel');
+    const toast              = document.getElementById('toast');
+    const themeCheckbox      = document.getElementById('theme-checkbox');
+    const toggleThemeText    = document.querySelector('#toggle-theme span');
+    const langToggle         = document.getElementById('langToggle');
+
+    const i18n = {
+      th: {
+        header: "Executor Link Hub",
+        btnAdd: "➕ เพิ่ม Executor",
+        btnCopyAll: "📋 คัดลอกลิงก์ทั้งหมด",
+        btnExport: "Export JSON",
+        btnImport: "Import JSON",
+        searchPlaceholder: "ค้นหา Executor...",
+        filterAll: "ทุกแพลตฟอร์ม",
+        sortNameAsc: "ชื่อ A → Z",
+        sortNameDesc: "ชื่อ Z → A",
+        sortVersionDesc: "เวอร์ชันใหม่ → เก่า",
+        sortVersionAsc: "เวอร์ชันเก่า → ใหม่",
+        toggleThemeText: "Light Mode",
+        modalAddTitle: "เพิ่ม Executor",
+        modalEditTitle: "แก้ไข Executor",
+        labelName: "ชื่อตัว Executor",
+        placeholderName: "เช่น Arceus X",
+        labelVersion: "เวอร์ชัน",
+        placeholderVersion: "เช่น v3.2.1",
+        labelPlatforms: "แพลตฟอร์ม",
+        labelLink: "ลิงก์",
+        labelStatus: "สถานะ",
+        btnSave: "บันทึก",
+        btnCancel: "ยกเลิก",
+        emptyState: "ยังไม่มี Executor ในระบบ 😭 คลิก “เพิ่ม Executor” เพื่อเริ่มต้น",
+        labelUpdated: "อัปเดต:",
+        labelVersionText: "เวอร์ชัน:",
+        labelStatusText: "สถานะ:",
+        confirmDelete: "คุณแน่ใจว่าจะลบหรือไม่?",
+        copied: "คัดลอกสำเร็จ",
+        added: "เพิ่มสำเร็จ",
+        edited: "แก้ไขสำเร็จ",
+        deleted: "ลบสำเร็จ",
+        importSuccess: "Import สำเร็จ",
+        invalidFile: "ไฟล์ไม่ถูกต้อง",
+        jsonInvalid: "ไฟล์ JSON ไม่ถูกต้อง",
+        pin: "ปักหมุด",
+        unpin: "ยกเลิกปักหมุด"
+      },
+      en: {
+        header: "Executor Link Hub",
+        btnAdd: "➕ Add Executor",
+        btnCopyAll: "📋 Copy All Links",
+        btnExport: "Export JSON",
+        btnImport: "Import JSON",
+        searchPlaceholder: "Search Executor...",
+        filterAll: "All Platforms",
+        sortNameAsc: "Name A → Z",
+        sortNameDesc: "Name Z → A",
+        sortVersionDesc: "Version New → Old",
+        sortVersionAsc: "Version Old → New",
+        toggleThemeText: "Dark Mode",
+        modalAddTitle: "Add Executor",
+        modalEditTitle: "Edit Executor",
+        labelName: "Executor Name",
+        placeholderName: "e.g. Arceus X",
+        labelVersion: "Version",
+        placeholderVersion: "e.g. v3.2.1",
+        labelPlatforms: "Platforms",
+        labelLink: "Link",
+        labelStatus: "Status",
+        btnSave: "Save",
+        btnCancel: "Cancel",
+        emptyState: "No executors yet 😭 Click “Add Executor” to start",
+        labelUpdated: "Updated:",
+        labelVersionText: "Version:",
+        labelStatusText: "Status:",
+        confirmDelete: "Are you sure you want to delete?",
+        copied: "Copied successfully",
+        added: "Added successfully",
+        edited: "Edited successfully",
+        deleted: "Deleted successfully",
+        importSuccess: "Import success",
+        invalidFile: "Invalid file",
+        jsonInvalid: "JSON invalid",
+        pin: "Pin",
+        unpin: "Unpin"
+      }
+    };
+
+    function loadData() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      executors = data ? JSON.parse(data) : [];
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(executors));
+    }
+
+    function compareVersion(v1, v2) {
+      const a = v1.replace(/^v/, '').split('.').map(n => parseInt(n));
+      const b = v2.replace(/^v/, '').split('.').map(n => parseInt(n));
+      for (let i = 0; i < Math.max(a.length, b.length); i++) {
+        const na = a[i] || 0, nb = b[i] || 0;
+        if (na !== nb) return na - nb;
+      }
+      return 0;
+    }
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function copyLink(link) {
+      navigator.clipboard.writeText(link)
+        .then(() => showToast(i18n[document.documentElement.lang].copied));
+    }
+
+    btnCopyAll.addEventListener('click', () => {
+      const allLinks = executors.map(e => e.link).join('\n');
+      navigator.clipboard.writeText(allLinks)
+        .then(() => showToast(i18n[document.documentElement.lang].copied));
+    });
+
+    btnAdd.addEventListener('click', () => openModal('add'));
+    closeModalBtn.addEventListener('click', closeModal);
+    btnCancel.addEventListener('click', closeModal);
+    function openModal(mode, index = null) {
+      modal.classList.add('active');
+      nameInput.focus();
+      if (mode === 'add') {
+        modalTitle.textContent = i18n[document.documentElement.lang].modalAddTitle;
+        nameInput.value = '';
+        versionInput.value = '';
+        [...platformsSelect.options].forEach(opt => opt.selected = false);
+        linkInput.value = '';
+        statusSelect.value = 'Online';
+        editIndex = null;
+      } else if (mode === 'edit') {
+        modalTitle.textContent = i18n[document.documentElement.lang].modalEditTitle;
+        const exe = executors[index];
+        nameInput.value = exe.name;
+        versionInput.value = exe.version;
+        [...platformsSelect.options].forEach(opt => opt.selected = exe.platforms.includes(opt.value));
+        linkInput.value = exe.link;
+        statusSelect.value = exe.status;
+        editIndex = index;
       }
     }
 
-    function createParticle() {
-      return {
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 1.3 + 0.3,
-        speedX: (Math.random() - 0.5) * 0.12,
-        speedY: (Math.random() - 0.5) * 0.12,
-        opacity: Math.random() * 0.3 + 0.1
-      };
+    function closeModal() {
+      modal.classList.remove('active');
     }
 
-    function resizeCanvas() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    }
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => {
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 5);
-        grad.addColorStop(0, `rgba(83, 144, 217, ${p.opacity})`);
-        grad.addColorStop(1, 'rgba(83, 144, 217, 0)');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius * 5, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-
-    function updateParticles() {
-      particles.forEach(p => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-        if (p.x < 0) p.x = width;
-        else if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
-        else if (p.y > height) p.y = 0;
-      });
-    }
-
-    function animate() {
-      drawParticles();
-      updateParticles();
-      requestAnimationFrame(animate);
-    }
-
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      init();
+    btnSave.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const version = versionInput.value.trim();
+      const platforms = [...platformsSelect.selectedOptions].map(opt => opt.value);
+      const link = linkInput.value.trim();
+      const status = statusSelect.value;
+      if (!name || !version || platforms.length === 0 || !link) {
+        showToast(i18n[document.documentElement.lang].invalidFile);
+        return;
+      }
+      const nowISO = new Date().toISOString();
+      if (editIndex !== null) {
+        executors[editIndex] = {
+          ...executors[editIndex],
+          name, version, platforms, link, status, updatedAt: nowISO
+        };
+        showToast(i18n[document.documentElement.lang].edited);
+      } else {
+        executors.push({ name, version, platforms, link, status, updatedAt: nowISO, pinned: false });
+        showToast(i18n[document.documentElement.lang].added);
+      }
+      saveData();
+      renderCards();
+      closeModal();
     });
 
-    init();
-    animate();
+    function deleteExecutor(index) {
+      const confirmMsg = i18n[document.documentElement.lang].confirmDelete;
+      if (confirm(confirmMsg)) {
+        executors.splice(index, 1);
+        saveData();
+        renderCards();
+        showToast(i18n[document.documentElement.lang].deleted);
+      }
+    }
+
+    function togglePin(index) {
+      executors[index].pinned = !executors[index].pinned;
+      saveData();
+      renderCards();
+      const msg = executors[index].pinned
+        ? i18n[document.documentElement.lang].pin + ' ✓'
+        : i18n[document.documentElement.lang].unpin;
+      showToast(msg);
+    }
+
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(renderCards, 200);
+    });
+
+    filterPlatform.addEventListener('change', renderCards);
+    sortBySelect.addEventListener('change', renderCards);
+
+    btnExport.addEventListener('click', () => {
+      const dataStr = JSON.stringify(executors, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'executors.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    btnImport.addEventListener('click', () => importInput.click());
+    importInput.addEventListener('change', () => {
+      const file = importInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          try {
+            const imported = JSON.parse(e.target.result);
+            if (Array.isArray(imported)) {
+              executors = imported;
+              saveData();
+              renderCards();
+              showToast(i18n[document.documentElement.lang].importSuccess);
+            } else {
+              showToast(i18n[document.documentElement.lang].invalidFile);
+            }
+          } catch {
+            showToast(i18n[document.documentElement.lang].jsonInvalid);
+          }
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    themeCheckbox.addEventListener('change', () => {
+      if (themeCheckbox.checked) {
+        document.documentElement.setAttribute('data-theme', 'light');
+        toggleThemeText.textContent = i18n[document.documentElement.lang].toggleThemeText;
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        toggleThemeText.textContent = i18n[document.documentElement.lang].toggleThemeText;
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    function setThemeFromPreference() {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'light') {
+        themeCheckbox.checked = true;
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+      toggleThemeText.textContent = i18n[document.documentElement.lang].toggleThemeText;
+    }
+
+    langToggle.addEventListener('click', () => {
+      const isTH = document.documentElement.lang === 'th';
+      document.documentElement.lang = isTH ? 'en' : 'th';
+      langToggle.textContent = isTH ? 'TH' : 'EN';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = i18n[document.documentElement.lang][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.placeholder = i18n[document.documentElement.lang][key];
+      });
+      setThemeFromPreference();
+      renderCards();
+    });
+
+    function renderCards() {
+      cardContainer.innerHTML = '';
+      if (executors.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.textContent = i18n[document.documentElement.lang].emptyState;
+        cardContainer.appendChild(empty);
+        return;
+      }
+
+      const term = searchInput.value.toLowerCase();
+      const platformFilterVal = filterPlatform.value;
+      const sortBy = sortBySelect.value;
+
+      let filtered = executors.filter(e => {
+        const matchesName = e.name.toLowerCase().includes(term);
+        const matchesPlat = platformFilterVal === 'All' || e.platforms.includes(platformFilterVal);
+        return matchesName && matchesPlat;
+      });
+
+      if (sortBy === 'name-asc') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortBy === 'name-desc') {
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+      } else if (sortBy === 'version-desc') {
+        filtered.sort((a, b) => compareVersion(b.version, a.version));
+      } else if (sortBy === 'version-asc') {
+        filtered.sort((a, b) => compareVersion(a.version, b.version));
+      }
+
+      const pinnedList = filtered.filter(e => e.pinned);
+      const normalList = filtered.filter(e => !e.pinned);
+      const combined = [...pinnedList, ...normalList];
+
+      combined.forEach((exe, idx) => {
+        const index = executors.indexOf(exe);
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const title = document.createElement('h2');
+        title.textContent = exe.name;
+        card.appendChild(title);
+
+        const versionP = document.createElement('p');
+        versionP.innerHTML = `<strong>${i18n[document.documentElement.lang].labelVersionText}</strong> ${exe.version}`;
+        card.appendChild(versionP);
+
+        const platformsDiv = document.createElement('div');
+        platformsDiv.className = 'platforms';
+        exe.platforms.forEach(pf => {
+          const span = document.createElement('span');
+          span.className = 'platform';
+          span.textContent = pf;
+          platformsDiv.appendChild(span);
+        });
+        card.appendChild(platformsDiv);
+
+        const statusP = document.createElement('p');
+        statusP.innerHTML = `<strong>${i18n[document.documentElement.lang].labelStatusText}</strong> ${exe.status}`;
+        card.appendChild(statusP);
+
+        if (exe.updatedAt) {
+          const d = new Date(exe.updatedAt);
+          const dateStr = d.toLocaleDateString(
+            document.documentElement.lang === 'th' ? 'th-TH' : 'en-US',
+            { year: 'numeric', month: 'short', day: 'numeric' }
+          );
+          const updateP = document.createElement('p');
+          updateP.innerHTML = `<strong>${i18n[document.documentElement.lang].labelUpdated}</strong> ${dateStr}`;
+          card.appendChild(updateP);
+        }
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'actions';
+
+        const btnCopy = document.createElement('button');
+        btnCopy.className = 'btn-copy';
+        btnCopy.setAttribute('aria-label', 'Copy Link');
+        btnCopy.textContent = '📋';
+        btnCopy.onclick = () => copyLink(exe.link);
+        actionsDiv.appendChild(btnCopy);
+
+        const btnEdit = document.createElement('button');
+        btnEdit.className = 'btn-edit';
+        btnEdit.setAttribute('aria-label', 'Edit Executor');
+        btnEdit.textContent = '✏️';
+        btnEdit.onclick = () => openModal('edit', index);
+        actionsDiv.appendChild(btnEdit);
+
+        const btnDelete = document.createElement('button');
+        btnDelete.className = 'btn-delete';
+        btnDelete.setAttribute('aria-label', 'Delete Executor');
+        btnDelete.textContent = '🗑️';
+        btnDelete.onclick = () => deleteExecutor(index);
+        actionsDiv.appendChild(btnDelete);
+
+        const btnPin = document.createElement('button');
+        btnPin.className = 'btn-pin';
+        btnPin.setAttribute('aria-label', exec.pinned ? 'Unpin Executor' : 'Pin Executor');
+        btnPin.textContent = exe.pinned ? '📌' : '📍';
+        btnPin.onclick = () => togglePin(index);
+        actionsDiv.appendChild(btnPin);
+
+        card.appendChild(actionsDiv);
+        cardContainer.appendChild(card);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      setThemeFromPreference();
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = i18n[document.documentElement.lang][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.placeholder = i18n[document.documentElement.lang][key];
+      });
+      renderCards();
+    });
   </script>
 </body>
 </html>
