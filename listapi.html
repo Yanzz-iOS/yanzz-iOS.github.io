@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YANZZ API</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #0f0f0f;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem;
+      font-size: 2rem;
+      background: linear-gradient(90deg, #ff00cc, #3333ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .form-container {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    input, select, textarea {
+      margin: 0.5rem;
+      padding: 0.7rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #444;
+      color: white;
+      border-radius: 10px;
+      backdrop-filter: blur(5px);
+      width: 200px;
+    }
+
+    button {
+      padding: 10px 25px;
+      font-size: 1rem;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 50px;
+      color: #fff;
+      background: linear-gradient(90deg, #00f2ff, #ff00f2, #00f2ff);
+      background-size: 300% 100%;
+      animation: glow 3s linear infinite;
+      cursor: pointer;
+    }
+
+    @keyframes glow {
+      0% {background-position: 0 0;}
+      100% {background-position: 300% 0;}
+    }
+
+    .card-container {
+      padding: 2rem;
+    }
+
+    .category-group {
+      margin-bottom: 2rem;
+    }
+
+    .category-header {
+      font-size: 1.3rem;
+      margin: 1rem 0;
+      cursor: pointer;
+      color: #00e0ff;
+      text-shadow: 0 0 10px #00f2ff;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #444;
+      border-radius: 15px;
+      padding: 1rem;
+      backdrop-filter: blur(5px);
+      transition: 0.3s;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      position: relative;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+    }
+
+    .card h3 {
+      margin: 0.5rem 0;
+      font-size: 1.2rem;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+    }
+
+    .card a {
+      color: #00ffff;
+      text-decoration: none;
+    }
+
+    .delete-btn, .copy-btn {
+      position: absolute;
+      top: 10px;
+      font-size: 0.8rem;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .delete-btn {
+      right: 10px;
+      background: #ff0040;
+      color: white;
+    }
+
+    .copy-btn {
+      right: 80px;
+      background: #0088ff;
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: #888;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: #fff;
+      display: none;
+    }
+
+    @media(max-width: 600px) {
+      input, textarea {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>🚀 API HUB RGB EDITION</header>
+
+  <div class="form-container">
+    <input type="text" id="name" placeholder="API Name">
+    <input type="text" id="url" placeholder="API Link">
+    <input type="text" id="category" placeholder="Category (e.g. AI)">
+    <textarea id="description" placeholder="Description" rows="2"></textarea><br>
+    <button onclick="addAPI()">➕ Add</button>
+    <button onclick="clearAll()">🗑️ Clear All</button><br>
+    <input type="text" id="search" placeholder="🔍 Search by name or category" oninput="loadAPIs()">
+  </div>
+
+  <div class="card-container" id="apiList"></div>
+
+  <div id="toast"></div>
+
+  <footer>© 2025 - Made by YANZZ</footer>
+
+  <script>
+    const apiList = document.getElementById('apiList');
+    const toast = document.getElementById('toast');
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 2500);
+    }
+
+    function loadAPIs() {
+      const data = JSON.parse(localStorage.getItem("apis") || "[]");
+      const query = document.getElementById("search").value.trim().toLowerCase();
+      apiList.innerHTML = "";
+
+      const categories = {};
+
+      data.forEach(api => {
+        if (
+          api.name.toLowerCase().includes(query) ||
+          api.category.toLowerCase().includes(query)
+        ) {
+          if (!categories[api.category]) categories[api.category] = [];
+          categories[api.category].push(api);
+        }
+      });
+
+      for (const [cat, items] of Object.entries(categories)) {
+        const section = document.createElement("div");
+        section.className = "category-group";
+
+        const header = document.createElement("div");
+        header.className = "category-header";
+        header.textContent = `📁 ${cat}`;
+        header.onclick = () => {
+          grid.style.display = grid.style.display === 'none' ? 'grid' : 'none';
+        };
+
+        const grid = document.createElement("div");
+        grid.className = "card-grid";
+
+        items.forEach((api, index) => {
+          const div = document.createElement('div');
+          div.className = 'card';
+          div.innerHTML = `
+            <button class="copy-btn" onclick="copyLink('${api.url}')">📋 Copy</button>
+            <button class="delete-btn" onclick="deleteAPI(${index}, '${cat}')">❌</button>
+            <h3>${api.name}</h3>
+            <p><strong>Category:</strong> ${api.category}</p>
+            <p>${api.description}</p>
+            <p><em>🕒 ${api.time || "Unknown time"}</em></p>
+            <a href="${api.url}" target="_blank">🌐 View API</a>
+          `;
+          grid.appendChild(div);
+        });
+
+        section.appendChild(header);
+        section.appendChild(grid);
+        apiList.appendChild(section);
+      }
+    }
+
+    function addAPI() {
+      const name = document.getElementById("name").value.trim();
+      const url = document.getElementById("url").value.trim();
+      const category = document.getElementById("category").value.trim() || "Uncategorized";
+      const description = document.getElementById("description").value.trim();
+
+      if (!name || !url) return alert("Please fill out API name and link!");
+
+      const newAPI = {
+        name, url, category, description,
+        time: new Date().toLocaleString()
+      };
+      const old = JSON.parse(localStorage.getItem("apis") || "[]");
+      localStorage.setItem("apis", JSON.stringify([...old, newAPI]));
+
+      showToast("✅ API Added!");
+      loadAPIs();
+    }
+
+    function deleteAPI(index, cat) {
+      const all = JSON.parse(localStorage.getItem("apis") || "[]");
+      const filtered = all.filter((api, i) => !(api.category === cat && i === index));
+      localStorage.setItem("apis", JSON.stringify(filtered));
+      showToast("🗑️ Deleted!");
+      loadAPIs();
+    }
+
+    function clearAll() {
+      if (confirm("Delete all APIs?")) {
+        localStorage.removeItem("apis");
+        loadAPIs();
+        showToast("❌ Cleared All!");
+      }
+    }
+
+    function copyLink(url) {
+      navigator.clipboard.writeText(url);
+      showToast("🔗 Link Copied!");
+    }
+
+    window.onload = loadAPIs;
+  </script>
+</body>
+</html>
