@@ -3,19 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YANZZ API</title>
+  <title>YANZZ API HUB RGB EDITION</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    :root {
+      --bg-dark: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      --bg-light: #f0f0f0;
+      --text-dark: #fff;
+      --text-light: #000;
+      --card-dark: rgba(255, 255, 255, 0.1);
+      --card-light: rgba(0, 0, 0, 0.05);
+      --blur: blur(5px);
+      --radius: 10px;
+      --highlight: #00e0ff;
+    }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background: #0f0f0f;
-      color: white;
+      background: var(--bg-dark);
+      color: var(--text-dark);
       font-family: 'Orbitron', sans-serif;
-      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
     }
-
+    body.light {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
     header {
+      width: 100%;
       text-align: center;
       padding: 2rem;
       font-size: 2rem;
@@ -23,93 +42,195 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
+    .container {
+      width: 95%;
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
     .form-container {
-      text-align: center;
-      margin-top: 2rem;
+      background: var(--card-dark);
+      backdrop-filter: var(--blur);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 20px auto 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
     }
-
-    input, select, textarea {
-      margin: 0.5rem;
-      padding: 0.7rem;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid #444;
-      color: white;
-      border-radius: 10px;
-      backdrop-filter: blur(5px);
-      width: 200px;
+    body.light .form-container {
+      background: var(--card-light);
     }
-
-    button {
-      padding: 10px 25px;
+    .form-container input,
+    .form-container textarea {
+      width: 100%;
+      padding: 10px;
       font-size: 1rem;
-      margin-top: 1rem;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: rgba(255,255,255,0.05);
+      color: inherit;
+      backdrop-filter: var(--blur);
+    }
+    body.light .form-container input,
+    body.light .form-container textarea {
+      background: #fff;
+      color: #000;
+      border-color: #ccc;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .form-row button,
+    .form-row input[type="file"] {
+      padding: 10px 20px;
+      font-size: 1rem;
       border: none;
       border-radius: 50px;
-      color: #fff;
+      cursor: pointer;
       background: linear-gradient(90deg, #00f2ff, #ff00f2, #00f2ff);
       background-size: 300% 100%;
       animation: glow 3s linear infinite;
-      cursor: pointer;
+      color: #fff;
+      backdrop-filter: var(--blur);
     }
-
+    .form-row button:hover {
+      opacity: 0.9;
+    }
     @keyframes glow {
-      0% {background-position: 0 0;}
-      100% {background-position: 300% 0;}
+      0% { background-position: 0 0; }
+      100% { background-position: 300% 0; }
     }
-
-    .card-container {
-      padding: 2rem;
+    .search-bar {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 20px;
     }
-
+    .search-bar input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: rgba(255,255,255,0.05);
+      color: inherit;
+      backdrop-filter: var(--blur);
+    }
+    body.light .search-bar input {
+      background: #fff;
+      color: #000;
+      border-color: #ccc;
+    }
+    #apiList {
+      width: 100%;
+      margin: 0 auto;
+    }
     .category-group {
-      margin-bottom: 2rem;
+      margin-bottom: 20px;
     }
-
     .category-header {
       font-size: 1.3rem;
       margin: 1rem 0;
       cursor: pointer;
-      color: #00e0ff;
-      text-shadow: 0 0 10px #00f2ff;
+      color: var(--highlight);
+      text-shadow: 0 0 10px var(--highlight);
+      user-select: none;
     }
-
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1rem;
+      gap: 15px;
+      width: 100%;
     }
-
+    /* Grid 2 คอลัมน์บนจอใหญ่, 1 คอลัมน์บนมือถือ */
+    @media (min-width: 768px) {
+      .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 767px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
     .card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid #444;
-      border-radius: 15px;
-      padding: 1rem;
-      backdrop-filter: blur(5px);
-      transition: 0.3s;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
       position: relative;
+      background: var(--card-dark);
+      backdrop-filter: var(--blur);
+      border-radius: var(--radius);
+      padding: 15px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 10px rgba(0,255,255,0.2);
     }
-
+    body.light .card {
+      background: var(--card-light);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      color: var(--text-light);
+    }
     .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px rgba(0,255,255,0.4);
     }
-
     .card h3 {
-      margin: 0.5rem 0;
+      margin: 0 0 5px;
       font-size: 1.2rem;
     }
-
     .card p {
       font-size: 0.9rem;
+      margin: 5px 0;
+      word-wrap: break-word;
     }
-
     .card a {
       color: #00ffff;
       text-decoration: none;
     }
-
+    .card a:hover {
+      text-decoration: underline;
+    }
+    .pin-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: gold;
+      color: black;
+      padding: 3px 8px;
+      font-size: 0.8rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .card-actions {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .card-actions button {
+      flex: 1 1 auto;
+      min-width: 100px;
+      padding: 8px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .card-actions button:hover {
+      background: #555;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 6px;
+      margin: 2px 2px 2px 0;
+      background: #0088ff;
+      color: white;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
     .delete-btn, .copy-btn {
       position: absolute;
       top: 10px;
@@ -118,169 +239,321 @@
       padding: 3px 8px;
       border-radius: 5px;
       cursor: pointer;
-    }
-
-    .delete-btn {
-      right: 10px;
-      background: #ff0040;
       color: white;
     }
-
-    .copy-btn {
-      right: 80px;
-      background: #0088ff;
-      color: white;
-    }
-
+    .delete-btn { right: 10px; background: #ff0040; }
+    .copy-btn { right: 80px; background: #0088ff; }
     footer {
       text-align: center;
-      padding: 1rem;
+      padding: 10px;
+      font-size: 0.9rem;
       color: #888;
+      margin-top: auto;
     }
-
     #toast {
       position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0, 0, 0, 0.7);
+      color: #fff;
       padding: 10px 20px;
       border-radius: 10px;
-      color: #fff;
-      display: none;
-    }
-
-    @media(max-width: 600px) {
-      input, textarea {
-        width: 90%;
-      }
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 999;
+      text-align: center;
+      max-width: 90%;
     }
   </style>
 </head>
 <body>
   <header>🚀 API HUB RGB EDITION</header>
+  <div class="container">
+    <!-- ฟอร์มเพิ่ม / แก้ไข API -->
+    <div class="form-container">
+      <input type="text" id="name" placeholder="API Name">
+      <input type="text" id="url" placeholder="API Link">
+      <input type="text" id="category" placeholder="Category">
+      <input type="text" id="tags" placeholder="Tags (comma separated)">
+      <textarea id="description" placeholder="Description" rows="2"></textarea>
+      <div class="form-row">
+        <button onclick="addOrUpdateAPI()">➕ Add / Update</button>
+        <button onclick="clearAll()">🗑️ Clear All</button>
+        <button onclick="toggleTheme()">🌗 Theme</button>
+        <button onclick="exportJSON()">📤 Export</button>
+        <button onclick="document.getElementById('importFile').click()">📥 Import</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+        <button onclick="randomAPI()">🎲 Random</button>
+      </div>
+    </div>
 
-  <div class="form-container">
-    <input type="text" id="name" placeholder="API Name">
-    <input type="text" id="url" placeholder="API Link">
-    <input type="text" id="category" placeholder="Category (e.g. AI)">
-    <textarea id="description" placeholder="Description" rows="2"></textarea><br>
-    <button onclick="addAPI()">➕ Add</button>
-    <button onclick="clearAll()">🗑️ Clear All</button><br>
-    <input type="text" id="search" placeholder="🔍 Search by name or category" oninput="loadAPIs()">
+    <!-- ช่องค้นหา -->
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="🔍 Search by name, category or tag..." oninput="renderList()">
+    </div>
+
+    <!-- รายการ API แยกตามหมวดหมู่ -->
+    <div id="apiList"></div>
   </div>
 
-  <div class="card-container" id="apiList"></div>
+  <!-- Toast แจ้งเตือน -->
   <div id="toast"></div>
   <footer>© 2025 - Made by YANZZ</footer>
 
   <script>
-    const apiList = document.getElementById('apiList');
-    const toast = document.getElementById('toast');
+    // Short alias to get element by ID
+    const $ = id => document.getElementById(id);
 
+    // แสดง Toast
     function showToast(msg) {
-      toast.textContent = msg;
-      toast.style.display = 'block';
-      setTimeout(() => toast.style.display = 'none', 2500);
+      const t = $("toast");
+      t.textContent = msg;
+      t.style.opacity = "1";
+      setTimeout(() => { t.style.opacity = "0"; }, 2000);
     }
 
-    function loadAPIs() {
-      const data = JSON.parse(localStorage.getItem("apis") || "[]");
-      const query = document.getElementById("search").value.trim().toLowerCase();
-      apiList.innerHTML = "";
+    // ฟังก์ชันช่วยเก็บ-โหลด ไปยัง localStorage
+    function saveData(data) {
+      localStorage.setItem("apis", JSON.stringify(data));
+    }
+    function loadData() {
+      return JSON.parse(localStorage.getItem("apis") || "[]");
+    }
 
-      const categories = {};
+    // คืนค่าวัตถุจากอินพุต (ใช้ทั้งเพิ่มและอัปเดต)
+    function getInput() {
+      return {
+        name: $("name").value.trim(),
+        url: $("url").value.trim(),
+        category: $("category").value.trim() || "Uncategorized",
+        tags: $("tags").value.trim().toLowerCase().split(",").map(t => t.trim()).filter(t => t),
+        description: $("description").value.trim(),
+        time: new Date().toLocaleString(),
+        pinned: false
+      };
+    }
 
-      data.forEach(api => {
-        if (
-          api.name.toLowerCase().includes(query) ||
-          api.category.toLowerCase().includes(query)
-        ) {
-          if (!categories[api.category]) categories[api.category] = [];
-          categories[api.category].push(api);
+    // ตัวแปรเก็บสถานะว่ากำลังแก้ไขหรือสร้างใหม่ (index ของรายการที่จะอัปเดต)
+    let editIndex = -1;
+
+    // ฟังก์ชันเพิ่มหรืออัปเดต API
+    function addOrUpdateAPI() {
+      const input = getInput();
+      if (!input.name || !input.url) {
+        return alert("Please fill out both Name and URL");
+      }
+      const apis = loadData();
+      // ถ้า editIndex >= 0 แปลว่ากำลังแก้ไข
+      if (editIndex >= 0) {
+        // รักษาค่าสถานะ pinned ของเดิม
+        input.pinned = apis[editIndex].pinned;
+        apis[editIndex] = input;
+        editIndex = -1;
+        showToast("✏️ API Updated");
+      } else {
+        // เช็คชื่อซ้ำ
+        if (apis.some(a => a.name === input.name)) {
+          return alert("⚠️ Duplicate Name");
         }
+        apis.push(input);
+        showToast("➕ API Added");
+      }
+      saveData(apis);
+      renderList();
+      clearForm();
+    }
+
+    // ล้างช่องฟอร์ม
+    function clearForm() {
+      $("name").value = "";
+      $("url").value = "";
+      $("category").value = "";
+      $("tags").value = "";
+      $("description").value = "";
+      editIndex = -1;
+    }
+
+    // สลับธีม (Dark/Light) และเก็บสถานะลง localStorage
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+      if (document.body.classList.contains("light")) {
+        localStorage.setItem("theme", "light");
+        showToast("🌗 Light Mode");
+      } else {
+        localStorage.setItem("theme", "dark");
+        showToast("🌚 Dark Mode");
+      }
+    }
+
+    // โหลดสถานะธีมตอนเริ่มเว็บ
+    window.addEventListener("DOMContentLoaded", () => {
+      if (localStorage.getItem("theme") === "light") {
+        document.body.classList.add("light");
+      }
+      renderList();
+    });
+
+    // ฟังก์ชัน Export JSON
+    function exportJSON() {
+      const data = localStorage.getItem("apis") || "[]";
+      const blob = new Blob([data], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "apis.json";
+      a.click();
+      showToast("📤 Exported");
+    }
+    // ฟังก์ชัน Import JSON
+    function importJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const arr = JSON.parse(e.target.result);
+          if (!Array.isArray(arr)) throw "Invalid";
+          saveData(arr);
+          renderList();
+          showToast("📥 Imported");
+        } catch {
+          alert("⚠️ Invalid JSON file");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // ฟังก์ชันสุ่ม API ขึ้นมาแจ้งเตือน
+    function randomAPI() {
+      const apis = loadData();
+      if (apis.length === 0) return showToast("❗ No API available");
+      const r = apis[Math.floor(Math.random() * apis.length)];
+      alert(`🎲 ${r.name}\n${r.url}`);
+    }
+
+    // ฟังก์ชันล้างทั้งหมด
+    function clearAll() {
+      if (confirm("Delete all APIs?")) {
+        localStorage.removeItem("apis");
+        renderList();
+        showToast("🗑️ Cleared All");
+      }
+    }
+
+    // ฟังก์ชันคัดลอกลิงก์
+    function copyLink(url) {
+      navigator.clipboard.writeText(url);
+      showToast("📋 Link Copied");
+    }
+
+    // ฟังก์ชันลบ API โดย index
+    function deleteAPI(idx) {
+      const apis = loadData();
+      apis.splice(idx, 1);
+      saveData(apis);
+      renderList();
+      showToast("❌ Deleted");
+    }
+
+    // ฟังก์ชันปักหมุด API โดย index
+    function togglePin(idx) {
+      const apis = loadData();
+      apis[idx].pinned = !apis[idx].pinned;
+      saveData(apis);
+      renderList();
+      showToast(apis[idx].pinned ? "📌 Pinned" : "📍 Unpinned");
+    }
+
+    // ฟังก์ชันแก้ไข API โดย index (load ข้อมูลขึ้นฟอร์ม)
+    function editAPI(idx) {
+      const apis = loadData();
+      const api = apis[idx];
+      $("name").value = api.name;
+      $("url").value = api.url;
+      $("category").value = api.category;
+      $("tags").value = api.tags.join(", ");
+      $("description").value = api.description;
+      editIndex = idx;
+      showToast("✏️ Edit Mode");
+    }
+
+    // ฟังก์ชันแสดงรายการ API แยกหมวดหมู่ + ฟีเจอร์ collapse/expand + แท็ก + คำนวณ index แต่ละหมวด
+    function renderList() {
+      const all = loadData();
+      const q = $("search").value.trim().toLowerCase();
+      const listEl = $("apiList");
+      listEl.innerHTML = "";
+
+      // จัดเรียงให้ pinned ขึ้นมาแรก
+      all.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+
+      // กรองตาม Search ชื่อ / หมวด / แท็ก
+      const filtered = all.filter(api => {
+        return api.name.toLowerCase().includes(q) ||
+               api.category.toLowerCase().includes(q) ||
+               api.tags.some(tag => tag.toLowerCase().includes(q));
       });
 
-      for (const [cat, items] of Object.entries(categories)) {
+      // แยกตามหมวดหมู่
+      const grouped = {};
+      filtered.forEach(api => {
+        if (!grouped[api.category]) grouped[api.category] = [];
+        grouped[api.category].push(api);
+      });
+
+      // สร้างแต่ละ section ของหมวดหมู่
+      Object.entries(grouped).forEach(([cat, items]) => {
         const section = document.createElement("div");
         section.className = "category-group";
 
         const header = document.createElement("div");
         header.className = "category-header";
-        header.textContent = `📁 ${cat}`;
+        header.textContent = `📂 ${cat} (${items.length})`; // ชื่อหมวด + จำนวนรายการ
         header.onclick = () => {
-          grid.style.display = grid.style.display === 'none' ? 'grid' : 'none';
+          const grid = section.querySelector(".card-grid");
+          if (grid.style.display === "none") {
+            grid.style.display = "grid";
+            header.textContent = `📂 ${cat} (${items.length})`;
+          } else {
+            grid.style.display = "none";
+            header.textContent = `📁 ${cat} (${items.length})`;
+          }
         };
 
         const grid = document.createElement("div");
         grid.className = "card-grid";
+        // แสดงแต่ละ card
+        items.forEach((api, idxInGroup) => {
+          // หา index จริงในอาเรย์ loadData()
+          const actualIdx = loadData().findIndex(a => a.name === api.name && a.url === api.url && a.time === api.time);
 
-        items.forEach((api, index) => {
-          const div = document.createElement('div');
-          div.className = 'card';
-          div.innerHTML = `
-            <button class="copy-btn" onclick="copyLink('${api.url}')">📋 Copy</button>
-            <button class="delete-btn" onclick="deleteAPI(${index}, '${cat}')">❌</button>
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            ${api.pinned ? '<div class="pin-btn">📌</div>' : ''}
             <h3>${api.name}</h3>
+            <p><strong>URL:</strong> <a href="${api.url}" target="_blank">${api.url}</a> 
+              <button onclick="copyLink('${api.url}')">📋</button>
+            </p>
             <p><strong>Category:</strong> ${api.category}</p>
             <p>${api.description}</p>
-            <p><em>🕒 ${api.time || "Unknown time"}</em></p>
-            <a href="${api.url}" target="_blank">🌐 View API</a>
+            <p><small>${api.time}</small></p>
+            <p><strong>Tags:</strong> ${api.tags.map(t => `<span class="tag">${t}</span>`).join(" ")}</p>
+            <div class="card-actions">
+              <button onclick="togglePin(${actualIdx})">${api.pinned ? "📍 Unpin" : "📌 Pin"}</button>
+              <button onclick="editAPI(${actualIdx})">✏️ Edit</button>
+              <button onclick="deleteAPI(${actualIdx})">❌ Delete</button>
+            </div>
           `;
-          grid.appendChild(div);
+          grid.appendChild(card);
         });
 
         section.appendChild(header);
         section.appendChild(grid);
-        apiList.appendChild(section);
-      }
-    }
-
-    function addAPI() {
-      const name = document.getElementById("name").value.trim();
-      const url = document.getElementById("url").value.trim();
-      const category = document.getElementById("category").value.trim() || "Uncategorized";
-      const description = document.getElementById("description").value.trim();
-
-      if (!name || !url) return alert("Please fill out API name and link!");
-
-      const newAPI = {
-        name, url, category, description,
-        time: new Date().toLocaleString()
-      };
-      const old = JSON.parse(localStorage.getItem("apis") || "[]");
-      localStorage.setItem("apis", JSON.stringify([...old, newAPI]));
-
-      showToast("✅ API Added!");
-      loadAPIs();
-    }
-
-    function deleteAPI(index, cat) {
-      const all = JSON.parse(localStorage.getItem("apis") || "[]");
-      let count = -1;
-      const filtered = all.filter(api => {
-        if (api.category === cat) count++;
-        return !(api.category === cat && count === index);
+        listEl.appendChild(section);
       });
-      localStorage.setItem("apis", JSON.stringify(filtered));
-      showToast("🗑️ Deleted!");
-      loadAPIs();
     }
 
-    function clearAll() {
-      if (confirm("Delete all APIs?")) {
-        localStorage.removeItem("apis");
-        loadAPIs();
-        showToast("❌ Cleared All!");
-      }
-    }
-
-    function copyLink(url) {
-      navigator.clipboard.writeText(url);
-      showToast("🔗 Link Copied!");
-    }
-
-    window.onload = loadAPIs;
   </script>
 </body>
 </html>
