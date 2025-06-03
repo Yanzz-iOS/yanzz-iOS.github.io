@@ -171,9 +171,7 @@
   </div>
 
   <div class="card-container" id="apiList"></div>
-
   <div id="toast"></div>
-
   <footer>© 2025 - Made by YANZZ</footer>
 
   <script>
@@ -259,7 +257,11 @@
 
     function deleteAPI(index, cat) {
       const all = JSON.parse(localStorage.getItem("apis") || "[]");
-      const filtered = all.filter((api, i) => !(api.category === cat && i === index));
+      let count = -1;
+      const filtered = all.filter(api => {
+        if (api.category === cat) count++;
+        return !(api.category === cat && count === index);
+      });
       localStorage.setItem("apis", JSON.stringify(filtered));
       showToast("🗑️ Deleted!");
       loadAPIs();
