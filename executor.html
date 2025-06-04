@@ -3,101 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YANZZ Executors</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>YANZZ Executor Link Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-dark: #0d0d0d;
-      --bg-light: #f0f0f0;
-      --card-bg-dark: rgba(30, 30, 30, 0.85);
-      --card-bg-light: #ffffff;
-      --text-dark: #eee;
-      --text-light: #111;
-      --accent: #ff6ec7;
-      --accent2: #18ffff;
-      --border-radius: 12px;
-      --shadow-color: rgba(0, 0, 0, 0.1);
+      --bg-dark: #0a0a0a;
+      --card-bg-dark: rgba(20, 20, 20, 0.9);
+      --text-dark: #f0f0f0;
+      --accent: #e91e63;
+      --accent2: #9c27b0;
+      --border-radius: 10px;
+      --shadow-color: rgba(0, 0, 0, 0.2);
+      --hide-opacity: 0.4;
     }
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+    html, body {
+      height: 100%;
+    }
     body {
       font-family: 'Poppins', sans-serif;
-      min-height: 100vh;
-      background: var(--bg-dark);
+      background: radial-gradient(circle at top left, #121212, #000000);
       color: var(--text-dark);
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: background 0.3s, color 0.3s;
-    }
-    [data-theme="light"] {
-      background: var(--bg-light);
-      color: var(--text-light);
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(45deg, var(--accent), var(--accent2), var(--accent), var(--accent2));
-      background-size: 600% 600%;
-      animation: GradientBG 20s ease infinite;
-      z-index: -1;
-      opacity: 0.15;
-    }
-    @keyframes GradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    header {
-      width: 100%;
-      max-width: 800px;
-      margin: 20px auto 10px;
-      background: var(--card-bg-dark);
-      backdrop-filter: blur(10px);
-      border-radius: var(--border-radius);
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 15px var(--shadow-color);
-      transition: background 0.3s;
-    }
-    [data-theme="light"] header {
-      background: var(--card-bg-light);
-    }
-    header h1 {
-      font-size: 1.8rem;
-      color: var(--accent);
-      text-shadow: 0 0 8px var(--accent);
-    }
-    .lang-toggle {
-      background: var(--accent2);
-      border: none;
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-weight: 600;
-      color: #000;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .lang-toggle:hover {
-      background: #0fe8e8;
+      position: relative;
+      overflow-x: hidden;
     }
     .controls {
       width: 100%;
-      max-width: 800px;
-      margin: 10px auto 20px;
+      max-width: 900px;
+      margin: 20px auto;
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       align-items: center;
       justify-content: center;
+      background: var(--card-bg-dark);
+      padding: 12px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px var(--shadow-color);
     }
-    .controls input,
     .controls select,
     .controls button {
       padding: 0.5rem 0.75rem;
@@ -107,74 +57,111 @@
       color: inherit;
       font-size: 0.9rem;
       outline: none;
-      transition: all 0.2s;
-    }
-    .controls input::placeholder,
-    .controls select {
-      color: inherit;
-      opacity: 0.6;
+      transition: background 0.2s, color 0.2s;
     }
     .controls button {
       cursor: pointer;
       background: var(--card-bg-dark);
     }
-    [data-theme="light"] .controls button {
-      background: var(--card-bg-light);
-    }
     .controls button:hover {
       background: var(--accent);
       color: #fff;
     }
-    main {
+    .section-container {
       width: 100%;
-      max-width: 800px;
+      max-width: 900px;
+      margin-bottom: 40px;
+      padding: 0 10px;
+    }
+    .shared-section {
+      width: 100%;
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 10px;
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px var(--shadow-color);
+    }
+    .shared-section h3 {
+      color: var(--accent2);
+      margin-bottom: 10px;
+      text-shadow: 0 0 4px var(--accent2);
+      font-size: 1.3rem;
+      text-align: center;
+    }
+    .platform-section {
+      margin-bottom: 1.5rem;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      background: var(--card-bg-dark);
+      box-shadow: 0 4px 12px var(--shadow-color);
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: rgba(30, 30, 30, 0.8);
+      cursor: pointer;
+    }
+    .section-header h3 {
+      font-size: 1.2rem;
+      color: var(--accent2);
+      text-shadow: 0 0 4px var(--accent2);
+    }
+    .section-header .toggle-icon {
+      font-size: 1.2rem;
+      user-select: none;
+    }
+    .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 1rem;
-      margin-bottom: 40px;
-      padding: 0 10px;
+      padding: 1rem;
     }
     .card {
       background: var(--card-bg-dark);
       border-radius: var(--border-radius);
       padding: 1rem;
-      box-shadow: 0 4px 15px var(--shadow-color);
+      box-shadow: 0 4px 12px var(--shadow-color);
       position: relative;
       overflow: hidden;
-      transition: all 0.3s ease;
+      transition: transform 0.2s, opacity 0.2s;
     }
-    [data-theme="light"] .card {
-      background: var(--card-bg-light);
+    .card.hidden {
+      opacity: var(--hide-opacity);
     }
     .card:hover {
-      box-shadow: 0 6px 20px var(--shadow-color);
-      transform: translateY(-5px);
+      transform: translateY(-4px);
+      box-shadow: 0 6px 18px var(--shadow-color);
     }
     .card h2 {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: var(--accent);
       margin-bottom: 6px;
-      text-shadow: 0 0 6px var(--accent);
+      text-shadow: 0 0 4px var(--accent);
     }
     .card p {
       font-size: 0.9rem;
       color: #ccc;
+      margin-bottom: 6px;
+    }
+    .tags-container {
       margin-bottom: 8px;
     }
-    .card .platforms {
-      margin-bottom: 8px;
-    }
-    .platform {
+    .tag {
       display: inline-block;
-      padding: 0.25rem 0.5rem;
+      padding: 0.2rem 0.4rem;
       background: var(--accent2);
       color: #000;
       border-radius: 4px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       margin-right: 0.25rem;
+      margin-bottom: 4px;
     }
     .card .actions {
       display: flex;
+      flex-wrap: wrap;
       gap: 0.5rem;
       margin-top: 10px;
     }
@@ -185,22 +172,28 @@
       border-radius: 4px;
       font-size: 0.85rem;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s, background 0.2s;
+      background: var(--card-bg-dark);
+      color: inherit;
     }
     .card .actions button:hover {
       transform: scale(1.05);
+      background: var(--accent);
+      color: #fff;
     }
-    .btn-copy { background: var(--accent); color: #fff; }
-    .btn-edit { background: var(--accent2); color: #000; }
+    .btn-copy   { background: var(--accent); color: #fff; }
+    .btn-edit   { background: var(--accent2); color: #000; }
     .btn-delete { background: #f44336; color: #fff; }
-    .btn-pin   { background: #ffd700; color: #000; } /* Gold for pin */
+    .btn-pin    { background: #ffd700; color: #000; }
+    .btn-hide   { background: #888; color: #fff; }
+    .btn-check  { background: #4caf50; color: #fff; }
 
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.8);
       align-items: center; justify-content: center;
       z-index: 1000;
     }
@@ -211,58 +204,66 @@
       background: var(--card-bg-dark);
       border-radius: var(--border-radius);
       padding: 2rem;
-      width: 90%; max-width: 500px;
+      width: 90%; max-width: 480px;
       box-shadow: 0 4px 20px var(--shadow-color);
       animation: fadeIn 0.3s ease-out;
       position: relative;
-      transition: background 0.3s;
-    }
-    [data-theme="light"] .modal-content {
-      background: var(--card-bg-light);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .modal-content h2 {
-      margin-bottom: 1rem;
+      grid-column: 1 / -1;
+      margin-bottom: 0.5rem;
       color: var(--accent);
       text-align: center;
+      font-size: 1.5rem;
     }
     .modal-content label {
-      display: block;
-      margin: 0.5rem 0 0.25rem;
       font-size: 0.9rem;
       color: inherit;
+      margin-top: 0.5rem;
     }
     .modal-content input,
     .modal-content select {
       width: 100%;
-      padding: 0.5rem;
+      padding: 0.6rem;
       border: 1px solid var(--accent);
       border-radius: 4px;
       background: transparent;
       color: inherit;
       outline: none;
       transition: background 0.2s;
+      font-size: 0.9rem;
     }
     .modal-content select[multiple] {
-      height: 120px;
+      height: 90px;
+    }
+    .modal-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
     }
     .modal-content .form-actions {
-      margin-top: 1.5rem;
+      grid-column: 1 / -1;
+      margin-top: 1rem;
       display: flex;
       justify-content: flex-end;
       gap: 0.5rem;
     }
     .modal-content .form-actions button {
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1.2rem;
       border: 2px solid var(--accent);
       border-radius: 4px;
       background: transparent;
       color: inherit;
       cursor: pointer;
       transition: background 0.2s;
+      font-size: 0.9rem;
     }
     .modal-content .form-actions button:hover {
       background: var(--accent);
@@ -289,214 +290,560 @@
       transition: opacity 0.3s;
       z-index: 1001;
       text-shadow: 0 0 8px #000;
+      font-size: 0.9rem;
     }
     #toast.show {
       opacity: 1;
       pointer-events: auto;
     }
-
     .empty-state {
-      grid-column: 1 / -1;
       text-align: center;
-      color: #999;
+      color: #bbb;
       font-size: 1.1rem;
       padding: 40px;
     }
     @media (max-width: 600px) {
-      header { flex-direction: column; align-items: center; }
       .controls { flex-direction: column; align-items: stretch; }
       .card { padding: 0.75rem; }
-      .modal-content { padding: 1rem; }
+      .modal-content { padding: 1rem; grid-template-columns: 1fr; }
+      .modal-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-<body data-theme="dark">
-  <header>
-    <h1 data-i18n="header">YANZZ EXECUTORS</h1>
-    <button class="lang-toggle" id="langToggle">EN</button>
-  </header>
+<body>
 
   <div class="controls">
-    <input type="text" id="search" placeholder="" data-i18n-placeholder="searchPlaceholder" aria-label="ค้นหา Executor">
     <select id="filter-platform" aria-label="Platform Filter">
-      <option value="All" data-i18n="filterAll">ALL</option>
+      <option value="All">All Platforms</option>
       <option value="Android">Android</option>
       <option value="iOS">iOS</option>
       <option value="Windows">Windows</option>
       <option value="macOS">macOS</option>
     </select>
-    <select id="sort-by" aria-label="เรียงลำดับ">
-      <option value="name-asc" data-i18n="sortNameAsc">ชื่อ A → Z</option>
-      <option value="name-desc" data-i18n="sortNameDesc">ชื่อ Z → A</option>
-      <option value="version-desc" data-i18n="sortVersionDesc">เวอร์ชันใหม่ → เก่า</option>
-      <option value="version-asc" data-i18n="sortVersionAsc">เวอร์ชันเก่า → ใหม่</option>
+    <select id="filter-hidden" aria-label="Visibility Filter">
+      <option value="All">All</option>
+      <option value="Visible">Visible</option>
+      <option value="Hidden">Hidden</option>
     </select>
-    <button id="btn-add" data-i18n="btnAdd">➕ Add Executor</button>
-    <button id="btn-copy-all" data-i18n="btnCopyAll">📋 คัดลอกลิงก์ทั้งหมด</button>
-    <button id="btn-export" data-i18n="btnExport">Export JSON</button>
-    <button id="btn-import" data-i18n="btnImport">Import JSON</button>
-    <div id="toggle-theme">
-      <input type="checkbox" id="theme-checkbox" aria-label="สลับธีม">
-      <span data-i18n="toggleThemeText">Light</span>
-    </div>
+    <button id="btn-add">➕ Add Executor</button>
+    <button id="btn-share">🔗 Share Executors</button>
+    <button id="btn-load-shared">📥 Load Shared</button>
+    <button id="btn-stats">📊 Stats</button>
   </div>
 
-  <main id="card-container">
-  </main>
+  <div class="shared-section" id="shared-section" style="display:none;">
+    <h3>Shared Executors</h3>
+    <div id="shared-cards"></div>
+  </div>
+
+  <div class="section-container" id="section-container"></div>
 
   <div class="modal" id="modal-form" role="dialog" aria-modal="true">
     <div class="modal-content">
-      <span class="close-modal" id="close-modal" aria-label="ปิด">&times;</span>
-      <h2 id="modal-title" data-i18n="modalAddTitle">เพิ่ม Executor</h2>
-      <label for="executor-name" data-i18n="labelName">ชื่อตัว Executor</label>
-      <input type="text" id="executor-name" placeholder="" data-i18n-placeholder="placeholderName" aria-label="Executor Name">
-      <label for="executor-version" data-i18n="labelVersion">เวอร์ชัน</label>
-      <input type="text" id="executor-version" placeholder="" data-i18n-placeholder="placeholderVersion" aria-label="Executor Version">
-      <label for="executor-platforms" data-i18n="labelPlatforms">แพลตฟอร์ม</label>
-      <select id="executor-platforms" multiple aria-label="เลือกแพลตฟอร์ม">
+      <span class="close-modal" id="close-modal" aria-label="Close">&times;</span>
+      <h2 id="modal-title">Add Executor</h2>
+      <div class="modal-row">
+        <div>
+          <label for="executor-name">Executor Name</label>
+          <input type="text" id="executor-name" placeholder="e.g. Arceus X" aria-label="Executor Name" />
+        </div>
+        <div>
+          <label for="executor-version">Version</label>
+          <input type="text" id="executor-version" placeholder="e.g. v3.2.1" aria-label="Executor Version" />
+        </div>
+      </div>
+      <label for="executor-platforms">Platforms</label>
+      <select id="executor-platforms" multiple aria-label="Select Platforms">
         <option value="Android">Android</option>
         <option value="iOS">iOS</option>
         <option value="Windows">Windows</option>
         <option value="macOS">macOS</option>
       </select>
-      <label for="executor-link" data-i18n="labelLink">ลิงก์</label>
-      <input type="url" id="executor-link" placeholder="https://" aria-label="Executor Link">
-      <label for="executor-status" data-i18n="labelStatus">สถานะ</label>
-      <select id="executor-status" aria-label="สถานะ">
-        <option value="Online">Online</option>
-        <option value="Offline">Offline</option>
-        <option value="Beta">Beta</option>
-      </select>
+
+      <label for="executor-tags">Tags (comma-separated)</label>
+      <input type="text" id="executor-tags" placeholder="e.g. Free, Premium" aria-label="Tags" />
+
+      <label for="executor-link">Download Link</label>
+      <input type="url" id="executor-link" placeholder="https://" aria-label="Executor Link" />
+
+      <div class="modal-row">
+        <div>
+          <label for="executor-status">Status</label>
+          <select id="executor-status" aria-label="Status">
+            <option value="Online">Online</option>
+            <option value="Offline">Offline</option>
+            <option value="Beta">Beta</option>
+          </select>
+        </div>
+        <div>
+          <label for="executor-hidden">Visibility</label>
+          <select id="executor-hidden" aria-label="Hidden">
+            <option value="false">Visible</option>
+            <option value="true">Hidden</option>
+          </select>
+        </div>
+      </div>
+
       <div class="form-actions">
-        <button id="btn-save" data-i18n="btnSave">บันทึก</button>
-        <button id="btn-cancel" data-i18n="btnCancel">ยกเลิก</button>
+        <button id="btn-cancel">Cancel</button>
+        <button id="btn-save">Save Executor</button>
       </div>
     </div>
   </div>
 
-  <input type="file" id="import-input" accept="application/json" style="display: none;">
-
   <div id="toast"></div>
 
   <script>
-    const STORAGE_KEY       = 'executorLinks';
-    let executors           = [];
-    let editIndex           = null;
-    let debounceTimer       = null;
+    const DB_NAME = 'executorsDB';
+    const DB_VERSION = 1;
+    let db;
 
-    const cardContainer      = document.getElementById('card-container');
-    const searchInput        = document.getElementById('search');
-    const filterPlatform     = document.getElementById('filter-platform');
-    const sortBySelect       = document.getElementById('sort-by');
-    const btnAdd             = document.getElementById('btn-add');
-    const btnCopyAll         = document.getElementById('btn-copy-all');
-    const btnExport          = document.getElementById('btn-export');
-    const btnImport          = document.getElementById('btn-import');
-    const importInput        = document.getElementById('import-input');
-    const modal              = document.getElementById('modal-form');
-    const closeModalBtn      = document.getElementById('close-modal');
-    const modalTitle         = document.getElementById('modal-title');
-    const nameInput          = document.getElementById('executor-name');
-    const versionInput       = document.getElementById('executor-version');
-    const platformsSelect    = document.getElementById('executor-platforms');
-    const linkInput          = document.getElementById('executor-link');
-    const statusSelect       = document.getElementById('executor-status');
-    const btnSave            = document.getElementById('btn-save');
-    const btnCancel          = document.getElementById('btn-cancel');
-    const toast              = document.getElementById('toast');
-    const themeCheckbox      = document.getElementById('theme-checkbox');
-    const toggleThemeText    = document.querySelector('#toggle-theme span');
-    const langToggle         = document.getElementById('langToggle');
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = event => {
+          const database = event.target.result;
+          if (!database.objectStoreNames.contains('executors')) {
+            const store = database.createObjectStore('executors', { keyPath: 'id', autoIncrement: true });
+            store.createIndex('platforms', 'platforms', { multiEntry: true });
+          }
+        };
+        request.onsuccess = event => {
+          db = event.target.result;
+          resolve();
+        };
+        request.onerror = () => reject(request.error);
+      });
+    }
 
-    const i18n = {
-      th: {
-        header: "Executor Link Hub",
-        btnAdd: "➕ เพิ่ม Executor",
-        btnCopyAll: "📋 คัดลอกลิงก์ทั้งหมด",
-        btnExport: "Export JSON",
-        btnImport: "Import JSON",
-        searchPlaceholder: "ค้นหา Executor...",
-        filterAll: "ทุกแพลตฟอร์ม",
-        sortNameAsc: "ชื่อ A → Z",
-        sortNameDesc: "ชื่อ Z → A",
-        sortVersionDesc: "เวอร์ชันใหม่ → เก่า",
-        sortVersionAsc: "เวอร์ชันเก่า → ใหม่",
-        toggleThemeText: "Light Mode",
-        modalAddTitle: "เพิ่ม Executor",
-        modalEditTitle: "แก้ไข Executor",
-        labelName: "ชื่อตัว Executor",
-        placeholderName: "เช่น Arceus X",
-        labelVersion: "เวอร์ชัน",
-        placeholderVersion: "เช่น v3.2.1",
-        labelPlatforms: "แพลตฟอร์ม",
-        labelLink: "ลิงก์",
-        labelStatus: "สถานะ",
-        btnSave: "บันทึก",
-        btnCancel: "ยกเลิก",
-        emptyState: "ยังไม่มี Executor ในระบบ 😭 คลิก “เพิ่ม Executor” เพื่อเริ่มต้น",
-        labelUpdated: "อัปเดต:",
-        labelVersionText: "เวอร์ชัน:",
-        labelStatusText: "สถานะ:",
-        confirmDelete: "คุณแน่ใจว่าจะลบหรือไม่?",
-        copied: "คัดลอกสำเร็จ",
-        added: "เพิ่มสำเร็จ",
-        edited: "แก้ไขสำเร็จ",
-        deleted: "ลบสำเร็จ",
-        importSuccess: "Import สำเร็จ",
-        invalidFile: "ไฟล์ไม่ถูกต้อง",
-        jsonInvalid: "ไฟล์ JSON ไม่ถูกต้อง",
-        pin: "ปักหมุด",
-        unpin: "ยกเลิกปักหมุด"
-      },
-      en: {
-        header: "Executor Link Hub",
-        btnAdd: "➕ Add Executor",
-        btnCopyAll: "📋 Copy All Links",
-        btnExport: "Export JSON",
-        btnImport: "Import JSON",
-        searchPlaceholder: "Search Executor...",
-        filterAll: "All Platforms",
-        sortNameAsc: "Name A → Z",
-        sortNameDesc: "Name Z → A",
-        sortVersionDesc: "Version New → Old",
-        sortVersionAsc: "Version Old → New",
-        toggleThemeText: "Dark Mode",
-        modalAddTitle: "Add Executor",
-        modalEditTitle: "Edit Executor",
-        labelName: "Executor Name",
-        placeholderName: "e.g. Arceus X",
-        labelVersion: "Version",
-        placeholderVersion: "e.g. v3.2.1",
-        labelPlatforms: "Platforms",
-        labelLink: "Link",
-        labelStatus: "Status",
-        btnSave: "Save",
-        btnCancel: "Cancel",
-        emptyState: "No executors yet 😭 Click “Add Executor” to start",
-        labelUpdated: "Updated:",
-        labelVersionText: "Version:",
-        labelStatusText: "Status:",
-        confirmDelete: "Are you sure you want to delete?",
-        copied: "Copied successfully",
-        added: "Added successfully",
-        edited: "Edited successfully",
-        deleted: "Deleted successfully",
-        importSuccess: "Import success",
-        invalidFile: "Invalid file",
-        jsonInvalid: "JSON invalid",
-        pin: "Pin",
-        unpin: "Unpin"
+    function addExecutorToDB(executor) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('executors', 'readwrite');
+        const store = tx.objectStore('executors');
+        const req = store.add(executor);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function updateExecutorInDB(executor) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('executors', 'readwrite');
+        const store = tx.objectStore('executors');
+        const req = store.put(executor);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function deleteExecutorFromDB(id) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('executors', 'readwrite');
+        const store = tx.objectStore('executors');
+        const req = store.delete(id);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function fetchAllExecutorsFromDB() {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('executors', 'readonly');
+        const store = tx.objectStore('executors');
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    let executors = [];
+    let sharedExecutors = [];
+    let editIndex = null;
+    let lastOperatedIndex = null;
+    let collapseState = {};
+    let debounceDraftTimer = null;
+
+    const cardContainer     = document.getElementById('section-container');
+    const sharedSection     = document.getElementById('shared-section');
+    const sharedCards       = document.getElementById('shared-cards');
+    const filterPlatform    = document.getElementById('filter-platform');
+    const filterHidden      = document.getElementById('filter-hidden');
+    const btnAdd            = document.getElementById('btn-add');
+    const btnShare          = document.getElementById('btn-share');
+    const btnLoadShared     = document.getElementById('btn-load-shared');
+    const btnStats          = document.getElementById('btn-stats');
+    const modal             = document.getElementById('modal-form');
+    const closeModalBtn     = document.getElementById('close-modal');
+    const modalTitle        = document.getElementById('modal-title');
+    const nameInput         = document.getElementById('executor-name');
+    const versionInput      = document.getElementById('executor-version');
+    const platformsSelect   = document.getElementById('executor-platforms');
+    const tagsInput         = document.getElementById('executor-tags');
+    const linkInput         = document.getElementById('executor-link');
+    const statusSelect      = document.getElementById('executor-status');
+    const hiddenSelect      = document.getElementById('executor-hidden');
+    const btnSave           = document.getElementById('btn-save');
+    const btnCancel         = document.getElementById('btn-cancel');
+    const toast             = document.getElementById('toast');
+
+    const PLATFORMS = ['Android','iOS','Windows','macOS'];
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function copyLink(link) {
+      navigator.clipboard.writeText(link)
+        .then(() => showToast('Copied successfully'));
+    }
+
+    function formatTags(tagsArray) {
+      return tagsArray.map(tag => `<span class="tag">${tag.trim()}</span>`).join('');
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function saveDraft() {
+      clearTimeout(debounceDraftTimer);
+      debounceDraftTimer = setTimeout(() => {
+        const draft = {
+          name: nameInput.value.trim(),
+          version: versionInput.value.trim(),
+          tags: tagsInput.value.trim(),
+          platforms: [...platformsSelect.selectedOptions].map(opt => opt.value),
+          link: linkInput.value.trim(),
+          status: statusSelect.value,
+          hidden: hiddenSelect.value
+        };
+        localStorage.setItem('executorDraft', JSON.stringify(draft));
+        showToast('Draft saved');
+      }, 1000);
+    }
+
+    function loadDraft() {
+      const data = localStorage.getItem('executorDraft');
+      if (data) {
+        try {
+          const draft = JSON.parse(data);
+          nameInput.value = draft.name || '';
+          versionInput.value = draft.version || '';
+          tagsInput.value = draft.tags || '';
+          [...platformsSelect.options].forEach(opt => opt.selected = (draft.platforms || []).includes(opt.value));
+          linkInput.value = draft.link || '';
+          statusSelect.value = draft.status || 'Online';
+          hiddenSelect.value = draft.hidden || 'false';
+          showToast('Draft loaded');
+        } catch {}
       }
-    };
-
-    function loadData() {
-      const data = localStorage.getItem(STORAGE_KEY);
-      executors = data ? JSON.parse(data) : [];
     }
 
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(executors));
+    function clearDraft() {
+      localStorage.removeItem('executorDraft');
+      showToast('Draft cleared');
     }
+
+    async function loadDataAndRender() {
+      executors = await fetchAllExecutorsFromDB();
+      renderCards();
+    }
+
+    function renderCards() {
+      cardContainer.innerHTML = '';
+      const platFilter = filterPlatform.value;
+      const hiddenFilter = filterHidden.value;
+
+      let filtered = executors.filter(e => {
+        const matchPlat = platFilter === 'All' || e.platforms.includes(platFilter);
+        const matchHidden = (hiddenFilter === 'All')
+          || (hiddenFilter === 'Visible' && !e.hidden)
+          || (hiddenFilter === 'Hidden' && e.hidden);
+        return matchPlat && matchHidden;
+      });
+
+      if (filtered.length === 0) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'empty-state';
+        emptyDiv.textContent = 'No executors yet 😭 Click “Add Executor” to start';
+        cardContainer.appendChild(emptyDiv);
+        return;
+      }
+
+      const groups = {};
+      PLATFORMS.forEach(p => groups[p] = []);
+      filtered.forEach(e => {
+        e.platforms.forEach(p => {
+          if (groups[p]) groups[p].push(e);
+        });
+      });
+
+      PLATFORMS.forEach(platform => {
+        const items = groups[platform];
+        if (items.length === 0) return;
+        const pinnedList = items.filter(e => e.pinned);
+        const normalList = items.filter(e => !e.pinned);
+        const combinedItems = [...pinnedList, ...normalList];
+
+        const section = document.createElement('div');
+        section.className = 'platform-section';
+        const header = document.createElement('div');
+        header.className = 'section-header';
+        header.innerHTML = `
+          <h3>${platform} (${items.length})</h3>
+          <span class="toggle-icon" data-platform="${platform}">${collapseState[platform] ? '▼' : '▲'}</span>
+        `;
+        header.addEventListener('click', () => {
+          collapseState[platform] = !collapseState[platform];
+          renderCards();
+        });
+        section.appendChild(header);
+        if (!collapseState[platform]) {
+          const grid = document.createElement('div');
+          grid.className = 'cards-grid';
+          combinedItems.forEach(exe => {
+            const card = document.createElement('div');
+            card.className = 'card' + (exe.hidden ? ' hidden' : '');
+            card.innerHTML = `
+              <h2>${exe.name}</h2>
+              <div class="tags-container">${formatTags(exe.tags)}</div>
+              <p><strong>Version:</strong> ${exe.version}</p>
+              <p><strong>Status:</strong> ${exe.status}</p>
+              <p><strong>Hidden:</strong> ${exe.hidden ? 'Hidden' : 'Visible'}</p>
+              ${exe.updatedAt ? `<p><strong>Updated:</strong> ${formatDate(exe.updatedAt)}</p>` : ''}
+              <div class="actions">
+                <button class="btn-copy" aria-label="Copy Link">📋</button>
+                <button class="btn-edit" aria-label="Edit Executor">✏️</button>
+                <button class="btn-delete" aria-label="Delete Executor">🗑️</button>
+                <button class="btn-pin" aria-label="${exe.pinned ? 'Unpin' : 'Pin'}">${exe.pinned ? '📌' : '📍'}</button>
+                <button class="btn-hide" aria-label="${exe.hidden ? 'Unhide' : 'Hide'}">${exe.hidden ? '👁️' : '🚫'}</button>
+                <button class="btn-check" aria-label="Check Link">🔗</button>
+              </div>
+            `;
+            card.querySelector('.btn-copy').addEventListener('click', () => copyLink(exe.link));
+            card.querySelector('.btn-edit').addEventListener('click', () => openModal('edit', exe.id));
+            card.querySelector('.btn-delete').addEventListener('click', () => deleteExecutor(exe.id));
+            card.querySelector('.btn-pin').addEventListener('click', () => togglePin(exe.id));
+            card.querySelector('.btn-hide').addEventListener('click', () => toggleHide(exe.id));
+            card.querySelector('.btn-check').addEventListener('click', () => checkLink(exe.link));
+            grid.appendChild(card);
+          });
+          section.appendChild(grid);
+        }
+        cardContainer.appendChild(section);
+      });
+    }
+
+    function renderSharedExecutors() {
+      sharedCards.innerHTML = '';
+      if (sharedExecutors.length === 0) {
+        sharedSection.style.display = 'none';
+        return;
+      }
+      sharedSection.style.display = 'block';
+      sharedExecutors.forEach(exe => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.marginBottom = '1rem';
+        card.innerHTML = `
+          <h2>${exe.name}</h2>
+          <div class="tags-container">${formatTags(exe.tags)}</div>
+          <p><strong>Version:</strong> ${exe.version}</p>
+          <p><strong>Status:</strong> ${exe.status}</p>
+          ${exe.updatedAt ? `<p><strong>Updated:</strong> ${formatDate(exe.updatedAt)}</p>` : ''}
+          <button class="btn-check" aria-label="Check Link">🔗 Check Link</button>
+        `;
+        card.querySelector('.btn-check').addEventListener('click', () => checkLink(exe.link));
+        sharedCards.appendChild(card);
+      });
+    }
+
+    function openModal(mode, id = null) {
+      modal.classList.add('active');
+      nameInput.focus();
+      if (mode === 'add') {
+        modalTitle.textContent = 'Add Executor';
+        nameInput.value = '';
+        versionInput.value = '';
+        tagsInput.value = '';
+        [...platformsSelect.options].forEach(opt => opt.selected = false);
+        linkInput.value = '';
+        statusSelect.value = 'Online';
+        hiddenSelect.value = 'false';
+        editIndex = null;
+        loadDraft();
+      } else if (mode === 'edit') {
+        const exe = executors.find(e => e.id === id);
+        modalTitle.textContent = 'Edit Executor';
+        nameInput.value = exe.name;
+        versionInput.value = exe.version;
+        tagsInput.value = exe.tags.join(', ');
+        [...platformsSelect.options].forEach(opt => opt.selected = exe.platforms.includes(opt.value));
+        linkInput.value = exe.link;
+        statusSelect.value = exe.status;
+        hiddenSelect.value = exe.hidden.toString();
+        editIndex = id;
+        clearDraft();
+      }
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      clearDraft();
+    }
+
+    btnSave.addEventListener('click', async () => {
+      const name = nameInput.value.trim();
+      const version = versionInput.value.trim();
+      const tags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t !== '');
+      const platforms = [...platformsSelect.selectedOptions].map(opt => opt.value);
+      const link = linkInput.value.trim();
+      const status = statusSelect.value;
+      const hidden = hiddenSelect.value === 'true';
+      if (!name || !version || platforms.length === 0 || !link) {
+        showToast('Invalid input');
+        return;
+      }
+      const nowISO = new Date().toISOString();
+      if (editIndex !== null) {
+        const exe = executors.find(e => e.id === editIndex);
+        exe.name = name;
+        exe.version = version;
+        exe.tags = tags;
+        exe.platforms = platforms;
+        exe.link = link;
+        exe.status = status;
+        exe.hidden = hidden;
+        exe.updatedAt = nowISO;
+        await updateExecutorInDB(exe);
+        showToast('Edited successfully');
+        lastOperatedIndex = editIndex;
+      } else {
+        const newExe = {
+          name, version, tags, platforms, link, status, hidden,
+          updatedAt: nowISO, pinned: false
+        };
+        const newId = await addExecutorToDB(newExe);
+        newExe.id = newId;
+        showToast('Added successfully');
+        lastOperatedIndex = newId;
+      }
+      await loadDataAndRender();
+      closeModal();
+    });
+
+    closeModalBtn.addEventListener('click', closeModal);
+    btnCancel.addEventListener('click', closeModal);
+
+    [nameInput, versionInput, tagsInput, linkInput].forEach(el => {
+      el.addEventListener('input', saveDraft);
+    });
+    platformsSelect.addEventListener('change', saveDraft);
+    statusSelect.addEventListener('change', saveDraft);
+    hiddenSelect.addEventListener('change', saveDraft);
+
+    async function deleteExecutor(id) {
+      if (!confirm('Are you sure you want to delete?')) return;
+      await deleteExecutorFromDB(id);
+      showToast('Deleted successfully');
+      lastOperatedIndex = null;
+      await loadDataAndRender();
+    }
+
+    async function togglePin(id) {
+      const exe = executors.find(e => e.id === id);
+      exe.pinned = !exe.pinned;
+      await updateExecutorInDB(exe);
+      const msg = exe.pinned ? 'Pinned' : 'Unpinned';
+      showToast(`${msg} successfully`);
+      lastOperatedIndex = id;
+      await loadDataAndRender();
+    }
+
+    async function toggleHide(id) {
+      const exe = executors.find(e => e.id === id);
+      exe.hidden = !exe.hidden;
+      await updateExecutorInDB(exe);
+      const msg = exe.hidden ? 'Hidden' : 'Unhidden';
+      showToast(`${msg} successfully`);
+      lastOperatedIndex = id;
+      await loadDataAndRender();
+    }
+
+    function checkLink(url) {
+      fetch(url, { method: 'HEAD' })
+        .then(response => {
+          if (response.ok) showToast('Link OK');
+          else showToast('Link unreachable');
+        })
+        .catch(() => showToast('Link unreachable'));
+    }
+
+    function showStats() {
+      const total = executors.length;
+      const visible = executors.filter(e => !e.hidden).length;
+      const hidden = total - visible;
+      let message = `📊 Executor Stats\n\nTotal Executors: ${total}\nVisible: ${visible}\nHidden: ${hidden}\n\nPlatform Breakdown:\n`;
+      const byPlatform = {};
+      PLATFORMS.forEach(p => byPlatform[p] = 0);
+      executors.forEach(e => {
+        e.platforms.forEach(p => {
+          if (byPlatform[p] !== undefined) byPlatform[p]++;
+        });
+      });
+      PLATFORMS.forEach(p => {
+        message += `• ${p}: ${byPlatform[p]}\n`;
+      });
+      alert(message);
+    }
+
+    function shareExecutors() {
+      const data = JSON.stringify(executors);
+      navigator.clipboard.writeText(data).then(() => {
+        showToast('Executor JSON copied to clipboard');
+      });
+    }
+
+    function loadSharedExecutors() {
+      const input = prompt('Paste shared JSON here:');
+      if (!input) return;
+      try {
+        const parsed = JSON.parse(input);
+        if (!Array.isArray(parsed)) throw 'Invalid format';
+        sharedExecutors = parsed.map(e => ({
+          name: e.name || 'Unknown',
+          version: e.version || '',
+          tags: Array.isArray(e.tags) ? e.tags : [],
+          platforms: Array.isArray(e.platforms) ? e.platforms : [],
+          link: e.link || '',
+          status: e.status || 'Online',
+          hidden: !!e.hidden,
+          updatedAt: e.updatedAt || ''
+        }));
+        renderSharedExecutors();
+        showToast('Shared executors loaded');
+      } catch {
+        showToast('Invalid JSON');
+      }
+    }
+
+    btnAdd.addEventListener('click', () => openModal('add'));
+    btnShare.addEventListener('click', shareExecutors);
+    btnLoadShared.addEventListener('click', loadSharedExecutors);
+    btnStats.addEventListener('click', showStats);
+
+    filterPlatform.addEventListener('change', renderCards);
+    filterHidden.addEventListener('change', renderCards);
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      PLATFORMS.forEach(p => collapseState[p] = false);
+      await openDatabase();
+      await loadDataAndRender();
+    });
 
     function compareVersion(v1, v2) {
       const a = v1.replace(/^v/, '').split('.').map(n => parseInt(n));
@@ -507,302 +854,6 @@
       }
       return 0;
     }
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2000);
-    }
-
-    function copyLink(link) {
-      navigator.clipboard.writeText(link)
-        .then(() => showToast(i18n[document.documentElement.lang].copied));
-    }
-
-    btnCopyAll.addEventListener('click', () => {
-      const allLinks = executors.map(e => e.link).join('\n');
-      navigator.clipboard.writeText(allLinks)
-        .then(() => showToast(i18n[document.documentElement.lang].copied));
-    });
-
-    btnAdd.addEventListener('click', () => openModal('add'));
-    closeModalBtn.addEventListener('click', closeModal);
-    btnCancel.addEventListener('click', closeModal);
-    function openModal(mode, index = null) {
-      modal.classList.add('active');
-      nameInput.focus();
-      if (mode === 'add') {
-        modalTitle.textContent = i18n[document.documentElement.lang].modalAddTitle;
-        nameInput.value = '';
-        versionInput.value = '';
-        [...platformsSelect.options].forEach(opt => opt.selected = false);
-        linkInput.value = '';
-        statusSelect.value = 'Online';
-        editIndex = null;
-      } else if (mode === 'edit') {
-        modalTitle.textContent = i18n[document.documentElement.lang].modalEditTitle;
-        const exe = executors[index];
-        nameInput.value = exe.name;
-        versionInput.value = exe.version;
-        [...platformsSelect.options].forEach(opt => opt.selected = exe.platforms.includes(opt.value));
-        linkInput.value = exe.link;
-        statusSelect.value = exe.status;
-        editIndex = index;
-      }
-    }
-
-    function closeModal() {
-      modal.classList.remove('active');
-    }
-
-    btnSave.addEventListener('click', () => {
-      const name = nameInput.value.trim();
-      const version = versionInput.value.trim();
-      const platforms = [...platformsSelect.selectedOptions].map(opt => opt.value);
-      const link = linkInput.value.trim();
-      const status = statusSelect.value;
-      if (!name || !version || platforms.length === 0 || !link) {
-        showToast(i18n[document.documentElement.lang].invalidFile);
-        return;
-      }
-      const nowISO = new Date().toISOString();
-      if (editIndex !== null) {
-        executors[editIndex] = {
-          ...executors[editIndex],
-          name, version, platforms, link, status, updatedAt: nowISO
-        };
-        showToast(i18n[document.documentElement.lang].edited);
-      } else {
-        executors.push({ name, version, platforms, link, status, updatedAt: nowISO, pinned: false });
-        showToast(i18n[document.documentElement.lang].added);
-      }
-      saveData();
-      renderCards();
-      closeModal();
-    });
-
-    function deleteExecutor(index) {
-      const confirmMsg = i18n[document.documentElement.lang].confirmDelete;
-      if (confirm(confirmMsg)) {
-        executors.splice(index, 1);
-        saveData();
-        renderCards();
-        showToast(i18n[document.documentElement.lang].deleted);
-      }
-    }
-
-    function togglePin(index) {
-      executors[index].pinned = !executors[index].pinned;
-      saveData();
-      renderCards();
-      const msg = executors[index].pinned
-        ? i18n[document.documentElement.lang].pin + ' ✓'
-        : i18n[document.documentElement.lang].unpin;
-      showToast(msg);
-    }
-
-    searchInput.addEventListener('input', () => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(renderCards, 200);
-    });
-
-    filterPlatform.addEventListener('change', renderCards);
-    sortBySelect.addEventListener('change', renderCards);
-
-    btnExport.addEventListener('click', () => {
-      const dataStr = JSON.stringify(executors, null, 2);
-      const blob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'executors.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    btnImport.addEventListener('click', () => importInput.click());
-    importInput.addEventListener('change', () => {
-      const file = importInput.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          try {
-            const imported = JSON.parse(e.target.result);
-            if (Array.isArray(imported)) {
-              executors = imported;
-              saveData();
-              renderCards();
-              showToast(i18n[document.documentElement.lang].importSuccess);
-            } else {
-              showToast(i18n[document.documentElement.lang].invalidFile);
-            }
-          } catch {
-            showToast(i18n[document.documentElement.lang].jsonInvalid);
-          }
-        };
-        reader.readAsText(file);
-      }
-    });
-
-    themeCheckbox.addEventListener('change', () => {
-      if (themeCheckbox.checked) {
-        document.documentElement.setAttribute('data-theme', 'light');
-        toggleThemeText.textContent = i18n[document.documentElement.lang].toggleThemeText;
-        localStorage.setItem('theme', 'light');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        toggleThemeText.textContent = i18n[document.documentElement.lang].toggleThemeText;
-        localStorage.setItem('theme', 'dark');
-      }
-    });
-
-    function setThemeFromPreference() {
-      const theme = localStorage.getItem('theme');
-      if (theme === 'light') {
-        themeCheckbox.checked = true;
-        document.documentElement.setAttribute('data-theme', 'light');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-      toggleThemeText.textContent = i18n[document.documentElement.lang].toggleThemeText;
-    }
-
-    langToggle.addEventListener('click', () => {
-      const isTH = document.documentElement.lang === 'th';
-      document.documentElement.lang = isTH ? 'en' : 'th';
-      langToggle.textContent = isTH ? 'TH' : 'EN';
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        el.textContent = i18n[document.documentElement.lang][key];
-      });
-      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        el.placeholder = i18n[document.documentElement.lang][key];
-      });
-      setThemeFromPreference();
-      renderCards();
-    });
-
-    function renderCards() {
-      cardContainer.innerHTML = '';
-      if (executors.length === 0) {
-        const empty = document.createElement('div');
-        empty.className = 'empty-state';
-        empty.textContent = i18n[document.documentElement.lang].emptyState;
-        cardContainer.appendChild(empty);
-        return;
-      }
-
-      const term = searchInput.value.toLowerCase();
-      const platformFilterVal = filterPlatform.value;
-      const sortBy = sortBySelect.value;
-
-      let filtered = executors.filter(e => {
-        const matchesName = e.name.toLowerCase().includes(term);
-        const matchesPlat = platformFilterVal === 'All' || e.platforms.includes(platformFilterVal);
-        return matchesName && matchesPlat;
-      });
-
-      if (sortBy === 'name-asc') {
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-      } else if (sortBy === 'name-desc') {
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
-      } else if (sortBy === 'version-desc') {
-        filtered.sort((a, b) => compareVersion(b.version, a.version));
-      } else if (sortBy === 'version-asc') {
-        filtered.sort((a, b) => compareVersion(a.version, b.version));
-      }
-
-      const pinnedList = filtered.filter(e => e.pinned);
-      const normalList = filtered.filter(e => !e.pinned);
-      const combined = [...pinnedList, ...normalList];
-
-      combined.forEach((exe, idx) => {
-        const index = executors.indexOf(exe);
-        const card = document.createElement('div');
-        card.className = 'card';
-
-        const title = document.createElement('h2');
-        title.textContent = exe.name;
-        card.appendChild(title);
-
-        const versionP = document.createElement('p');
-        versionP.innerHTML = `<strong>${i18n[document.documentElement.lang].labelVersionText}</strong> ${exe.version}`;
-        card.appendChild(versionP);
-
-        const platformsDiv = document.createElement('div');
-        platformsDiv.className = 'platforms';
-        exe.platforms.forEach(pf => {
-          const span = document.createElement('span');
-          span.className = 'platform';
-          span.textContent = pf;
-          platformsDiv.appendChild(span);
-        });
-        card.appendChild(platformsDiv);
-
-        const statusP = document.createElement('p');
-        statusP.innerHTML = `<strong>${i18n[document.documentElement.lang].labelStatusText}</strong> ${exe.status}`;
-        card.appendChild(statusP);
-
-        if (exe.updatedAt) {
-          const d = new Date(exe.updatedAt);
-          const dateStr = d.toLocaleDateString(
-            document.documentElement.lang === 'th' ? 'th-TH' : 'en-US',
-            { year: 'numeric', month: 'short', day: 'numeric' }
-          );
-          const updateP = document.createElement('p');
-          updateP.innerHTML = `<strong>${i18n[document.documentElement.lang].labelUpdated}</strong> ${dateStr}`;
-          card.appendChild(updateP);
-        }
-
-        const actionsDiv = document.createElement('div');
-        actionsDiv.className = 'actions';
-
-        const btnCopy = document.createElement('button');
-        btnCopy.className = 'btn-copy';
-        btnCopy.setAttribute('aria-label', 'Copy Link');
-        btnCopy.textContent = '📋';
-        btnCopy.onclick = () => copyLink(exe.link);
-        actionsDiv.appendChild(btnCopy);
-
-        const btnEdit = document.createElement('button');
-        btnEdit.className = 'btn-edit';
-        btnEdit.setAttribute('aria-label', 'Edit Executor');
-        btnEdit.textContent = '✏️';
-        btnEdit.onclick = () => openModal('edit', index);
-        actionsDiv.appendChild(btnEdit);
-
-        const btnDelete = document.createElement('button');
-        btnDelete.className = 'btn-delete';
-        btnDelete.setAttribute('aria-label', 'Delete Executor');
-        btnDelete.textContent = '🗑️';
-        btnDelete.onclick = () => deleteExecutor(index);
-        actionsDiv.appendChild(btnDelete);
-
-        const btnPin = document.createElement('button');
-        btnPin.className = 'btn-pin';
-        btnPin.setAttribute('aria-label', exec.pinned ? 'Unpin Executor' : 'Pin Executor');
-        btnPin.textContent = exe.pinned ? '📌' : '📍';
-        btnPin.onclick = () => togglePin(index);
-        actionsDiv.appendChild(btnPin);
-
-        card.appendChild(actionsDiv);
-        cardContainer.appendChild(card);
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      loadData();
-      setThemeFromPreference();
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        el.textContent = i18n[document.documentElement.lang][key];
-      });
-      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        el.placeholder = i18n[document.documentElement.lang][key];
-      });
-      renderCards();
-    });
   </script>
 </body>
 </html>
