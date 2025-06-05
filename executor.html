@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YANZZ Executor Link Hub</title>
+  <title>YANZZ Executor</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -14,7 +14,6 @@
       --accent2: #9c27b0;
       --border-radius: 10px;
       --shadow-color: rgba(0, 0, 0, 0.2);
-      --hide-opacity: 0.4;
     }
     * {
       margin: 0;
@@ -109,44 +108,41 @@
       box-shadow: 0 4px 12px var(--shadow-color);
       position: relative;
       overflow: hidden;
-      transition: transform 0.2s, opacity 0.2s;
-    }
-    .card.hidden {
-      opacity: var(--hide-opacity);
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 6px 18px var(--shadow-color);
+    }
+    .card img {
+      max-width: 80%;
+      max-height: 120px;
+      border-radius: var(--border-radius);
+      margin-bottom: 0.75rem;
+      object-fit: cover;
     }
     .card h2 {
       font-size: 1.2rem;
       color: var(--accent);
       margin-bottom: 6px;
       text-shadow: 0 0 4px var(--accent);
+      text-align: center;
     }
     .card p {
       font-size: 0.9rem;
       color: #ccc;
       margin-bottom: 6px;
-    }
-    .tags-container {
-      margin-bottom: 8px;
-    }
-    .tag {
-      display: inline-block;
-      padding: 0.2rem 0.4rem;
-      background: var(--accent2);
-      color: #000;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      margin-right: 0.25rem;
-      margin-bottom: 4px;
+      text-align: center;
     }
     .card .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       margin-top: 10px;
+      width: 100%;
     }
     .card .actions button {
       flex: 1;
@@ -167,8 +163,6 @@
     .btn-copy   { background: var(--accent); color: #fff; }
     .btn-edit   { background: var(--accent2); color: #000; }
     .btn-delete { background: #f44336; color: #fff; }
-    .btn-pin    { background: #ffd700; color: #000; }
-    .btn-hide   { background: #888; color: #fff; }
     .btn-check  { background: #4caf50; color: #fff; }
 
     .modal {
@@ -304,16 +298,10 @@
       <option value="Windows">Windows</option>
       <option value="macOS">macOS</option>
     </select>
-    <select id="filter-hidden" aria-label="Visibility Filter">
-      <option value="All">All</option>
-      <option value="Visible">Visible</option>
-      <option value="Hidden">Hidden</option>
-    </select>
     <button id="btn-add">➕ Add Executor</button>
-    <button id="btn-stats">📊 Stats</button>
   </div>
 
-  <!-- Card Sections Container -->
+  <!-- Card Sections Container (visible to all) -->
   <div class="section-container" id="section-container"></div>
 
   <!-- Modal for Add/Edit -->
@@ -331,6 +319,7 @@
           <input type="text" id="executor-version" placeholder="e.g. v3.2.1" aria-label="Executor Version" />
         </div>
       </div>
+
       <label for="executor-platforms">Platforms</label>
       <select id="executor-platforms" multiple aria-label="Select Platforms">
         <option value="Android">Android</option>
@@ -339,8 +328,8 @@
         <option value="macOS">macOS</option>
       </select>
 
-      <label for="executor-tags">Tags (comma-separated)</label>
-      <input type="text" id="executor-tags" placeholder="e.g. Free, Premium" aria-label="Tags" />
+      <label for="executor-image">Select Image</label>
+      <input type="file" id="executor-image" accept="image/*" aria-label="Executor Image" />
 
       <label for="executor-link">Download Link</label>
       <input type="url" id="executor-link" placeholder="https://" aria-label="Executor Link" />
@@ -354,13 +343,7 @@
             <option value="Beta">Beta</option>
           </select>
         </div>
-        <div>
-          <label for="executor-hidden">Visibility</label>
-          <select id="executor-hidden" aria-label="Hidden">
-            <option value="false">Visible</option>
-            <option value="true">Hidden</option>
-          </select>
-        </div>
+        <div></div>
       </div>
 
       <div class="form-actions">
@@ -375,7 +358,7 @@
   <script>
     /***** IndexedDB Setup *****/
     const DB_NAME = 'executorsDB';
-    const DB_VERSION = 1;
+    const DB_VERSION = 2;
     let db;
 
     function openDatabase() {
@@ -442,22 +425,20 @@
     let lastOperatedIndex = null;
     let collapseState = {};
     let debounceDraftTimer = null;
+    let selectedImageData = "";
 
     const cardContainer    = document.getElementById('section-container');
     const filterPlatform   = document.getElementById('filter-platform');
-    const filterHidden     = document.getElementById('filter-hidden');
     const btnAdd           = document.getElementById('btn-add');
-    const btnStats         = document.getElementById('btn-stats');
     const modal            = document.getElementById('modal-form');
     const closeModalBtn    = document.getElementById('close-modal');
     const modalTitle       = document.getElementById('modal-title');
     const nameInput        = document.getElementById('executor-name');
     const versionInput     = document.getElementById('executor-version');
     const platformsSelect  = document.getElementById('executor-platforms');
-    const tagsInput        = document.getElementById('executor-tags');
+    const imageInput       = document.getElementById('executor-image');
     const linkInput        = document.getElementById('executor-link');
     const statusSelect     = document.getElementById('executor-status');
-    const hiddenSelect     = document.getElementById('executor-hidden');
     const btnSave          = document.getElementById('btn-save');
     const btnCancel        = document.getElementById('btn-cancel');
     const toast            = document.getElementById('toast');
@@ -476,10 +457,6 @@
         .then(() => showToast('Copied successfully'));
     }
 
-    function formatTags(tagsArray) {
-      return tagsArray.map(tag => `<span class="tag">${tag.trim()}</span>`).join('');
-    }
-
     function formatDate(iso) {
       if (!iso) return '';
       const d = new Date(iso);
@@ -492,11 +469,10 @@
         const draft = {
           name: nameInput.value.trim(),
           version: versionInput.value.trim(),
-          tags: tagsInput.value.trim(),
           platforms: [...platformsSelect.selectedOptions].map(opt => opt.value),
           link: linkInput.value.trim(),
           status: statusSelect.value,
-          hidden: hiddenSelect.value
+          imageData: selectedImageData
         };
         localStorage.setItem('executorDraft', JSON.stringify(draft));
         showToast('Draft saved');
@@ -510,11 +486,10 @@
           const draft = JSON.parse(data);
           nameInput.value = draft.name || '';
           versionInput.value = draft.version || '';
-          tagsInput.value = draft.tags || '';
           [...platformsSelect.options].forEach(opt => opt.selected = (draft.platforms || []).includes(opt.value));
           linkInput.value = draft.link || '';
           statusSelect.value = draft.status || 'Online';
-          hiddenSelect.value = draft.hidden || 'false';
+          selectedImageData = draft.imageData || "";
           showToast('Draft loaded');
         } catch {}
       }
@@ -525,6 +500,21 @@
       showToast('Draft cleared');
     }
 
+    /***** Image Handling *****/
+    imageInput.addEventListener('change', event => {
+      const file = event.target.files[0];
+      if (!file) {
+        selectedImageData = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = e => {
+        selectedImageData = e.target.result; // base64 data URL
+        showToast('Image selected');
+      };
+      reader.readAsDataURL(file);
+    });
+
     /***** Rendering *****/
     async function loadDataAndRender() {
       executors = await fetchAllExecutorsFromDB();
@@ -534,27 +524,10 @@
     function renderCards() {
       cardContainer.innerHTML = '';
       const platFilter = filterPlatform.value;
-      const hiddenFilter = filterHidden.value;
-
-      let filtered = executors.filter(e => {
-        const matchPlat = platFilter === 'All' || e.platforms.includes(platFilter);
-        const matchHidden = (hiddenFilter === 'All')
-          || (hiddenFilter === 'Visible' && !e.hidden)
-          || (hiddenFilter === 'Hidden' && e.hidden);
-        return matchPlat && matchHidden;
-      });
-
-      if (filtered.length === 0) {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.className = 'empty-state';
-        emptyDiv.textContent = 'No executors yet 😭 Click “Add Executor” to start';
-        cardContainer.appendChild(emptyDiv);
-        return;
-      }
 
       const groups = {};
       PLATFORMS.forEach(p => groups[p] = []);
-      filtered.forEach(e => {
+      executors.forEach(e => {
         e.platforms.forEach(p => {
           if (groups[p]) groups[p].push(e);
         });
@@ -563,9 +536,7 @@
       PLATFORMS.forEach(platform => {
         const items = groups[platform];
         if (items.length === 0) return;
-        const pinnedList = items.filter(e => e.pinned);
-        const normalList = items.filter(e => !e.pinned);
-        const combinedItems = [...pinnedList, ...normalList];
+        const combinedItems = items.slice(); // no pin sorting
 
         const section = document.createElement('div');
         section.className = 'platform-section';
@@ -585,28 +556,23 @@
           grid.className = 'cards-grid';
           combinedItems.forEach(exe => {
             const card = document.createElement('div');
-            card.className = 'card' + (exe.hidden ? ' hidden' : '');
+            card.className = 'card';
             card.innerHTML = `
+              ${exe.imageData ? `<img src="${exe.imageData}" alt="${exe.name}"/>` : ''}
               <h2>${exe.name}</h2>
-              <div class="tags-container">${formatTags(exe.tags)}</div>
               <p><strong>Version:</strong> ${exe.version}</p>
               <p><strong>Status:</strong> ${exe.status}</p>
-              <p><strong>Hidden:</strong> ${exe.hidden ? 'Hidden' : 'Visible'}</p>
               ${exe.updatedAt ? `<p><strong>Updated:</strong> ${formatDate(exe.updatedAt)}</p>` : ''}
               <div class="actions">
                 <button class="btn-copy" aria-label="Copy Link">📋</button>
                 <button class="btn-edit" aria-label="Edit Executor">✏️</button>
                 <button class="btn-delete" aria-label="Delete Executor">🗑️</button>
-                <button class="btn-pin" aria-label="${exe.pinned ? 'Unpin' : 'Pin'}">${exe.pinned ? '📌' : '📍'}</button>
-                <button class="btn-hide" aria-label="${exe.hidden ? 'Unhide' : 'Hide'}">${exe.hidden ? '👁️' : '🚫'}</button>
                 <button class="btn-check" aria-label="Check Link">🔗</button>
               </div>
             `;
             card.querySelector('.btn-copy').addEventListener('click', () => copyLink(exe.link));
             card.querySelector('.btn-edit').addEventListener('click', () => openModal('edit', exe.id));
             card.querySelector('.btn-delete').addEventListener('click', () => deleteExecutor(exe.id));
-            card.querySelector('.btn-pin').addEventListener('click', () => togglePin(exe.id));
-            card.querySelector('.btn-hide').addEventListener('click', () => toggleHide(exe.id));
             card.querySelector('.btn-check').addEventListener('click', () => checkLink(exe.link));
             grid.appendChild(card);
           });
@@ -614,21 +580,28 @@
         }
         cardContainer.appendChild(section);
       });
+
+      if (executors.length === 0) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'empty-state';
+        emptyDiv.textContent = 'No executors yet 😭 Click “Add Executor” to start';
+        cardContainer.appendChild(emptyDiv);
+      }
     }
 
     /***** Modal Handling & Draft *****/
     function openModal(mode, id = null) {
       modal.classList.add('active');
       nameInput.focus();
+      imageInput.value = '';
+      selectedImageData = "";
       if (mode === 'add') {
         modalTitle.textContent = 'Add Executor';
         nameInput.value = '';
         versionInput.value = '';
-        tagsInput.value = '';
         [...platformsSelect.options].forEach(opt => opt.selected = false);
         linkInput.value = '';
         statusSelect.value = 'Online';
-        hiddenSelect.value = 'false';
         editIndex = null;
         loadDraft();
       } else if (mode === 'edit') {
@@ -636,11 +609,10 @@
         modalTitle.textContent = 'Edit Executor';
         nameInput.value = exe.name;
         versionInput.value = exe.version;
-        tagsInput.value = exe.tags.join(', ');
         [...platformsSelect.options].forEach(opt => opt.selected = exe.platforms.includes(opt.value));
         linkInput.value = exe.link;
         statusSelect.value = exe.status;
-        hiddenSelect.value = exe.hidden.toString();
+        selectedImageData = exe.imageData || "";
         editIndex = id;
         clearDraft();
       }
@@ -654,13 +626,21 @@
     btnSave.addEventListener('click', async () => {
       const name = nameInput.value.trim();
       const version = versionInput.value.trim();
-      const tags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t !== '');
       const platforms = [...platformsSelect.selectedOptions].map(opt => opt.value);
       const link = linkInput.value.trim();
       const status = statusSelect.value;
-      const hidden = hiddenSelect.value === 'true';
       if (!name || !version || platforms.length === 0 || !link) {
         showToast('Invalid input');
+        return;
+      }
+      // Duplicate check: same name+version
+      const exists = executors.some(e =>
+        e.name.toLowerCase() === name.toLowerCase() &&
+        e.version.toLowerCase() === version.toLowerCase() &&
+        (editIndex === null || e.id !== editIndex)
+      );
+      if (exists) {
+        showToast('Duplicate entry: same name and version');
         return;
       }
       const nowISO = new Date().toISOString();
@@ -668,19 +648,19 @@
         const exe = executors.find(e => e.id === editIndex);
         exe.name = name;
         exe.version = version;
-        exe.tags = tags;
         exe.platforms = platforms;
         exe.link = link;
         exe.status = status;
-        exe.hidden = hidden;
+        exe.imageData = selectedImageData;
         exe.updatedAt = nowISO;
         await updateExecutorInDB(exe);
         showToast('Edited successfully');
         lastOperatedIndex = editIndex;
       } else {
         const newExe = {
-          name, version, tags, platforms, link, status, hidden,
-          updatedAt: nowISO, pinned: false
+          name, version, platforms, link, status,
+          imageData: selectedImageData,
+          updatedAt: nowISO
         };
         const newId = await addExecutorToDB(newExe);
         newExe.id = newId;
@@ -694,12 +674,11 @@
     closeModalBtn.addEventListener('click', closeModal);
     btnCancel.addEventListener('click', closeModal);
 
-    [nameInput, versionInput, tagsInput, linkInput].forEach(el => {
+    [nameInput, versionInput, linkInput].forEach(el => {
       el.addEventListener('input', saveDraft);
     });
     platformsSelect.addEventListener('change', saveDraft);
     statusSelect.addEventListener('change', saveDraft);
-    hiddenSelect.addEventListener('change', saveDraft);
 
     /***** Action Handlers *****/
     async function deleteExecutor(id) {
@@ -707,26 +686,6 @@
       await deleteExecutorFromDB(id);
       showToast('Deleted successfully');
       lastOperatedIndex = null;
-      await loadDataAndRender();
-    }
-
-    async function togglePin(id) {
-      const exe = executors.find(e => e.id === id);
-      exe.pinned = !exe.pinned;
-      await updateExecutorInDB(exe);
-      const msg = exe.pinned ? 'Pinned' : 'Unpinned';
-      showToast(`${msg} successfully`);
-      lastOperatedIndex = id;
-      await loadDataAndRender();
-    }
-
-    async function toggleHide(id) {
-      const exe = executors.find(e => e.id === id);
-      exe.hidden = !exe.hidden;
-      await updateExecutorInDB(exe);
-      const msg = exe.hidden ? 'Hidden' : 'Unhidden';
-      showToast(`${msg} successfully`);
-      lastOperatedIndex = id;
       await loadDataAndRender();
     }
 
@@ -739,30 +698,9 @@
         .catch(() => showToast('Link unreachable'));
     }
 
-    function showStats() {
-      const total = executors.length;
-      const visible = executors.filter(e => !e.hidden).length;
-      const hidden = total - visible;
-      let message = `📊 Executor Stats\n\nTotal Executors: ${total}\nVisible: ${visible}\nHidden: ${hidden}\n\nPlatform Breakdown:\n`;
-      const byPlatform = {};
-      PLATFORMS.forEach(p => byPlatform[p] = 0);
-      executors.forEach(e => {
-        e.platforms.forEach(p => {
-          if (byPlatform[p] !== undefined) byPlatform[p]++;
-        });
-      });
-      PLATFORMS.forEach(p => {
-        message += `• ${p}: ${byPlatform[p]}\n`;
-      });
-      alert(message);
-    }
-
     /***** Event Listeners *****/
     btnAdd.addEventListener('click', () => openModal('add'));
-    btnStats.addEventListener('click', showStats);
-
     filterPlatform.addEventListener('change', renderCards);
-    filterHidden.addEventListener('change', renderCards);
 
     /***** Initialization *****/
     document.addEventListener('DOMContentLoaded', async () => {
@@ -770,16 +708,6 @@
       await openDatabase();
       await loadDataAndRender();
     });
-
-    function compareVersion(v1, v2) {
-      const a = v1.replace(/^v/, '').split('.').map(n => parseInt(n));
-      const b = v2.replace(/^v/, '').split('.').map(n => parseInt(n));
-      for (let i = 0; i < Math.max(a.length, b.length); i++) {
-        const na = a[i] || 0, nb = b[i] || 0;
-        if (na !== nb) return na - nb;
-      }
-      return 0;
-    }
   </script>
 </body>
 </html>
