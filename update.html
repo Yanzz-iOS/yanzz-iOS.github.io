@@ -1,120 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YANZZ - Update bot</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Segoe UI', sans-serif;
-      line-height: 1.6;
-      color: #ffffff;
-      background: url("https://cdn.discordapp.com/attachments/1243485467945734154/1380896399213854830/3211d90a0145d5169ec0354260ad0e2e.gif?ex=68482e7d&is=6846dcfd&hm=99efba66bc829608d14f986b246ce7dd56132af8695edec95a512b2171072347&") no-repeat center center fixed;
-      background-size: cover;
-      backdrop-filter: brightness(0.9);
-      display: flex;
-      flex-direction: column;
-    }
-
-    main {
-      flex: 1;
-      padding: 40px 20px;
-    }
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>YANZZ - Update bot</title>
+<!-- AOS CSS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    color: #fff;
+    background: url("https://cdn.discordapp.com/attachments/1243485467945734154/1380896399213854830/3211d90a0145d5169ec0354260ad0e2e.gif?ex=68482e7d&is=6846dcfd&hm=99efba66bc829608d14f986b246ce7dd56132af8695edec95a512b2171072347&") no-repeat center center fixed;
+    background-size: cover;
+    backdrop-filter: brightness(0.9);
+    display: flex;
+    flex-direction: column;
+  }
+  main {
+    flex: 1;
+    padding: 40px 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    color: #00ffff;
+    text-shadow: 0 0 8px #000;
+  }
+  /* เวอร์ชันกล่อง */
+  .version {
+    margin-bottom: 50px;
+  }
+  .version-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #0ff;
+    text-shadow: 0 0 6px #000;
+    margin-bottom: 10px;
+  }
+  .version-date {
+    font-size: 1em;
+    color: #ccc;
+    margin-bottom: 20px;
+  }
+  .update {
+    background-color: rgba(0,0,0,0.6);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .update:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  }
+  .date {
+    font-size: 0.95em;
+    color: #ccc;
+    margin-bottom: 8px;
+  }
+  p {
+    margin: 0;
+    font-size: 1.05em;
+  }
+  /* ไอคอน [+] เด้ง */
+  .translatable p::before {
+    content: "[+] ";
+    display: inline-block;
+    animation: icon-bounce 1.5s ease-in-out infinite;
+  }
+  @keyframes icon-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  footer {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.85em;
+    text-shadow: 0 0 5px #000;
+    padding: 20px;
+  }
+  @media (max-width: 600px) {
     h1 {
-      text-align: center;
-      font-size: 2.5em;
-      margin-bottom: 40px;
-      color: #00ffff;
-      text-shadow: 0 0 8px #000;
+      font-size: 2em;
     }
-
-    .update {
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .date {
-      font-size: 0.95em;
-      color: #ccc;
-      margin-bottom: 8px;
-    }
-
-    p {
-      margin: 0;
-      font-size: 1.05em;
-    }
-
-    code {
-      background-color: #222;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-
-    footer {
-      text-align: center;
-      color: #aaa;
-      font-size: 0.85em;
-      text-shadow: 0 0 5px #000;
-      padding: 20px;
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 2em;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <main>
-    <h1>BOT UPDATE</h1>
+<main>
+  <h1>BOT UPDATE</h1>
 
+  <section class="version" data-aos="fade-up">
+    <div class="version-title">Version 2.1.6.0</div>
+    <div class="version-date">8 มิถุนายน 2025</div>
     <div class="update">
-      <div class="date">8 มิถุนายน 2025</div>
       <p class="translatable">
-        [+] เพิ่มคำสั่ง ?gag หรือ /grow-a-garden-stock<br>
-        [+] แก้ไข grow-a-garden-stock<br>
-        [+] แก้ไข ระบบ ทำให้เสถียรขึ้น
+        เพิ่มคำสั่ง ?gag หรือ /grow-a-garden-stock<br>
+        แก้ไข grow-a-garden-stock<br>
+        แก้ไข ระบบ ทำให้เสถียรขึ้น
       </p>
     </div>
-  </main>
+  </section>
 
-  <footer>
-    Developed by YANZZ
-  </footer>
+</main>
+<footer>
+  Developed by YANZZ
+</footer>
+<head>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 800,
+    easing: 'ease-out',
+    once: true
+  });
 
-  <script>
-    async function translateText(text) {
-      const res = await fetch('https://libretranslate.de/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          q: text,
-          source: 'th',
-          target: 'en',
-          format: 'html'
-        })
-      });
-      const data = await res.json();
-      return data.translatedText;
-    }
-
-    document.querySelectorAll('.translatable').forEach(async p => {
-      const original = p.innerHTML;
-      try {
-        const translated = await translateText(original);
-        p.innerHTML = translated;
-      } catch (e) {
-        console.error('Translation error:', e);
-      }
+  async function translateText(text) {
+    const res = await fetch('https://libretranslate.de/translate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        q: text,
+        source: 'th',
+        target: 'en',
+        format: 'html'
+      })
     });
-  </script>
+    const data = await res.json();
+    return data.translatedText;
+  }
+
+  document.querySelectorAll('.translatable').forEach(async p => {
+    const original = p.innerHTML;
+    try {
+      const translated = await translateText(original);
+      p.innerHTML = translated;
+    } catch (e) {
+      console.error('Translation error:', e);
+    }
+  });
+</script>
 </body>
 </html>
