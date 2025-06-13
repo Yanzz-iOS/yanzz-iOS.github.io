@@ -1,145 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>YANZZ - Update bot</title>
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-<style>
-  html, body {
-    margin: 0; padding: 0; height: 100%;
-    font-family: 'Segoe UI', sans-serif;
-    line-height: 1.6;
-    color: #fff;
-    background: url("https://cdn.discordapp.com/attachments/1243485467945734154/1383111505230299228/40eb71374bfd72140300dbd8c8e5ba4a.gif?ex=684d9a77&is=684c48f7&hm=bd0d19b6aca348869fc693eaf0d4fa306b756abe06368e36cf7fddb3b1406996&") no-repeat center center fixed;
-    background-size: cover;
-    backdrop-filter: brightness(0.9);
-    display: flex;
-    flex-direction: column;
-  }
-  main {
-    flex: 1;
-    padding: 40px 20px;
-  }
-  h1 {
-    text-align: center;
-    font-size: 2.5em;
-    margin-bottom: 40px;
-    color: #00ffff;
-    text-shadow: 0 0 8px #000;
-  }
-  .version {
-    margin-bottom: 50px;
-  }
-  .version-title {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: #0ff;
-    text-shadow: 0 0 6px #000;
-    margin-bottom: 10px;
-  }
-  .version-date {
-    font-size: 1em;
-    color: #ccc;
-    margin-bottom: 20px;
-  }
-  .update {
-    background-color: rgba(0,0,0,0.6);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .update:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-  }
-  .date {
-    font-size: 0.95em;
-    color: #ccc;
-    margin-bottom: 8px;
-  }
-  p {
-    margin: 0;
-    font-size: 1.05em;
-  }
-  .translatable p::before {
-    content: "[+] ";
-    display: inline-block;
-    animation: icon-bounce 1.5s ease-in-out infinite;
-  }
-  @keyframes icon-bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
-  }
-  footer {
-    text-align: center;
-    color: #aaa;
-    font-size: 0.85em;
-    text-shadow: 0 0 5px #000;
-    padding: 20px;
-  }
-  @media (max-width: 600px) {
-    h1 {
-      font-size: 2em;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YANZZ - Update bot</title>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: #fff;
+      background-color: #000;
+      background-image: url("https://cdn.discordapp.com/attachments/1243485467945734154/1383111505230299228/40eb71374bfd72140300dbd8c8e5ba4a.gif?ex=684d9a77&is=684c48f7&hm=bd0d19b6aca348869fc693eaf0d4fa306b756abe06368e36cf7fddb3b1406996&");
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
+      background-size: cover;
+      backdrop-filter: brightness(0.9);
+      display: flex;
+      flex-direction: column;
     }
-  }
-</style>
+
+    main {
+      flex: 1;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 40px;
+      color: #00ffff;
+      text-shadow: 0 0 8px #000;
+    }
+
+    .version {
+      margin-bottom: 50px;
+    }
+
+    .version-title {
+      font-size: 1.8em;
+      font-weight: bold;
+      color: #0ff;
+      text-shadow: 0 0 6px #000;
+      margin-bottom: 10px;
+    }
+
+    .version-date {
+      font-size: 1em;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+
+    .update {
+      background-color: rgba(0,0,0,0.6);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .update:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    }
+
+    .date {
+      font-size: 0.95em;
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.05em;
+    }
+
+    .translatable p::before {
+      content: "[+] ";
+      display: inline-block;
+      animation: icon-bounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes icon-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    footer {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.85em;
+      text-shadow: 0 0 5px #000;
+      padding: 20px;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+    }
+  </style>
 </head>
 <body>
-<main>
-  <h1>BOT UPDATE</h1>
+  <main>
+    <h1>BOT UPDATE</h1>
 
-  <section class="version" data-aos="fade-up">
-    <div class="version-title">Version 2.1.6.1</div>
-    <div class="version-date">13 มิถุนายน 2025</div>
-    <div class="update">
-      <p class="translatable">
-        เพิ่ม API New<br>
-        แก้ไข Roblox Version<br>
-        แก้ไข ระบบ ทำให้เสถียรขึ้น + รวดเร็ว
-      </p>
-    </div>
-  </section>
+    <section class="version" data-aos="fade-up">
+      <div class="version-title">Version 2.1.6.1</div>
+      <div class="version-date">13 มิถุนายน 2025</div>
+      <div class="update">
+        <p class="translatable">
+          เพิ่ม API New<br>
+          แก้ไข Roblox Version<br>
+          แก้ไข ระบบ ทำให้เสถียรขึ้น + รวดเร็ว
+        </p>
+      </div>
+    </section>
+  </main>
 
-</main>
-<footer>
-  Developed by YANZZ
-</footer>
-<head>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-  AOS.init({
-    duration: 800,
-    easing: 'ease-out',
-    once: true
-  });
+  <footer>
+    Developed by YANZZ
+  </footer>
 
-  async function translateText(text) {
-    const res = await fetch('https://libretranslate.de/translate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        q: text,
-        source: 'th',
-        target: 'en',
-        format: 'html'
-      })
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out',
+      once: true
     });
-    const data = await res.json();
-    return data.translatedText;
-  }
 
-  document.querySelectorAll('.translatable').forEach(async p => {
-    const original = p.innerHTML;
-    try {
-      const translated = await translateText(original);
-      p.innerHTML = translated;
-    } catch (e) {
-      console.error('Translation error:', e);
+    async function translateText(text) {
+      const res = await fetch('https://libretranslate.de/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          q: text,
+          source: 'th',
+          target: 'en',
+          format: 'html'
+        })
+      });
+      const data = await res.json();
+      return data.translatedText;
     }
-  });
-</script>
+
+    document.querySelectorAll('.translatable').forEach(async p => {
+      const original = p.innerHTML.split('<br>');
+      try {
+        const translatedLines = await Promise.all(
+          original.map(line => translateText(line))
+        );
+        p.innerHTML = translatedLines.join('<br>');
+      } catch (e) {
+        console.error('Translation error:', e);
+      }
+    });
+  </script>
 </body>
 </html>
