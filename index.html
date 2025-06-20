@@ -1,200 +1,108 @@
-<!DOCTYPE html><html lang="en">
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YANZZ - All Websites</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="YANZZ Hub: Bring all your websites and tools together in one place." />
+  <meta property="og:title" content="YANZZ - All Websites" />
+  <meta property="og:description" content="YANZZ Hub: Bring all your websites and tools together in one place." />
+  <meta property="og:image" content="/og-image.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p1V6gqS+6F3+OqL+L6S5Hz+z0Oa1gXftx0VUuvtgU5w5U8Z+5qfws6XnE0Xkkg9fQzN4qZdUn7TZ6YJKA9Piwg==" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
-    :root {
-      --bg-start: #0f172a;
-      --bg-end: #1e293b;
-      --accent: #2563eb;
-      --light: rgba(255, 255, 255, 0.1);
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { margin:0; overflow:hidden; font-family:'Kanit', sans-serif; }
+    #loader {
+      position: fixed; top:0; left:0; width:100%; height:100%; background:#000;
+      display:flex; align-items:center; justify-content:center; z-index:999;
     }
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Kanit', sans-serif;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: 2rem 1rem;
-  text-align: center;
-  background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
-  background-size: 400% 400%;
-  animation: bgAnimation 15s ease infinite;
-  color: #fff;
-}
-
-@keyframes bgAnimation {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-header h1 {
-  font-size: 2.75rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-  opacity: 0;
-  animation: fadeInDown 1s ease forwards;
-}
-
-.subtext {
-  font-size: 1.1rem;
-  color: #d1d5db;
-  margin-bottom: 2rem;
-  opacity: 0;
-  animation: fadeInDown 1.2s ease forwards;
-}
-
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-main {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.link-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-a.link-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  background: var(--light);
-  border-radius: 1rem;
-  overflow: hidden;
-  cursor: pointer;
-  text-decoration: none;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: background 0.3s ease, transform 0.3s ease;
-  animation: fadeInUp 0.8s ease forwards;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-a.link-item:nth-child(1) { animation-delay: 0.3s; }
-a.link-item:nth-child(2) { animation-delay: 0.5s; }
-a.link-item:nth-child(3) { animation-delay: 0.7s; }
-a.link-item:nth-child(4) { animation-delay: 0.9s; }
-a.link-item:nth-child(5) { animation-delay: 1.1s; }
-
-a.link-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-5px) scale(1.03);
-}
-
-a.link-item::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: var(--accent);
-  border-radius: 50%;
-  opacity: 0.5;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease;
-  z-index: 1;
-}
-
-a.link-item:active::after {
-  width: 200%;
-  height: 200%;
-  transition: none;
-  opacity: 0;
-}
-
-a.link-item span {
-  position: relative;
-  z-index: 2;
-  color: #fff;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-footer {
-  margin-top: auto;
-  padding: 2rem 0 1rem;
-  font-size: 0.85rem;
-  color: #9ca3af;
-}
-
-@media (max-width: 480px) {
-  header h1 { font-size: 2rem; }
-  .subtext { font-size: 1rem; }
-}
-
+    #loader .spinner {
+      border: 6px solid rgba(255,255,255,0.2);
+      border-top: 6px solid #fff;
+      border-radius: 50%; width: 50px; height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    canvas#bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
+    .link-grid {
+      position:relative; display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:1.5rem; width:100%; max-width:1000px;
+      margin:5vh auto; padding:0 1rem;
+      z-index:1;
+    }
+    a.link-item {
+      position:relative; display:flex; align-items:center; justify-content:center;
+      padding:1.5rem; background:rgba(20,20,30,0.6); border-radius:1rem;
+      text-decoration:none; color:#fff; font-size:1.2rem; font-weight:600;
+      transition:transform 0.3s, box-shadow 0.3s; overflow:hidden;
+    }
+    a.link-item:hover {
+      transform:translateY(-5px) scale(1.05);
+      box-shadow:0 10px 25px rgba(0,0,0,0.5);
+    }
+    a.link-item::after {
+      content:''; position:absolute; border-radius:50%; transform:scale(0);
+      background:rgba(255,255,255,0.2); width:100px; height:100px; opacity:0;
+      transition:transform 0.6s, opacity 1s;
+    }
+    a.link-item:active::after {
+      transform:scale(4); opacity:1; transition:0s;
+    }
+    a.link-item span { display:flex; align-items:center; }
+    a.link-item span i { margin-right:0.75rem; }
+    header { text-align:center; margin-top:2rem; position:relative; z-index:1; }
+    header h1 { font-size:3rem; font-weight:700; text-shadow:0 2px 5px rgba(0,0,0,0.5); color:#fff; }
+    footer { text-align:center; margin:3rem 0 1rem; font-size:0.85rem; color:#ccc; position:relative; z-index:1; }
+    @media(max-width:480px){ header h1{font-size:2rem;} }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Your All Websites</h1>
-  </header>
-  <main>
-    <div class="link-grid">
-      <a class="link-item" href="https://yanzz-ios.github.io/genkey.html" target="_blank">
-        <span>GEN KEY</span>
-      </a>
-      <a class="link-item" href="https://yanzz-ios.github.io/update.html" target="_blank">
-        <span>CHECK UPDATES</span>
-      </a>
-      <a class="link-item" href="https://yanzz-ios.github.io/executor.html" target="_blank">
-        <span>EXECUTOR</span>
-      </a>
-      <a class="link-item" href="https://yanzz-ios.github.io/addapi.html" target="_blank">
-        <span>ADD API</span>
-      </a>
-      <a class="link-item" href="https://yanzz-ios.github.io/invite.html" target="_blank">
-        <span>INVITE BOT</span>
-      </a>
-    </div>
-  </main>
-  <footer>
-    © 2025 All websites are powered by YANZZ
-  </footer>
+  <div id="loader"><div class="spinner"></div></div>
+  <canvas id="bg"></canvas>
+  <header><h1>Your All Websites</h1></header>
+  <div class="link-grid">
+    <a class="link-item" href="https://yanzz-ios.github.io/genkey.html" target="_blank"><span><i class="fas fa-key"></i>GEN KEY</span></a>
+    <a class="link-item" href="https://yanzz-ios.github.io/update.html" target="_blank"><span><i class="fas fa-sync-alt"></i>CHECK UPDATES</span></a>
+    <a class="link-item" href="https://yanzz-ios.github.io/executor.html" target="_blank"><span><i class="fas fa-play"></i>EXECUTOR</span></a>
+    <a class="link-item" href="https://yanzz-ios.github.io/addapi.html" target="_blank"><span><i class="fas fa-plus"></i>ADD API</span></a>
+    <a class="link-item" href="https://yanzz-ios.github.io/invite.html" target="_blank"><span><i class="fas fa-robot"></i>INVITE BOT</span></a>
+  </div>
+  <footer>© 2025 All websites are powered by YANZZ</footer>
+  <script>
+    const loaderEl = document.getElementById('loader');
+    let done = false;
+    function hideLoader(){ if(done) return; done=true; loaderEl.style.display='none'; }
+    setTimeout(hideLoader, 3000);
+    const scene = new THREE.Scene();
+    const loaderTex = new THREE.CubeTextureLoader();
+    loaderTex.load([
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_px.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nx.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_py.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_ny.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_pz.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nz.jpg'
+    ], function(texture){ scene.background = texture; hideLoader(); });
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), antialias:true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    window.addEventListener('resize', ()=>{ renderer.setSize(window.innerWidth, window.innerHeight); camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); });
+    const starCount=2000;
+    const starsGeo=new THREE.BufferGeometry(); const starVerts=[];
+    for(let i=0;i<starCount;i++){ starVerts.push((Math.random()-0.5)*1000,(Math.random()-0.5)*1000,(Math.random()-0.5)*1000); }
+    starsGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts,3));
+    const starsMat=new THREE.PointsMaterial({color:0xffffff,size:1,sizeAttenuation:true});
+    const stars=new THREE.Points(starsGeo,starsMat); scene.add(stars);
+    camera.position.z=200;
+    function animate(){ requestAnimationFrame(animate); stars.rotation.y+=0.0005; stars.rotation.x+=0.0003; renderer.render(scene,camera); }
+    animate();
+  </script>
 </body>
 </html>
