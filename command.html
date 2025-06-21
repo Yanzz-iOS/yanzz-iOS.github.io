@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bot Command Viewer</title>
+  <title>YANZZ - Bot Command</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -120,11 +120,11 @@
 </head>
 <body>
   <header>
-    <h1>Bot Command Viewer</h1>
+    <h1>Bot Commande</h1>
     <p>Explore all available bot commands by category</p>
   </header>
   <div class="container" id="categoriesContainer"></div>
-  <footer>&copy; 2025 Bot Command Viewer. All rights reserved.</footer>
+  <footer>&copy; © 2025 Bot Command Viewer. All rights reserved.</footer>
 
 <script>
   const iconMap = {
@@ -140,54 +140,57 @@
 
   const commandsData = [
     { category: 'Executor', syntax: '≈executor' },
-    { category: 'Server', syntax: '≈userinfo' },
-    { category: 'Server', syntax: '≈avatar' },
+    { category: 'Server', syntax: '≈userinfo <@user>' },
+    { category: 'Server', syntax: '≈avatar <@user>' },
     { category: 'Server', syntax: 'info≈server' },
-    { category: 'Server', syntax: '≈afk' },
+    { category: 'Server', syntax: '≈afk <message>' },
     { category: 'Server', syntax: '≈qafk' },
     { category: 'Server', syntax: 'icons≈server' },
-    { category: 'Server', syntax: 'profile≈user' },
+    { category: 'Server', syntax: 'profile≈user <@user>' },
     { category: 'Server', syntax: '≈emulators' },
-    { category: 'Server', syntax: '≈pokémon' },
-    { category: 'Server', syntax: '≈fget' },
+    { category: 'Server', syntax: '≈pokémon <name>' },
+    { category: 'Server', syntax: '≈fget getkey, mykey, check, recheck, status' },
     { category: 'Server', syntax: 'ran≈pokémon' },
     { category: 'Server', syntax: '≈purge' },
-    { category: 'Server', syntax: 'add≈role' },
-    { category: 'Server', syntax: 'role≈remove' },
-    { category: 'Server', syntax: '≈setverify' },
-    { category: 'Server', syntax: '≈ship' },
-    { category: 'Server', syntax: 'add≈emoji' },
-    { category: 'Server', syntax: '≈tiktok' },
-    { category: 'Server', syntax: '≈ytdow' },
+    { category: 'Server', syntax: 'add≈role <addrole,add-role> <@user> <@role>' },
+    { category: 'Server', syntax: 'role≈remove <roleremove,role-remove> <@user> <@role>' },
+    { category: 'Server', syntax: '≈setverify <@Role> , <Panel>' },
+    { category: 'Server', syntax: '≈ship <@user>,<@you> <random random> <random , <@user> <@user random>' },
+    { category: 'Server', syntax: 'add≈emoji <message> <message>' },
+    { category: 'Server', syntax: '≈tiktok <url>' },
+    { category: 'Server', syntax: '≈ytdow <url>' },
     { category: 'Server', syntax: '≈joke' },
     { category: 'Server', syntax: '≈meme' },
-    { category: 'Server', syntax: '≈move' },
+    { category: 'Server', syntax: '≈move @mention #channel' },
     { category: 'Server', syntax: '≈massban' },
-    { category: 'Server', syntax: '≈roulette' },
+    { category: 'Server', syntax: '≈ytsearch <query>' },
+    { category: 'Server', syntax: '≈roulette <message>' },
     { category: 'Server', syntax: '≈gag' },
-    { category: 'Anime', syntax: 's≈anime' },
+    { category: 'Server', syntax: '≈help' },
+    { category: 'Anime', syntax: 's≈anime <search>' },
     { category: 'Anime', syntax: 'r≈anime' },
-    { category: 'Anime', syntax: 'i≈anime' },
-    { category: 'Bypass Executor', syntax: '/Bypass' },
-    { category: 'Bypass Executor', syntax: '/codex' },
-    { category: 'Roblox', syntax: '≈search' },
+    { category: 'Anime', syntax: 'i≈anime <name>' },
+    { category: 'Bypass Executor', syntax: '/Bypass <url>' },
+    { category: 'Bypass Executor', syntax: '/codex <url>' },
+    { category: 'Roblox', syntax: '≈search <message>' },
     { category: 'Roblox', syntax: '≈version' },
-    { category: 'Roblox', syntax: 'r≈avatar' },
-    { category: 'Roblox', syntax: '≈tax' },
-    { category: 'AI', syntax: '≈video' },
-    { category: 'AI', syntax: '≈picture' },
-    { category: 'AI', syntax: '≈owoify' },
+    { category: 'Roblox', syntax: 'r≈avatar <@user>' },
+    { category: 'Roblox', syntax: '≈tax <message>' },
+    { category: 'AI', syntax: '≈video <message>' },
+    { category: 'AI', syntax: '≈picture <message>' },
+    { category: 'AI', syntax: '≈owoify <message>' },
     { category: 'AI', syntax: '≈utctime' },
-    { category: 'AI', syntax: '≈tts' },
-    { category: 'AI', syntax: '≈playground' },
-    { category: 'AI', syntax: '≈pixartsigma' },
-    { category: 'AI', syntax: 'ai≈leonardo' },
-    { category: 'Nsfw', syntax: '≈nsfw' },
-    { category: 'Nsfw', syntax: '≈nsfw image' },
+    { category: 'AI', syntax: '≈tts <message>' },
+    { category: 'AI', syntax: '≈playground <message>' },
+    { category: 'AI', syntax: '≈pixartsigma <message>' },
+    { category: 'AI', syntax: 'ai≈leonardo <message>' },
+    { category: 'Nsfw', syntax: '≈nsfw <name>' },
+    { category: 'Nsfw', syntax: '≈nsfw image <name>' },
+    { category: 'Nsfw', syntax: '≈image <name>' },
     { category: 'Nsfw', syntax: '≈awoo' },
     { category: 'Nsfw', syntax: '≈pat' },
     { category: 'Nsfw', syntax: '≈dance' },
-    { category: 'Music', syntax: '≈play' },
+    { category: 'Music', syntax: '≈play <name,url>' },
     { category: 'Music', syntax: '≈stop' }
   ];
 
@@ -226,7 +229,6 @@
     }
   }
 
-  // Scroll to category on command click
   document.addEventListener('click', e => {
     if(e.target.tagName === 'LI' && e.target.closest('.commands-list')){
       const allSections = document.querySelectorAll('.category');
