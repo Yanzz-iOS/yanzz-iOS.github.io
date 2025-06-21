@@ -3,19 +3,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YANZZ - All Websites</title>
-  <!-- Favicon -->
   <link rel="icon" href="/favicon.png" type="image/png">
-  <!-- Meta Tags -->
   <meta name="theme-color" content="#0f172a">
   <meta name="description" content="YANZZ Hub: Bring all your websites and tools together in one place.">
   <meta property="og:title" content="YANZZ - All Websites">
   <meta property="og:description" content="YANZZ Hub: Bring all your websites and tools together in one place.">
   <meta property="og:image" content="/og-image.png">
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-  <!-- Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -72,12 +67,14 @@
       <div class="link-text"><i class="fas fa-robot"></i>INVITE BOT</div>
       <div class="click-count">Clicks: <span class="count" data-id="invite">0</span></div>
     </a>
+    <a class="link-item" href="https://yanzz-ios.github.io/command.html" target="_blank" data-id="command">
+      <div class="link-text"><i class="fas fa-plus"></i>Bot Commands</div>
+      <div class="click-count">Clicks: <span class="count" data-id="command">0</span></div>
+    </a>
   </div>
   <footer>© 2025 All websites are powered by YANZZ</footer>
   <script>
-    // Loader hide
     setTimeout(() => document.getElementById('loader').style.display='none', 3000);
-    // Click Tracker
     document.querySelectorAll('.link-item').forEach(item => {
       const id = item.dataset.id;
       const countEl = document.querySelector(`.count[data-id="${id}"]`);
@@ -89,7 +86,6 @@
         countEl.textContent = count;
       });
     });
-    // Three.js Background
     const scene = new THREE.Scene();
     new THREE.CubeTextureLoader().load([
       'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_px.jpg',
@@ -97,6 +93,7 @@
       'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_py.jpg',
       'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_ny.jpg',
       'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_pz.jpg',
+      'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nz.jpg',
       'https://threejs.org/examples/textures/cube/MilkyWay/dark-s_nz.jpg'
     ], texture => scene.background = texture);
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
