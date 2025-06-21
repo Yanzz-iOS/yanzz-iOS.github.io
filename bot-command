@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bot Command Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-light: linear-gradient(135deg, #e3f2fd, #ffffff);
+      --bg-dark: linear-gradient(135deg, #121212, #1e1e1e);
+      --card-bg-light: #fff;
+      --card-bg-dark: #1f1f1f;
+      --text-light: #333;
+      --text-dark: #e0e0e0;
+      --primary-light: #0d47a1;
+      --primary-dark: #90caf9;
+    }
+    [data-theme="dark"] {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background: #1565c0;
+      color: #fff;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    header p {
+      font-size: 1.2rem;
+      opacity: 0.85;
+    }
+    .container {
+      flex: 1;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .category {
+      margin-top: 3rem;
+    }
+    .category-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .category-title svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+    [data-theme="dark"] .category-title {
+      color: var(--primary-dark);
+    }
+    ul.commands-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      padding-left: 0;
+    }
+    ul.commands-list li {
+      background: var(--card-bg-light);
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      padding: 0.8rem 1rem;
+      font-family: monospace;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+      user-select: none;
+      word-break: break-word;
+    }
+    [data-theme="dark"] ul.commands-list li {
+      background: var(--card-bg-dark);
+      box-shadow: 0 6px 18px rgba(255,255,255,0.05);
+    }
+    ul.commands-list li:hover {
+      background: var(--primary-light);
+      color: white;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+      transform: translateY(-4px);
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #e3f2fd;
+      color: #444;
+      font-size: 0.9rem;
+    }
+    [data-theme="dark"] footer {
+      background: #121212;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bot Command Viewer</h1>
+    <p>Explore all available bot commands by category</p>
+  </header>
+  <div class="container" id="categoriesContainer"></div>
+  <footer>&copy; 2025 Bot Command Viewer. All rights reserved.</footer>
+
+<script>
+  const iconMap = {
+    'Executor': `<svg viewBox="0 0 24 24"><path d="M3 4v16h18V4H3zm2 2h14v12H5V6zm2 2v2h10V8H7zm0 4v2h6v-2H7z"/></svg>`,
+    'Server': `<svg viewBox="0 0 24 24"><path d="M3 3v18h18V3H3zm2 2h14v2H5V5zm0 4h14v2H5V9zm0 4h14v2H5v-2zm0 4h14v2H5v-2z"/></svg>`,
+    'Anime': `<svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 4.9 5.2 4.9 9.1c0 5.4 7.1 11.3 7.1 11.3s7.1-5.9 7.1-11.3C19.1 5.2 15.9 2 12 2zm0 13.7c-2.9 0-5.2-2.3-5.2-5.2S9.1 5.3 12 5.3s5.2 2.3 5.2 5.2-2.3 5.2-5.2 5.2z"/></svg>`,
+    'Bypass Executor': `<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-10 10h2a8 8 0 1116 0h2a10 10 0 00-10-10zm0 4a6 6 0 00-6 6v4h2v6h8v-6h2v-4a6 6 0 00-6-6z"/></svg>`,
+    'Roblox': `<svg viewBox="0 0 24 24"><path d="M3 3l18 3-3 15-18-3 3-15zM8 8l8 2-2 8-8-2 2-8z"/></svg>`,
+    'AI': `<svg viewBox="0 0 24 24"><path d="M9 2v2H6v2h3v2H6v2h3v2H6v2h3v2H6v2h3v2H4v2h16v-2h-5v-2h3v-2h-3v-2h3v-2h-3v-2h3v-2h-3V6h3V4h-3V2H9z"/></svg>`,
+    'Nsfw': `<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>`,
+    'Music': `<svg viewBox="0 0 24 24"><path d="M12 3v10.55a4 4 0 1 0 2 0V7h4V3h-6z"/></svg>`
+  };
+
+  const commandsData = [
+    { category: 'Executor', syntax: '≈executor' },
+    { category: 'Server', syntax: '≈userinfo' },
+    { category: 'Server', syntax: '≈avatar' },
+    { category: 'Server', syntax: 'info≈server' },
+    { category: 'Server', syntax: '≈afk' },
+    { category: 'Server', syntax: '≈qafk' },
+    { category: 'Server', syntax: 'icons≈server' },
+    { category: 'Server', syntax: 'profile≈user' },
+    { category: 'Server', syntax: '≈emulators' },
+    { category: 'Server', syntax: '≈pokémon' },
+    { category: 'Server', syntax: '≈fget' },
+    { category: 'Server', syntax: 'ran≈pokémon' },
+    { category: 'Server', syntax: '≈purge' },
+    { category: 'Server', syntax: 'add≈role' },
+    { category: 'Server', syntax: 'role≈remove' },
+    { category: 'Server', syntax: '≈setverify' },
+    { category: 'Server', syntax: '≈ship' },
+    { category: 'Server', syntax: 'add≈emoji' },
+    { category: 'Server', syntax: '≈tiktok' },
+    { category: 'Server', syntax: '≈ytdow' },
+    { category: 'Server', syntax: '≈joke' },
+    { category: 'Server', syntax: '≈meme' },
+    { category: 'Server', syntax: '≈move' },
+    { category: 'Server', syntax: '≈massban' },
+    { category: 'Server', syntax: '≈roulette' },
+    { category: 'Server', syntax: '≈gag' },
+    { category: 'Anime', syntax: 's≈anime' },
+    { category: 'Anime', syntax: 'r≈anime' },
+    { category: 'Anime', syntax: 'i≈anime' },
+    { category: 'Bypass Executor', syntax: '/Bypass' },
+    { category: 'Bypass Executor', syntax: '/codex' },
+    { category: 'Roblox', syntax: '≈search' },
+    { category: 'Roblox', syntax: '≈version' },
+    { category: 'Roblox', syntax: 'r≈avatar' },
+    { category: 'Roblox', syntax: '≈tax' },
+    { category: 'AI', syntax: '≈video' },
+    { category: 'AI', syntax: '≈picture' },
+    { category: 'AI', syntax: '≈owoify' },
+    { category: 'AI', syntax: '≈utctime' },
+    { category: 'AI', syntax: '≈tts' },
+    { category: 'AI', syntax: '≈playground' },
+    { category: 'AI', syntax: '≈pixartsigma' },
+    { category: 'AI', syntax: 'ai≈leonardo' },
+    { category: 'Nsfw', syntax: '≈nsfw' },
+    { category: 'Nsfw', syntax: '≈nsfw image' },
+    { category: 'Nsfw', syntax: '≈awoo' },
+    { category: 'Nsfw', syntax: '≈pat' },
+    { category: 'Nsfw', syntax: '≈dance' },
+    { category: 'Music', syntax: '≈play' },
+    { category: 'Music', syntax: '≈stop' }
+  ];
+
+  const container = document.getElementById('categoriesContainer');
+
+  function render() {
+    container.innerHTML = '';
+    const grouped = commandsData.reduce((acc, cmd) => {
+      acc[cmd.category] = acc[cmd.category] || [];
+      acc[cmd.category].push(cmd);
+      return acc;
+    }, {});
+
+    for (const [category, cmds] of Object.entries(grouped)) {
+      const section = document.createElement('section');
+      section.className = 'category';
+      section.id = category.toLowerCase().replace(/\s+/g, '-'); // anchor id
+
+      const icon = iconMap[category] || '';
+      const title = document.createElement('h2');
+      title.className = 'category-title';
+      title.innerHTML = `${icon} ${category}`;
+      section.appendChild(title);
+
+      const ul = document.createElement('ul');
+      ul.className = 'commands-list';
+
+      cmds.forEach(cmd => {
+        const li = document.createElement('li');
+        li.textContent = cmd.syntax;
+        ul.appendChild(li);
+      });
+
+      section.appendChild(ul);
+      container.appendChild(section);
+    }
+  }
+
+  // Scroll to category on command click
+  document.addEventListener('click', e => {
+    if(e.target.tagName === 'LI' && e.target.closest('.commands-list')){
+      const allSections = document.querySelectorAll('.category');
+      for(const sec of allSections){
+        if(sec.textContent.toLowerCase().includes(e.target.textContent.toLowerCase())){
+          sec.scrollIntoView({behavior: 'smooth'});
+          break;
+        }
+      }
+    }
+  });
+
+  render();
+</script>
+</body>
+</html>
