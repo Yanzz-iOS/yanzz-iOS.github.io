@@ -1,0 +1,198 @@
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Stock Checker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+    }
+    .spinner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 60px;
+      height: 60px;
+      margin: -30px 0 0 -30px;
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top: 6px solid #00ffcc;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: none;
+      z-index: 1000;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    .section {
+      margin-top: 40px;
+    }
+    .section h2 {
+      text-align: center;
+      color: #00ffcc;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+    }
+    .stock-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      perspective: 1000px;
+    }
+    .fruit {
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      transform-style: preserve-3d;
+      transition: transform 0.4s, box-shadow 0.4s, opacity 0.4s ease, transform 0.4s ease;
+      cursor: default;
+      user-select: none;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .fruit.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fruit:hover {
+      transform: rotateY(15deg) translateZ(10px);
+      box-shadow: 0 8px 16px rgba(0, 255, 204, 0.3);
+    }
+    .fruit img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+    .fruit-name {
+      margin-top: 8px;
+      font-weight: bold;
+      color: #ffcc00;
+      font-size: 1.1rem;
+    }
+    .fruit-price {
+      margin-top: 4px;
+      font-size: 0.95rem;
+    }
+    .error {
+      text-align: center;
+      color: #f55;
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px 10px;
+      }
+      .section h2 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+      }
+      .stock-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+      }
+      .fruit {
+        padding: 10px;
+      }
+      .fruit-name {
+        font-size: 1rem;
+      }
+      .fruit-price {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <audio id="notify-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_9f1bfa8f3c.mp3" preload="auto"></audio>
+  <div id="spinner" class="spinner"></div>
+  <div id="error" class="error"></div>
+  <div id="mirage" class="section">
+    <h2>Mirage Stock</h2>
+    <div id="mirage-list" class="stock-list"></div>
+  </div>
+  <div id="normal" class="section">
+    <h2>Normal Stock</h2>
+    <div id="normal-list" class="stock-list"></div>
+  </div>
+  <script>
+    const API_URL = "https://test-hub.kys.gay/api/stock/bloxfruit";
+    let miragePrev = [];
+    const sound = document.getElementById("notify-sound");
+
+    function parsePrice(s) {
+      let n = parseFloat(s.replace(/[^0-9.]/g, ""));
+      if (/[kK]$/.test(s)) n *= 1e3;
+      if (/[mM]$/.test(s)) n *= 1e6;
+      return n;
+    }
+
+    function renderList(id, items) {
+      const cont = document.getElementById(id);
+      cont.innerHTML = "";
+      const seen = new Set();
+      items.forEach((item) => {
+        if (seen.has(item.name)) return;
+        seen.add(item.name);
+        const c = document.createElement("div");
+        c.className = "fruit";
+        c.innerHTML = `
+          <img src="${item.image_url}" alt="${item.name}" loading="lazy">
+          <div class="fruit-name">${item.name}</div>
+          <div class="fruit-price">USD: ${item.usd_price}</div>
+          <div class="fruit-price">Robux: ${item.robux_price}</div>
+        `;
+        cont.appendChild(c);
+        requestAnimationFrame(() => {
+          c.classList.add("visible");
+        });
+      });
+    }
+
+    async function loadStock() {
+      document.getElementById("spinner").style.display = "block";
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw "";
+        const { mirage_stock, normal_stock } = await res.json();
+        const noms = mirage_stock.items.map((i) => i.name);
+        const newOnes = noms.filter((n) => !miragePrev.includes(n));
+        if (miragePrev.length && newOnes.length) {
+          sound.play();
+          alert("New Mirage items: " + newOnes.join(", "));
+        }
+        miragePrev = noms;
+        mirage_stock.items.sort((a, b) => parsePrice(b.usd_price) - parsePrice(a.usd_price));
+        normal_stock.items.sort((a, b) => parsePrice(b.usd_price) - parsePrice(a.usd_price));
+        renderList("mirage-list", mirage_stock.items);
+        renderList("normal-list", normal_stock.items);
+        document.getElementById("error").textContent = "";
+      } catch (e) {
+        document.getElementById("error").textContent = "❌ Error loading data";
+      } finally {
+        document.getElementById("spinner").style.display = "none";
+      }
+    }
+
+    loadStock();
+    setInterval(loadStock, 30000);
+  </script>
+</body>
+</html>
