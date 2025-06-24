@@ -31,7 +31,7 @@
     }
     body {
       margin: 0;
-      overflow: auto; /* <-- แก้ไขตรงนี้ให้เลื่อนหน้าเว็บได้ */
+      overflow: auto;
       font-family: 'Kanit', sans-serif;
       color: #fff;
       background: #0f172a;
@@ -93,7 +93,7 @@
         0 0 10px #00aaff88,
         0 4px 15px #00aaff66;
       transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-      position: relative;
+      position: relative; /* สำคัญสำหรับตำแหน่ง status */
       overflow: hidden;
     }
     .link-item:hover {
@@ -155,6 +155,38 @@
       z-index: 1;
       user-select: none;
     }
+
+    .status-red {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background-color: #d32f2f;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 12px;
+      user-select: none;
+      pointer-events: none;
+      box-shadow: 0 0 8px #d32f2fcc;
+      z-index: 10;
+    }
+    .status-green {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background-color: #2ecc71;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 12px;
+      user-select: none;
+      pointer-events: none;
+      box-shadow: 0 0 8px #2ecc71cc;
+      z-index: 10;
+    }
+
     @media (max-width: 600px) {
       .link-grid {
         gap: 1rem;
@@ -178,38 +210,47 @@
 
   <div class="link-grid" id="linkGrid">
     <a class="link-item" href="https://yanzz-ios.github.io/genkey" target="_blank" rel="noopener" data-id="genkey" aria-label="GEN KEY">
+      <div class="status-green">Status</div>
       <div class="link-text"><i class="fas fa-key" aria-hidden="true"></i>GEN KEY</div>
       <div class="click-count">Clicks: <span class="count" data-id="genkey">0</span></div>
     </a>
     <a class="link-item" href="https://yanzz-ios.github.io/update" target="_blank" rel="noopener" data-id="update" aria-label="CHECK UPDATES">
+      <div class="status-green">Status</div>
       <div class="link-text"><i class="fas fa-sync-alt" aria-hidden="true"></i>CHECK UPDATES</div>
       <div class="click-count">Clicks: <span class="count" data-id="update">0</span></div>
     </a>
     <a class="link-item" href="https://yanzz-ios.github.io/executor" target="_blank" rel="noopener" data-id="executor" aria-label="EXECUTOR">
+      <div class="status-red">Status</div>
       <div class="link-text"><i class="fas fa-play" aria-hidden="true"></i>EXECUTOR</div>
       <div class="click-count">Clicks: <span class="count" data-id="executor">0</span></div>
     </a>
     <a class="link-item" href="https://yanzz-ios.github.io/addapi" target="_blank" rel="noopener" data-id="addapi" aria-label="ADD API">
+      <div class="status-green">Status</div>
       <div class="link-text"><i class="fas fa-plus" aria-hidden="true"></i>ADD API</div>
       <div class="click-count">Clicks: <span class="count" data-id="addapi">0</span></div>
     </a>
     <a class="link-item" href="https://yanzz-ios.github.io/invite" target="_blank" rel="noopener" data-id="invite" aria-label="INVITE BOT">
+      <div class="status-green">Status</div>
       <div class="link-text"><i class="fas fa-robot" aria-hidden="true"></i>INVITE BOT</div>
       <div class="click-count">Clicks: <span class="count" data-id="invite">0</span></div>
     </a>
     <a class="link-item" href="https://yanzz-ios.github.io/command.html" target="_blank" rel="noopener" data-id="command" aria-label="Bot Commands">
+      <div class="status-green">Status</div>
       <div class="link-text"><i class="fas fa-list" aria-hidden="true"></i>BOT COMMANDS</div>
       <div class="click-count">Clicks: <span class="count" data-id="command">0</span></div>
     </a>
     <a class="link-item" href="https://yanzz-ios.github.io/roblox-version" target="_blank" rel="noopener" data-id="robloxver" aria-label="Roblox Version">
+      <div class="status-green">Status</div>
       <div class="link-text"><i class="fas fa-cube" aria-hidden="true"></i>ROBLOX VERSION</div>
       <div class="click-count">Clicks: <span class="count" data-id="robloxver">0</span></div>
     </a>
     <a class="link-item" href="https://yanzz-ios.github.io/blox-fruits" target="_blank" rel="noopener" data-id="bloxfruits" aria-label="BLOX FRUITS">
+      <div class="status-red">Status</div>
       <div class="link-text"><i class="fas fa-apple-alt" aria-hidden="true"></i>BLOX FRUITS</div>
       <div class="click-count">Clicks: <span class="count" data-id="bloxfruits">0</span></div>
     </a>
     <a class="link-item" href="https://yanzz-ios.github.io/grow-a-garden-stock" target="_blank" rel="noopener" data-id="gardenstock" aria-label="GROW A GARDEN">
+      <div class="status-red">Status</div>
       <div class="link-text"><i class="fas fa-seedling" aria-hidden="true"></i>GROW A GARDEN</div>
       <div class="click-count">Clicks: <span class="count" data-id="gardenstock">0</span></div>
     </a>
