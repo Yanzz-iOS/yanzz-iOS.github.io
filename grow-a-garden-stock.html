@@ -1,358 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Grow A Garden Stock</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f9fc;
+    color: #34495e;
+    padding: 20px;
+    margin: 0;
+  }
+  #tabs {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    background: #d6e6f5;
+    color: #34495e;
+    padding: 10px 22px;
+    border-radius: 20px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(100, 149, 237, 0.3);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .tab.active {
+    background: #4a90e2;
+    color: #f5f9fc;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(74, 144, 226, 0.6);
+  }
+  #content {
+    margin: 0 auto;
+    max-width: 900px;
+  }
+  .category {
+    border: 1px solid #bdd7f0;
+    border-radius: 15px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    background: #eaf2fb;
+    box-shadow: 0 4px 10px rgba(74, 144, 226, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  .category:hover {
+    box-shadow: 0 6px 15px rgba(74, 144, 226, 0.2);
+  }
+  .category-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    cursor: pointer;
+    font-weight: 700;
+    user-select: none;
+    padding: 8px 12px;
+    background: #bbd5f7;
+    border-radius: 12px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: #274c77;
+    gap: 10px;
+  }
+  .category-header:hover {
+    background: #4a90e2;
+    color: #f0f7ff;
+  }
+  .category-header small {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: #537ebd;
+    align-self: center;
+    min-width: 150px;
+    text-align: right;
+  }
+  .items {
+    margin-top: 14px;
+    display: block;
+  }
+  .item {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid #c2d4f1;
+    font-size: 1rem;
+    transition: background-color 0.15s ease;
+  }
+  .item:last-child {
+    border-bottom: none;
+  }
+  .item:hover {
+    background: #d7e6fc;
+  }
+  .item span.emoji {
+    font-size: 32px;
+    flex-shrink: 0;
+    width: 44px;
+    text-align: center;
+  }
+  .item span.name {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #2c3e50;
+  }
+  .item span.quantity {
+    font-weight: 600;
+    min-width: 48px;
+    text-align: right;
+    color: #3b5998;
+  }
+  #status {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #537ebd;
+    font-style: italic;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div id="tabs"></div>
+  <div id="content"></div>
+  <div id="status"></div>
+
+<script>
+  const API = 'https://test-hub.kys.gay/api/grow/garden/stock';
+
+  let data = {}, current = '__all__';
+  let countdowns = {};
+
+  // ลบ honey_shop ออกจากนี้เลย
+  const categoryEmojis = {
+    cosmetics: "🎨",
+    eggs: "🥚",
+    gear: "🛠️",
+    honey: "🍯",
+    seeds: "🌱",
+    __all__: "📦"
+  };
+
+  function cap(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' ');
+  }
+
+  function parseTimeStringToSeconds(str) {
+    if (!str) return 0;
+    let total = 0;
+    const regex = /(\d+)([hms])/g;
+    let match;
+    while ((match = regex.exec(str)) !== null) {
+      const val = parseInt(match[1], 10);
+      const unit = match[2];
+      if (unit === 'h') total += val * 3600;
+      else if (unit === 'm') total += val * 60;
+      else if (unit === 's') total += val;
+    }
+    return total;
+  }
+
+  function formatSecondsToTimeString(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h > 0 ? h + 'h ' : ''}${m > 0 ? m + 'm ' : ''}${s}s`;
+  }
+
+  function buildTabs() {
+    // กรอง honey_shop ออก
+    const keysRaw = Object.keys(data).filter(k => data[k]?.items && k !== 'honey_shop');
+    const keys = ['__all__', ...keysRaw];
+    const tabs = document.getElementById('tabs');
+    tabs.innerHTML = '';
+    keys.forEach(k => {
+      const t = document.createElement('div');
+      t.className = 'tab';
+      t.textContent = k === '__all__' ? 'All' : cap(k);
+      if (current === k) t.classList.add('active');
+      t.onclick = () => {
+        current = k;
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        render();
+      };
+      tabs.appendChild(t);
+    });
+  }
+
+  async function renderCategory(cat) {
+    const cont = document.getElementById('content');
+    let div = cont.querySelector(`.category[data-cat="${cat}"]`);
+    const items = data[cat]?.items || [];
+    const total = items.some(i => i.quantity === 'N/A') ? 'N/A' : items.reduce((s, i) => s + (+i.quantity || 0), 0);
+    const restockKey = `${cat}_next_update_in`;
+    const restockStr = data[restockKey] || '';
+    countdowns[cat] = parseTimeStringToSeconds(restockStr);
+
+    if (!div) {
+      div = document.createElement('div');
+      div.className = 'category';
+      div.dataset.cat = cat;
+      document.getElementById('content').appendChild(div);
+    }
+    div.innerHTML = '';
+
+    const hdr = document.createElement('div');
+    hdr.className = 'category-header';
+    hdr.innerHTML = `<span>${cat === '__all__' ? 'All' : cap(cat)} (Total: ${total})</span>
+                     <small data-cat="${cat}">Restock in: ${formatSecondsToTimeString(countdowns[cat])}</small>`;
+
+    const itmDiv = document.createElement('div');
+    itmDiv.className = 'items';
+
+    for (const i of items) {
+      const it = document.createElement('div');
+      it.className = 'item';
+
+      // แสดง emoji ตามหมวดหมู่ ป้องกัน honey_shop ด้วย fallback
+      const emojiSpan = document.createElement('span');
+      emojiSpan.className = 'emoji';
+      emojiSpan.textContent = categoryEmojis[cat] || "📦";
+      it.appendChild(emojiSpan);
+
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'name';
+      nameSpan.textContent = i.name;
+
+      const qtySpan = document.createElement('span');
+      qtySpan.className = 'quantity';
+      qtySpan.textContent = i.quantity;
+
+      it.append(nameSpan, qtySpan);
+      itmDiv.appendChild(it);
+    }
+
+    hdr.onclick = () => {
+      itmDiv.style.display = itmDiv.style.display === 'none' ? 'block' : 'none';
+    };
+
+    div.appendChild(hdr);
+    div.appendChild(itmDiv);
+  }
+
+  async function render() {
+    const cont = document.getElementById('content');
+    cont.innerHTML = '';
+    if (current === '__all__') {
+      // กรอง honey_shop ออก
+      const cats = Object.keys(data).filter(k => data[k]?.items && k !== 'honey_shop');
+      for (const cat of cats) {
+        await renderCategory(cat);
+      }
+    } else {
+      if (current !== 'honey_shop') {
+        await renderCategory(current);
+      }
+    }
+    document.getElementById('status').textContent = `Last updated: ${data.current_time_eest || ''}`;
+  }
+
+  function updateRestockDisplays() {
+    document.querySelectorAll('.category-header small').forEach(small => {
+      const cat = small.dataset.cat;
+      if (countdowns[cat] !== undefined) {
+        const sec = countdowns[cat];
+        small.textContent = 'Restock in: ' + formatSecondsToTimeString(sec);
+      }
+    });
+  }
+
+  async function refreshCategoryIfNeeded(cat) {
+    if (!data[cat] || cat === 'honey_shop') return; // ป้องกัน honey_shop รีเฟรช
+
+    if (countdowns[cat] <= 0) {
+      try {
+        const r = await fetch(API);
+        const newData = await r.json();
+        const oldJson = JSON.stringify(data[cat]?.items || []);
+        const newJson = JSON.stringify(newData[cat]?.items || []);
+        if (oldJson !== newJson) {
+          data[cat] = newData[cat];
+          data[`${cat}_next_update_in`] = newData[`${cat}_next_update_in`];
+          countdowns[cat] = parseTimeStringToSeconds(data[`${cat}_next_update_in`]);
+          await renderCategory(cat);
+          console.log(`Category "${cat}" refreshed due to restock time.`);
+        } else {
+          countdowns[cat] = parseTimeStringToSeconds(newData[`${cat}_next_update_in`]);
+          data[`${cat}_next_update_in`] = newData[`${cat}_next_update_in`];
+          updateRestockDisplays();
+          console.log(`Category "${cat}" restock time reset.`);
+        }
+      } catch (e) {
+        console.error(`Failed to refresh category ${cat}:`, e);
+      }
+    }
+  }
+
+  function startCountdowns() {
+    setInterval(async () => {
+      let anyUpdate = false;
+      for (const cat in countdowns) {
+        if (countdowns[cat] > 0) {
+          countdowns[cat]--;
+          anyUpdate = true;
+        }
+      }
+      if (anyUpdate) updateRestockDisplays();
+
+      for (const cat in countdowns) {
+        if (countdowns[cat] <= 0) {
+          await refreshCategoryIfNeeded(cat);
+        }
+      }
+    }, 1000);
+  }
+
+  async function initialLoad() {
+    try {
+      const r = await fetch(API);
+      data = await r.json();
+      buildTabs();
+      await render();
+      startCountdowns();
+    } catch (e) {
+      console.error(e);
+      document.getElementById('status').textContent = 'Failed to load data';
+    }
+  }
+
+  initialLoad();
+</script>
 </body>
-</html><!DOCTYPE html>  
-<html lang="en">  
-<head>  
-<meta charset="UTF-8" />  
-<meta name="viewport" content="width=device-width, initial-scale=1" />  
-<title>Grow A Garden Stock Viewer</title>  
-<style>  
-  body {  
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
-    background: #f5f9fc;  
-    color: #34495e;  
-    padding: 20px;  
-    margin: 0;  
-  }  
-  #tabs {  
-    display: flex;  
-    gap: 12px;  
-    justify-content: center;  
-    margin-bottom: 20px;  
-    flex-wrap: wrap;  
-  }  
-  .tab {  
-    background: #d6e6f5;  
-    color: #34495e;  
-    padding: 10px 22px;  
-    border-radius: 20px;  
-    cursor: pointer;  
-    user-select: none;  
-    font-weight: 600;  
-    box-shadow: 0 2px 5px rgba(100, 149, 237, 0.3);  
-    transition: background-color 0.3s ease, color 0.3s ease;  
-  }  
-  .tab.active {  
-    background: #4a90e2;  
-    color: #f5f9fc;  
-    font-weight: 700;  
-    box-shadow: 0 4px 10px rgba(74, 144, 226, 0.6);  
-  }  
-  #content {  
-    margin: 0 auto;  
-    max-width: 900px;  
-  }  
-  .category {  
-    border: 1px solid #bdd7f0;  
-    border-radius: 15px;  
-    padding: 15px 20px;  
-    margin-bottom: 25px;  
-    background: #eaf2fb;  
-    box-shadow: 0 4px 10px rgba(74, 144, 226, 0.1);  
-    transition: box-shadow 0.3s ease;  
-  }  
-  .category:hover {  
-    box-shadow: 0 6px 15px rgba(74, 144, 226, 0.2);  
-  }  
-  .category-header {  
-    display: flex;  
-    justify-content: space-between;  
-    flex-wrap: wrap;  
-    cursor: pointer;  
-    font-weight: 700;  
-    user-select: none;  
-    padding: 8px 12px;  
-    background: #bbd5f7;  
-    border-radius: 12px;  
-    transition: background-color 0.3s ease, color 0.3s ease;  
-    color: #274c77;  
-    gap: 10px;  
-  }  
-  .category-header:hover {  
-    background: #4a90e2;  
-    color: #f0f7ff;  
-  }  
-  .category-header small {  
-    font-weight: 500;  
-    font-size: 0.85rem;  
-    color: #537ebd;  
-    align-self: center;  
-    min-width: 150px;  
-    text-align: right;  
-  }  
-  .items {  
-    margin-top: 14px;  
-    display: block;  
-  }  
-  .item {  
-    padding: 10px 12px;  
-    display: flex;  
-    align-items: center;  
-    gap: 14px;  
-    border-bottom: 1px solid #c2d4f1;  
-    font-size: 1rem;  
-    transition: background-color 0.15s ease;  
-  }  
-  .item:last-child {  
-    border-bottom: none;  
-  }  
-  .item:hover {  
-    background: #d7e6fc;  
-  }  
-  .item img {  
-    width: 44px;  
-    height: 44px;  
-    object-fit: contain;  
-    border-radius: 12px;  
-    background: #c8dafc;  
-    flex-shrink: 0;  
-    box-shadow: 0 0 6px rgba(74, 144, 226, 0.5);  
-  }  
-  .item span.name {  
-    flex-grow: 1;  
-    white-space: nowrap;  
-    overflow: hidden;  
-    text-overflow: ellipsis;  
-    color: #2c3e50;  
-  }  
-  .item span.quantity {  
-    font-weight: 600;  
-    min-width: 48px;  
-    text-align: right;  
-    color: #3b5998;  
-  }  
-  #status {  
-    text-align: center;  
-    margin-top: 20px;  
-    font-size: 0.9rem;  
-    color: #537ebd;  
-    font-style: italic;  
-    user-select: none;  
-  }  
-</style>  
-</head>  
-<body>  
-  <div id="tabs"></div>  
-  <div id="content"></div>  
-  <div id="status"></div>  
-  
-<script>  
-  const API = 'https://test-hub.kys.gay/api/grow/garden/stock';  
-  const PLACEHOLDER_IMG = 'https://via.placeholder.com/44?text=No+Img';  
-  
-  let data = {}, current = '__all__';  
-  let countdowns = {};  
-  
-  function cap(s) {  
-    return s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' ');  
-  }  
-  
-  function parseTimeStringToSeconds(str) {  
-    if (!str) return 0;  
-    let total = 0;  
-    const regex = /(\d+)([hms])/g;  
-    let match;  
-    while ((match = regex.exec(str)) !== null) {  
-      const val = parseInt(match[1], 10);  
-      const unit = match[2];  
-      if (unit === 'h') total += val * 3600;  
-      else if (unit === 'm') total += val * 60;  
-      else if (unit === 's') total += val;  
-    }  
-    return total;  
-  }  
-  
-  function formatSecondsToTimeString(seconds) {  
-    const h = Math.floor(seconds / 3600);  
-    const m = Math.floor((seconds % 3600) / 60);  
-    const s = seconds % 60;  
-    return `${h > 0 ? h + 'h ' : ''}${m > 0 ? m + 'm ' : ''}${s}s`;  
-  }  
-  
-  function loadImage(url, altText) {  
-    return new Promise(resolve => {  
-      const img = new Image();  
-      img.src = url;  
-      img.alt = altText;  
-      img.width = 44;  
-      img.height = 44;  
-      img.style.objectFit = 'contain';  
-      img.style.borderRadius = '12px';  
-      img.style.backgroundColor = '#c8dafc';  
-      img.style.boxShadow = '0 0 6px rgba(74, 144, 226, 0.5)';  
-  
-      img.onload = () => resolve(img);  
-      img.onerror = () => {  
-        console.warn('Image failed to load:', url);  
-        const placeholder = new Image();  
-        placeholder.src = PLACEHOLDER_IMG;  
-        placeholder.alt = 'No Image';  
-        placeholder.width = 44;  
-        placeholder.height = 44;  
-        placeholder.style.objectFit = 'contain';  
-        placeholder.style.borderRadius = '12px';  
-        placeholder.style.backgroundColor = '#c8dafc';  
-        placeholder.style.boxShadow = '0 0 6px rgba(74, 144, 226, 0.5)';  
-        resolve(placeholder);  
-      };  
-    });  
-  }  
-  
-  function buildTabs() {  
-    const keys = ['__all__', ...Object.keys(data).filter(k => data[k]?.items)];  
-    const tabs = document.getElementById('tabs');  
-    tabs.innerHTML = '';  
-    keys.forEach(k => {  
-      const t = document.createElement('div');  
-      t.className = 'tab';  
-      t.textContent = k === '__all__' ? 'All' : cap(k);  
-      if (current === k) t.classList.add('active');  
-      t.onclick = () => {  
-        current = k;  
-        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));  
-        t.classList.add('active');  
-        render();  
-      };  
-      tabs.appendChild(t);  
-    });  
-  }  
-  
-  async function renderCategory(cat) {  
-    const cont = document.getElementById('content');  
-    let div = cont.querySelector(`.category[data-cat="${cat}"]`);  
-    const items = data[cat]?.items || [];  
-    const total = items.some(i => i.quantity === 'N/A') ? 'N/A' : items.reduce((s, i) => s + (+i.quantity || 0), 0);  
-    const restockKey = `${cat}_next_update_in`;  
-    const restockStr = data[restockKey] || '';  
-    countdowns[cat] = parseTimeStringToSeconds(restockStr);  
-  
-    if (!div) {  
-      div = document.createElement('div');  
-      div.className = 'category';  
-      div.dataset.cat = cat;  
-      document.getElementById('content').appendChild(div);  
-    }  
-    div.innerHTML = '';  
-  
-    const hdr = document.createElement('div');  
-    hdr.className = 'category-header';  
-    hdr.innerHTML = `<span>${cat === '__all__' ? 'All' : cap(cat)} (Total: ${total})</span>  
-                     <small data-cat="${cat}">Restock in: ${formatSecondsToTimeString(countdowns[cat])}</small>`;  
-  
-    const itmDiv = document.createElement('div');  
-    itmDiv.className = 'items';  
-  
-    for (const i of items) {  
-      const it = document.createElement('div');  
-      it.className = 'item';  
-  
-      if (i.image_url) {  
-        const img = await loadImage(i.image_url, i.name);  
-        it.appendChild(img);  
-      }  
-  
-      const nameSpan = document.createElement('span');  
-      nameSpan.className = 'name';  
-      nameSpan.textContent = i.name;  
-  
-      const qtySpan = document.createElement('span');  
-      qtySpan.className = 'quantity';  
-      qtySpan.textContent = i.quantity;  
-  
-      it.append(nameSpan, qtySpan);  
-      itmDiv.appendChild(it);  
-    }  
-  
-    hdr.onclick = () => {  
-      itmDiv.style.display = itmDiv.style.display === 'none' ? 'block' : 'none';  
-    };  
-  
-    div.appendChild(hdr);  
-    div.appendChild(itmDiv);  
-  }  
-  
-  async function render() {  
-    const cont = document.getElementById('content');  
-    cont.innerHTML = '';  
-    if (current === '__all__') {  
-      for (const cat of Object.keys(data).filter(k => data[k]?.items)) {  
-        await renderCategory(cat);  
-      }  
-    } else {  
-      await renderCategory(current);  
-    }  
-    document.getElementById('status').textContent = `Last updated: ${data.current_time_eest || ''}`;  
-  }  
-  
-  function updateRestockDisplays() {  
-    document.querySelectorAll('.category-header small').forEach(small => {  
-      const cat = small.dataset.cat;  
-      if (countdowns[cat] !== undefined) {  
-        const sec = countdowns[cat];  
-        small.textContent = 'Restock in: ' + formatSecondsToTimeString(sec);  
-      }  
-    });  
-  }  
-  
-  async function refreshCategoryIfNeeded(cat) {  
-    if (!data[cat]) return;  
-  
-    if (countdowns[cat] <= 0) {  
-      try {  
-        const r = await fetch(API);  
-        const newData = await r.json();  
-        const oldJson = JSON.stringify(data[cat]?.items || []);  
-        const newJson = JSON.stringify(newData[cat]?.items || []);  
-        if (oldJson !== newJson) {  
-          data[cat] = newData[cat];  
-          data[`${cat}_next_update_in`] = newData[`${cat}_next_update_in`];  
-          countdowns[cat] = parseTimeStringToSeconds(data[`${cat}_next_update_in`]);  
-          await renderCategory(cat);  
-          console.log(`Category "${cat}" refreshed due to restock time.`);  
-        } else {  
-          countdowns[cat] = parseTimeStringToSeconds(newData[`${cat}_next_update_in`]);  
-          data[`${cat}_next_update_in`] = newData[`${cat}_next_update_in`];  
-          updateRestockDisplays();  
-          console.log(`Category "${cat}" restock time reset.`);  
-        }  
-      } catch (e) {  
-        console.error(`Failed to refresh category ${cat}:`, e);  
-      }  
-    }  
-  }  
-  
-  function startCountdowns() {  
-    setInterval(async () => {  
-      let anyUpdate = false;  
-      for (const cat in countdowns) {  
-        if (countdowns[cat] > 0) {  
-          countdowns[cat]--;  
-          anyUpdate = true;  
-        }  
-      }  
-      if (anyUpdate) updateRestockDisplays();  
-  
-      for (const cat in countdowns) {  
-        if (countdowns[cat] <= 0) {  
-          await refreshCategoryIfNeeded(cat);  
-        }  
-      }  
-    }, 1000);  
-  }  
-  
-  async function initialLoad() {  
-    try {  
-      const r = await fetch(API);  
-      data = await r.json();  
-      buildTabs();  
-      await render();  
-      startCountdowns();  
-    } catch (e) {  
-      console.error(e);  
-      document.getElementById('status').textContent = 'Failed to load data';  
-    }  
-  }  
-  
-  initialLoad();  
-</script>  
-</body>  
 </html>
