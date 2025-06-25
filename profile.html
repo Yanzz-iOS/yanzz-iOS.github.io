@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Profile</title>
+<style>
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0a0f23;
+    color: #e6f0ff;
+    overflow: hidden;
+    user-select: none;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+  }
+
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    background: transparent;
+    pointer-events: none;
+  }
+
+  .profile-container {
+    background: rgba(230, 240, 255, 0.15);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 0 30px rgba(102, 178, 255, 0.5);
+    text-align: center;
+    user-select: text;
+    overflow-wrap: break-word;
+    transform-style: preserve-3d;
+    perspective: 800px;
+    animation: float3D 6s ease-in-out infinite;
+    backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(102, 178, 255, 0.3);
+    position: relative;
+    z-index: 10;
+  }
+  @keyframes float3D {
+    0%, 100% {
+      transform: translateZ(0) rotateX(0deg) rotateY(0deg);
+      box-shadow: 0 0 30px rgba(102, 178, 255, 0.5);
+    }
+    50% {
+      transform: translateZ(15px) rotateX(8deg) rotateY(8deg);
+      box-shadow: 0 0 45px rgba(102, 178, 255, 0.7);
+    }
+  }
+  .avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #e6f0ff;
+    margin-bottom: 20px;
+    object-fit: cover;
+    filter: drop-shadow(0 0 6px #66b2ff);
+    transition: transform 0.3s ease, filter 0.3s ease;
+    backface-visibility: hidden;
+    background: #0a0f23;
+    position: relative;
+    z-index: 11;
+  }
+  .avatar:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 20px #99ccff);
+  }
+  h1 {
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    margin-bottom: 8px;
+    letter-spacing: 1.2px;
+    word-break: break-word;
+    text-shadow: 0 0 10px #99ccff;
+    color: #e6f0ff;
+    backface-visibility: hidden;
+  }
+  p.tagline {
+    font-size: 1rem;
+    font-style: italic;
+    margin-bottom: 25px;
+    color: #cce5ff;
+    text-shadow: 0 0 6px #66b2ff;
+  }
+  .discord-tag {
+    font-size: 1.2rem;
+    background: #3399ff;
+    padding: 12px 20px;
+    border-radius: 50px;
+    display: inline-block;
+    cursor: pointer;
+    user-select: all;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    word-break: break-word;
+    box-shadow: 0 0 12px #3399ffaa;
+    color: white;
+    backface-visibility: hidden;
+  }
+  .discord-tag:hover {
+    background: #66b2ff;
+    box-shadow: 0 0 24px #66b2ffcc;
+  }
+  button.copy-btn {
+    margin-top: 15px;
+    background: #3399ff;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px #3399ffcc;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    backface-visibility: hidden;
+  }
+  button.copy-btn:hover {
+    background: #1a75ff;
+    box-shadow: 0 0 26px #1a75ffcc;
+  }
+  a.discord-invite {
+    display: inline-block;
+    margin-top: 20px;
+    color: #cce5ff;
+    text-decoration: none;
+    font-weight: 600;
+    border: 2px solid #66b2ff;
+    padding: 10px 18px;
+    border-radius: 12px;
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    word-break: break-word;
+    backface-visibility: hidden;
+    box-shadow: 0 0 14px #66b2ffaa;
+  }
+  a.discord-invite:hover {
+    background: #66b2ff;
+    color: #0a0f23;
+    box-shadow: 0 0 28px #3399ffcc;
+  }
+  .about-me {
+    margin-top: 30px;
+    background: rgba(230, 240, 255, 0.15);
+    padding: 20px;
+    border-radius: 15px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #cce5ff;
+    text-align: left;
+    user-select: text;
+    box-shadow: 0 0 12px #3399ff88;
+    backface-visibility: hidden;
+  }
+  .progress-section {
+    margin-top: 30px;
+    text-align: left;
+  }
+  .progress-section label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #cce5ff;
+    text-shadow: 0 0 4px #3399ff99;
+  }
+  .progress-bar {
+    background: rgba(230, 240, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    height: 18px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .progress-bar > div {
+    height: 100%;
+    background: #3399ff;
+    width: 0;
+    transition: width 1.2s ease;
+    border-radius: 12px;
+    box-shadow: 0 0 8px #3399ffcc;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+  .fade-in {
+    animation: fadeIn 1s ease forwards;
+    opacity: 0;
+  }
+  @media (max-width: 400px) {
+    .profile-container {
+      padding: 20px;
+    }
+    h1 {
+      font-size: clamp(1.2rem, 6vw, 1.6rem);
+    }
+    .discord-tag {
+      font-size: 1rem;
+      padding: 10px 15px;
+    }
+    button.copy-btn {
+      width: 100%;
+    }
+    .about-me {
+      font-size: 0.9rem;
+      padding: 15px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="profile-container" role="main" aria-label="Discord Profile of ! CEO YANZZ">
+  <img
+    src="https://cdn.discordapp.com/attachments/1371029534299656202/1387490074811433111/8e46abebcbe4a0f60b05765d37bc1a32.jpg?ex=685d8854&is=685c36d4&hm=6cc36425a5cdd2c8e37367ea2bcab1a34273ad79e8fac23b1ba4223daf50c969&"
+    alt="Discord Profile Picture of ! CEO YANZZ"
+    class="avatar"
+    loading="lazy"
+    onerror="this.src='https://cdn-icons-png.flaticon.com/512/2111/2111370.png'"
+  />
+  <h1>! CEO YANZZ#6079</h1>
+  <p class="tagline">Developer & Discord Bot & Web Dev Specialist</p>
+
+  <div
+    class="discord-tag"
+    id="discordTag"
+    tabindex="0"
+    role="textbox"
+    aria-label="Discord Tag ! CEO YANZZ"
+    onclick="copyDiscordTag()"
+    onkeydown="if(event.key==='Enter' || event.key===' ') copyDiscordTag()"
+  >
+    ! CEO YANZZ#6079
+  </div>
+
+  <button class="copy-btn" onclick="copyDiscordTag()">Copy Discord Tag</button>
+
+  <a
+    href="https://discord.com/invite/mNGeUVcjKB"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="discord-invite"
+    aria-label="Invite link to join ! CEO YANZZ's Discord Server"
+  >
+    Join My Discord Server
+  </a>
+
+  <div class="progress-section fade-in" aria-label="Skill Progress Bars">
+    <div>
+      <label><i class="fa-solid fa-code"></i> BDFDSCRIPT 100%</label>
+      <div class="progress-bar"><div style="width: 100%;"></div></div>
+    </div>
+    <div>
+      <label><i class="fa-brands fa-html5"></i> HTML 80%</label>
+      <div class="progress-bar"><div style="width: 80%;"></div></div>
+    </div>
+    <div>
+      <label><i class="fa-brands fa-js-square"></i> JAVASCRIPT 45%</label>
+      <div class="progress-bar"><div style="width: 45%;"></div></div>
+    </div>
+    <div>
+      <label><i class="fa-brands fa-python"></i> PYTHON 40%</label>
+      <div class="progress-bar"><div style="width: 40%;"></div></div>
+    </div>
+    <div>
+      <label><i class="fa-brands fa-php"></i> PHP 6%</label>
+      <div class="progress-bar"><div style="width: 6%;"></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function copyDiscordTag() {
+    const tag = '! CEO YANZZ#6079';
+    navigator.clipboard.writeText(tag).then(() => {
+      alert('Discord Tag copied: ' + tag);
+    }).catch(() => {
+      alert('Failed to copy Discord Tag');
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.progress-bar > div').forEach(bar => {
+      const width = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => {
+        bar.style.width = width;
+      }, 100);
+    });
+  });
+
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let cols, rows;
+  const gridSize = 50;
+  let points = [];
+  let angle = 0;
+
+  function init() {
+    resize();
+    points = [];
+    for(let y=0; y<=rows; y++) {
+      for(let x=0; x<=cols; x++) {
+        points.push({
+          x: x * gridSize,
+          y: y * gridSize,
+          z: 0,
+          originalZ: 0,
+        });
+      }
+    }
+  }
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * devicePixelRatio;
+    canvas.height = height * devicePixelRatio;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+
+    cols = Math.floor(width / gridSize);
+    rows = Math.floor(height / gridSize);
+  }
+
+  function project(point) {
+    const distance = 200;
+    const z = point.z + 300;
+    const scale = distance / (distance + z);
+    return {
+      x: point.x * scale + (width / 2 - (cols * gridSize) / 2),
+      y: point.y * scale + (height / 2 - (rows * gridSize) / 2),
+      scale,
+    };
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.strokeStyle = 'rgba(51, 153, 255, 0.3)';
+    ctx.lineWidth = 1;
+
+    angle += 0.03;
+    points.forEach((p, i) => {
+      p.z = Math.sin(angle + i * 0.3) * 20;
+    });
+
+    for(let y=0; y<=rows; y++) {
+      ctx.beginPath();
+      for(let x=0; x<=cols; x++) {
+        const p = points[y * (cols + 1) + x];
+        const proj = project(p);
+        if(x === 0) {
+          ctx.moveTo(proj.x, proj.y);
+        } else {
+          ctx.lineTo(proj.x, proj.y);
+        }
+      }
+      ctx.stroke();
+    }
+
+    for(let x=0; x<=cols; x++) {
+      ctx.beginPath();
+      for(let y=0; y<=rows; y++) {
+        const p = points[y * (cols + 1) + x];
+        const proj = project(p);
+        if(y === 0) {
+          ctx.moveTo(proj.x, proj.y);
+        } else {
+          ctx.lineTo(proj.x, proj.y);
+        }
+      }
+      ctx.stroke();
+    }
+  }
+
+  function animate() {
+    draw();
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', () => {
+    init();
+  });
+
+  init();
+  animate();
+</script>
+
+</body>
+  </html>
