@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Profile</title>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
 <style>
   * {
     margin: 0; padding: 0; box-sizing: border-box;
@@ -16,15 +17,16 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #0a0f23;
     color: #e6f0ff;
-    overflow: hidden;
     user-select: none;
+    overflow: hidden;
+    font-size: calc(12px + 0.8vw);
   }
   body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    position: relative;
+    padding: 0;
+    margin: 0;
   }
 
   #bg-canvas {
@@ -38,186 +40,177 @@
   }
 
   .profile-container {
+    position: relative;
+    width: 100vw;
+    max-width: 600px;
+    height: 100vh;
     background: rgba(230, 240, 255, 0.15);
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 360px;
-    width: 100%;
+    border-radius: 0;
     box-shadow: 0 0 30px rgba(102, 178, 255, 0.5);
+    overflow: visible;
     text-align: center;
     user-select: text;
-    overflow-wrap: break-word;
-    transform-style: preserve-3d;
-    perspective: 800px;
-    animation: float3D 6s ease-in-out infinite;
     backdrop-filter: blur(12px);
     border: 1.5px solid rgba(102, 178, 255, 0.3);
-    position: relative;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
   }
-  @keyframes float3D {
-    0%, 100% {
-      transform: translateZ(0) rotateX(0deg) rotateY(0deg);
-      box-shadow: 0 0 30px rgba(102, 178, 255, 0.5);
-    }
-    50% {
-      transform: translateZ(15px) rotateX(8deg) rotateY(8deg);
-      box-shadow: 0 0 45px rgba(102, 178, 255, 0.7);
-    }
+
+  .banner {
+    width: 100%;
+    height: 200px;
+    background: url('https://cdn.discordapp.com/attachments/1243485467945734154/1388502783581360250/5bd049f40335bee726c0286f0a33c8ad.jpg?ex=6861377c&is=685fe5fc&hm=496035bd5b593b3ad30a2625eaa04174f14ca7eb12fcb23ea63f9f88f83eef1f&') no-repeat center/cover;
+    filter: none;
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: -70px auto 1rem auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #e6f0ff;
+    box-shadow: 0 0 20px #66b2ffaa;
+    background: #0a0f23;
+    transition: filter 0.3s ease, transform 0.3s ease;
+    z-index: 20;
+    animation: avatar-pulse 4s ease-in-out infinite;
+  }
+  .avatar-wrapper:hover {
+    filter: drop-shadow(0 0 30px #99ccff);
+    transform: scale(1.1);
+    animation-play-state: paused;
   }
   .avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border: 4px solid #e6f0ff;
-    margin-bottom: 20px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    filter: drop-shadow(0 0 6px #66b2ff);
-    transition: transform 0.3s ease, filter 0.3s ease;
-    backface-visibility: hidden;
-    background: #0a0f23;
-    position: relative;
-    z-index: 11;
+    border-radius: 50%;
+    display: block;
   }
-  .avatar:hover {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 20px #99ccff);
+
+  @keyframes avatar-pulse {
+    0%, 100% { box-shadow: 0 0 20px #66b2ffaa; }
+    50% { box-shadow: 0 0 35px #99ccffcc; }
   }
+
   h1 {
-    font-size: clamp(1.4rem, 4vw, 1.8rem);
-    margin-bottom: 8px;
-    letter-spacing: 1.2px;
-    word-break: break-word;
-    text-shadow: 0 0 10px #99ccff;
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    letter-spacing: 1.4px;
     color: #e6f0ff;
-    backface-visibility: hidden;
+    text-shadow: 0 0 12px #99ccff;
+    user-select: text;
   }
-  p.tagline {
-    font-size: 1rem;
-    font-style: italic;
-    margin-bottom: 25px;
-    color: #cce5ff;
-    text-shadow: 0 0 6px #66b2ff;
-  }
-  .discord-tag {
-    font-size: 1.2rem;
-    background: #3399ff;
-    padding: 12px 20px;
-    border-radius: 50px;
-    display: inline-block;
-    cursor: pointer;
-    user-select: all;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
-    word-break: break-word;
-    box-shadow: 0 0 12px #3399ffaa;
-    color: white;
-    backface-visibility: hidden;
-  }
-  .discord-tag:hover {
-    background: #66b2ff;
-    box-shadow: 0 0 24px #66b2ffcc;
-  }
-  button.copy-btn {
-    margin-top: 15px;
-    background: #3399ff;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 24px;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 4px 14px #3399ffcc;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
-    backface-visibility: hidden;
-  }
-  button.copy-btn:hover {
-    background: #1a75ff;
-    box-shadow: 0 0 26px #1a75ffcc;
-  }
+
   a.discord-invite {
     display: inline-block;
-    margin-top: 20px;
+    margin: 0 0 2rem 0;
     color: #cce5ff;
     text-decoration: none;
     font-weight: 600;
     border: 2px solid #66b2ff;
-    padding: 10px 18px;
-    border-radius: 12px;
-    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    word-break: break-word;
-    backface-visibility: hidden;
-    box-shadow: 0 0 14px #66b2ffaa;
+    padding: 12px 24px;
+    border-radius: 14px;
+    box-shadow: 0 0 18px #66b2ffaa;
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    user-select: none;
+    cursor: pointer;
   }
   a.discord-invite:hover {
     background: #66b2ff;
     color: #0a0f23;
-    box-shadow: 0 0 28px #3399ffcc;
+    box-shadow: 0 0 40px #3399ffcc;
+    transform: scale(1.05);
   }
-  .about-me {
-    margin-top: 30px;
-    background: rgba(230, 240, 255, 0.15);
-    padding: 20px;
-    border-radius: 15px;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #cce5ff;
-    text-align: left;
-    user-select: text;
-    box-shadow: 0 0 12px #3399ff88;
-    backface-visibility: hidden;
-  }
+
   .progress-section {
-    margin-top: 30px;
+    margin: 0 3rem 2rem 3rem;
     text-align: left;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
   .progress-section label {
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 0.375rem;
     display: block;
     color: #cce5ff;
-    text-shadow: 0 0 4px #3399ff99;
+    text-shadow: 0 0 5px #3399ffaa;
   }
   .progress-bar {
     background: rgba(230, 240, 255, 0.1);
-    border-radius: 12px;
+    border-radius: 14px;
     overflow: hidden;
-    margin-bottom: 16px;
-    height: 18px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    margin-bottom: 1rem;
+    height: 20px;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.3);
   }
   .progress-bar > div {
     height: 100%;
     background: #3399ff;
     width: 0;
-    transition: width 1.2s ease;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 14px;
+    box-shadow: 0 0 12px #3399ffcc;
+  }
+
+  #alert-box {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #1e2a78;
+    color: #e6f0ff;
+    padding: 1rem 2rem;
     border-radius: 12px;
-    box-shadow: 0 0 8px #3399ffcc;
-  }
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(10px);}
-    to {opacity: 1; transform: translateY(0);}
-  }
-  .fade-in {
-    animation: fadeIn 1s ease forwards;
+    box-shadow: 0 0 20px #3399ffcc;
+    font-weight: 600;
+    font-size: 1.2rem;
+    z-index: 9999;
+    user-select: none;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0;
   }
-  @media (max-width: 400px) {
+  #alert-box.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 480px) {
     .profile-container {
-      padding: 20px;
+      max-width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      border-width: 1px;
+    }
+    .banner {
+      height: 140px;
+    }
+    .avatar-wrapper {
+      width: 110px;
+      height: 110px;
+      margin: -55px auto 0.75rem auto;
+      border-radius: 50%;
+      border-width: 3px;
+      box-shadow: 0 0 15px #66b2ffaa;
     }
     h1 {
-      font-size: clamp(1.2rem, 6vw, 1.6rem);
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
     }
-    .discord-tag {
+    a.discord-invite {
+      padding: 10px 20px;
       font-size: 1rem;
-      padding: 10px 15px;
     }
-    button.copy-btn {
-      width: 100%;
-    }
-    .about-me {
-      font-size: 0.9rem;
-      padding: 15px;
+    .progress-section {
+      margin: 0 1rem 1.5rem 1rem;
     }
   }
 </style>
@@ -226,75 +219,160 @@
 
 <canvas id="bg-canvas"></canvas>
 
-<div class="profile-container" role="main" aria-label="Discord Profile of ! CEO YANZZ">
-  <img
-    src="https://cdn.discordapp.com/attachments/1243485467945734154/1387708265047261194/bf2314975e73df3478004c1986b6a437.jpg?ex=685e5388&is=685d0208&hm=9d0fafd1756f072d348f8407bd27a9426ff099fd260be845a0d38108900fbf90&"
-    alt="Discord Profile Picture of ! CEO YANZZ"
-    class="avatar"
-    loading="lazy"
-    onerror="this.src='https://cdn-icons-png.flaticon.com/512/2111/2111370.png'"
-  />
-  <h1>! CEO YANZZ#6079</h1>
-  <p class="tagline">Developer & Discord Bot & Web Dev Specialist</p>
+<div class="profile-container" role="main" aria-label="Discord Profile of YANZZ#6079">
 
-  <div
-    class="discord-tag"
-    id="discordTag"
-    tabindex="0"
-    role="textbox"
-    aria-label="Discord Tag ! CEO YANZZ"
-    onclick="copyDiscordTag()"
-    onkeydown="if(event.key==='Enter' || event.key===' ') copyDiscordTag()"
-  >
-    ! CEO YANZZ#6079
+  <div class="banner" aria-hidden="true"></div>
+
+  <div class="avatar-wrapper" aria-label="Profile Picture">
+    <img
+      src="https://cdn.discordapp.com/attachments/1243485467945734154/1387708265047261194/bf2314975e73df3478004c1986b6a437.jpg?ex=6860f688&is=685fa508&hm=a0e5cc10a8b7c5f6a7b8f14758a448df7706d0d35dc7b688f3429657641a9f17&"
+      alt="Discord Profile Picture of YANZZ#6079"
+      class="avatar"
+      loading="lazy"
+      onerror="this.src='https://cdn-icons-png.flaticon.com/512/2111/2111370.png'"
+    />
   </div>
 
-  <button class="copy-btn" onclick="copyDiscordTag()">Copy Discord Tag</button>
+  <h1>!CEO YANZZ#6079</h1>
 
   <a
     href="https://discord.com/invite/mNGeUVcjKB"
     target="_blank"
     rel="noopener noreferrer"
     class="discord-invite"
-    aria-label="Invite link to join ! CEO YANZZ's Discord Server"
+    aria-label="Invite link to join YANZZ's Discord Server"
   >
     Join My Discord Server
   </a>
 
-  <div class="progress-section fade-in" aria-label="Skill Progress Bars">
+  <div class="progress-section" aria-label="Skill Progress Bars">
     <div>
       <label><i class="fa-solid fa-code"></i> BDFDSCRIPT 100%</label>
       <div class="progress-bar"><div style="width: 100%;"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-html5"></i> HTML 80%</label>
+      <label><i class="fa-brands fa-html5"></i> HTML 81%</label>
       <div class="progress-bar"><div style="width: 80%;"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-js-square"></i> JAVASCRIPT 45%</label>
+      <label><i class="fa-brands fa-js-square"></i> JAVASCRIPT 46%</label>
       <div class="progress-bar"><div style="width: 45%;"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-python"></i> PYTHON 40%</label>
+      <label><i class="fa-brands fa-python"></i> PYTHON 46%</label>
       <div class="progress-bar"><div style="width: 40%;"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-php"></i> PHP 6%</label>
+      <label><i class="fa-brands fa-php"></i> PHP 7%</label>
       <div class="progress-bar"><div style="width: 6%;"></div></div>
     </div>
   </div>
 
 </div>
 
+<div id="alert-box" role="alert" aria-live="assertive"></div>
+
 <script>
-  function copyDiscordTag() {
-    const tag = '! CEO YANZZ#6079';
-    navigator.clipboard.writeText(tag).then(() => {
-      alert('Discord Tag copied: ' + tag);
-    }).catch(() => {
-      alert('Failed to copy Discord Tag');
-    });
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  let width, height;
+
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
   }
+
+  class Star {
+    constructor() {
+      this.reset();
+    }
+    reset() {
+      this.x = random(0, width);
+      this.y = random(0, height);
+      this.size = random(1, 2);
+      this.speed = random(0.5, 1.5);
+      this.length = random(80, 150);
+      this.angle = Math.PI / 4;
+      this.opacity = 0;
+      this.opacitySpeed = 0.02;
+    }
+    update() {
+      this.x += this.speed * Math.cos(this.angle);
+      this.y += this.speed * Math.sin(this.angle);
+      this.opacity += this.opacitySpeed;
+      if (this.opacity > 1) {
+        this.opacity = 1;
+        this.opacitySpeed = -this.opacitySpeed;
+      }
+      if (this.opacity < 0) this.opacitySpeed = -this.opacitySpeed;
+      if (this.x > width || this.y > height) {
+        this.reset();
+        this.x = 0;
+        this.y = random(0, height / 2);
+      }
+    }
+    draw() {
+      ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
+      ctx.lineWidth = this.size;
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(this.x - this.length * Math.cos(this.angle), this.y - this.length * Math.sin(this.angle));
+      ctx.stroke();
+    }
+  }
+
+  function init() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    stars = [];
+    for(let i = 0; i < 40; i++) {
+      stars.push(new Star());
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    stars.forEach(star => {
+      star.update();
+      star.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', () => {
+    init();
+  });
+
+  init();
+  animate();
+
+  function showAlert(message) {
+    const alertBox = document.getElementById('alert-box');
+    alertBox.textContent = message;
+    alertBox.classList.add('show');
+    clearTimeout(alertBox.hideTimeout);
+    alertBox.hideTimeout = setTimeout(() => {
+      alertBox.classList.remove('show');
+    }, 3000);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key.toUpperCase())) ||
+      (e.ctrlKey && e.key.toUpperCase() === 'U')
+    ) {
+      e.preventDefault();
+      showAlert('This function is disabled.');
+    }
+  });
+
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    showAlert('Right click is disabled');
+  });
 
   window.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.progress-bar > div').forEach(bar => {
@@ -305,106 +383,7 @@
       }, 100);
     });
   });
-
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let width, height;
-  let cols, rows;
-  const gridSize = 50;
-  let points = [];
-  let angle = 0;
-
-  function init() {
-    resize();
-    points = [];
-    for(let y=0; y<=rows; y++) {
-      for(let x=0; x<=cols; x++) {
-        points.push({
-          x: x * gridSize,
-          y: y * gridSize,
-          z: 0,
-          originalZ: 0,
-        });
-      }
-    }
-  }
-
-  function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width * devicePixelRatio;
-    canvas.height = height * devicePixelRatio;
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(devicePixelRatio, devicePixelRatio);
-
-    cols = Math.floor(width / gridSize);
-    rows = Math.floor(height / gridSize);
-  }
-
-  function project(point) {
-    const distance = 200;
-    const z = point.z + 300;
-    const scale = distance / (distance + z);
-    return {
-      x: point.x * scale + (width / 2 - (cols * gridSize) / 2),
-      y: point.y * scale + (height / 2 - (rows * gridSize) / 2),
-      scale,
-    };
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.strokeStyle = 'rgba(51, 153, 255, 0.3)';
-    ctx.lineWidth = 1;
-
-    angle += 0.03;
-    points.forEach((p, i) => {
-      p.z = Math.sin(angle + i * 0.3) * 20;
-    });
-
-    for(let y=0; y<=rows; y++) {
-      ctx.beginPath();
-      for(let x=0; x<=cols; x++) {
-        const p = points[y * (cols + 1) + x];
-        const proj = project(p);
-        if(x === 0) {
-          ctx.moveTo(proj.x, proj.y);
-        } else {
-          ctx.lineTo(proj.x, proj.y);
-        }
-      }
-      ctx.stroke();
-    }
-
-    for(let x=0; x<=cols; x++) {
-      ctx.beginPath();
-      for(let y=0; y<=rows; y++) {
-        const p = points[y * (cols + 1) + x];
-        const proj = project(p);
-        if(y === 0) {
-          ctx.moveTo(proj.x, proj.y);
-        } else {
-          ctx.lineTo(proj.x, proj.y);
-        }
-      }
-      ctx.stroke();
-    }
-  }
-
-  function animate() {
-    draw();
-    requestAnimationFrame(animate);
-  }
-
-  window.addEventListener('resize', () => {
-    init();
-  });
-
-  init();
-  animate();
 </script>
 
 </body>
-  </html>
+</html>
