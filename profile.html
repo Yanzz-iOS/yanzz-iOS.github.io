@@ -1,458 +1,525 @@
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Profile</title>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
-<style>
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
-  html, body {
-    height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #0a0f23;
-    color: #e6f0ff;
-    user-select: none;
-    overflow: hidden;
-    font-size: calc(12px + 0.8vw);
-  }
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-  }
-
-  #bg-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0;
-    background: transparent;
-    pointer-events: none;
-  }
-
-  .profile-container {
-    width: 100vw;
-    max-width: 600px;
-    max-height: 90vh;
-    padding: 2rem 1.5rem;
-    background: rgba(230, 240, 255, 0.15);
-    border-radius: 12px;
-    box-shadow: 0 0 30px rgba(102, 178, 255, 0.5);
-    overflow: visible;
-    text-align: center;
-    user-select: text;
-    backdrop-filter: blur(12px);
-    border: 1.5px solid rgba(102, 178, 255, 0.3);
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    opacity: 1;
-    transition: opacity 2s ease-in-out;
-  }
-
-  .banner {
-    width: 100%;
-    height: 200px;
-    background: url('https://cdn.discordapp.com/attachments/1243485467945734154/1388502783581360250/5bd049f40335bee726c0286f0a33c8ad.jpg?ex=6861377c&is=685fe5fc&hm=496035bd5b593b3ad30a2625eaa04174f14ca7eb12fcb23ea63f9f88f83eef1f&') no-repeat center/cover;
-    filter: none;
-    border-radius: 12px 12px 0 0;
-  }
-
-  .avatar-wrapper {
-    position: relative;
-    width: 140px;
-    height: 140px;
-    margin: -70px auto 1rem auto;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid #e6f0ff;
-    box-shadow: 0 0 20px #66b2ffaa;
-    background: #0a0f23;
-    transition: filter 0.3s ease, transform 0.3s ease;
-    z-index: 20;
-    animation: avatar-pulse 4s ease-in-out infinite;
-  }
-  .avatar-wrapper:hover {
-    filter: drop-shadow(0 0 30px #99ccff);
-    transform: scale(1.1);
-    animation-play-state: paused;
-  }
-  .avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-    display: block;
-  }
-
-  @keyframes avatar-pulse {
-    0%, 100% { box-shadow: 0 0 20px #66b2ffaa; }
-    50% { box-shadow: 0 0 35px #99ccffcc; }
-  }
-
-  h1 {
-    margin-top: 0;
-    margin-bottom: 1.25rem;
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
-    letter-spacing: 1.4px;
-    color: #e6f0ff;
-    text-shadow: 0 0 12px #99ccff;
-    user-select: text;
-  }
-
-  a.discord-invite {
-    display: inline-block;
-    margin: 0 0 2rem 0;
-    color: #cce5ff;
-    text-decoration: none;
-    font-weight: 600;
-    border: 2px solid #66b2ff;
-    padding: 12px 24px;
-    border-radius: 14px;
-    box-shadow: 0 0 18px #66b2ffaa;
-    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-    user-select: none;
-    cursor: pointer;
-  }
-  a.discord-invite:hover {
-    background: #66b2ff;
-    color: #0a0f23;
-    box-shadow: 0 0 40px #3399ffcc;
-    transform: scale(1.05);
-  }
-
-  .progress-section {
-    margin: -2rem 4rem 3rem 4rem;
-    text-align: left;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-  .progress-section label {
-    font-weight: 600;
-    margin-bottom: 0.375rem;
-    display: block;
-    color: #cce5ff;
-    text-shadow: 0 0 5px #3399ffaa;
-  }
-  .progress-bar {
-    background: rgba(230, 240, 255, 0.1);
-    border-radius: 14px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-    height: 20px;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.3);
-  }
-  .progress-bar > div {
-    height: 100%;
-    background: #3399ff;
-    width: 0;
-    border-radius: 14px;
-    box-shadow: 0 0 12px #3399ffcc;
-    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-  /* แสดงตัวเลขเปอร์เซ็นต์บน progress bar */
-  .progress-bar > div::after {
-    content: attr(data-progress) '%';
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-shadow: 0 0 5px #3399ffcc;
-    user-select: none;
-  }
-
-  #alert-box {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    background: rgba(30, 42, 120, 0.85);
-    color: #e6f0ff;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    box-shadow: 0 0 20px #3399ffcc;
-    font-weight: 600;
-    font-size: 1.2rem;
-    z-index: 9999;
-    user-select: none;
-    pointer-events: none;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    opacity: 0;
-  }
-  #alert-box.show {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  @media (max-width: 480px) {
-    .profile-container {
-      width: 100vw;
-      height: 100vh;
-      max-height: none;
-      padding: 1rem;
-      background: rgba(230, 240, 255, 0.15);
-      border-radius: 0;
-      border-width: 1px;
-      backdrop-filter: blur(12px);
-      border: 1.5px solid rgba(102, 178, 255, 0.3);
-    }
-    .banner {
-      height: 140px;
-      border-radius: 0;
-    }
-    .avatar-wrapper {
-      width: 110px;
-      height: 110px;
-      margin: -55px auto 0.75rem auto;
-      border-radius: 50%;
-      border-width: 3px;
-      box-shadow: 0 0 15px #66b2ffaa;
-    }
-    h1 {
-      font-size: 1.6rem;
-      margin-bottom: 1rem;
-    }
-    a.discord-invite {
-      padding: 10px 20px;
-      font-size: 1rem;
-    }
-    .progress-section {
-      margin: 0 1rem 1.5rem 1rem;
-    }
-  }
-</style>
-</head>
-<body>
-
-<canvas id="bg-canvas" aria-hidden="true"></canvas>
-
-<div class="profile-container" role="main" aria-label="Discord Profile of YANZZ#6079">
-
-  <div class="banner" aria-hidden="true"></div>
-
-  <div class="avatar-wrapper" aria-label="Profile Picture of YANZZ#6079">
-    <img
-      src="https://cdn.discordapp.com/attachments/1243485467945734154/1387708265047261194/bf2314975e73df3478004c1986b6a437.jpg?ex=6860f688&is=685fa508&hm=a0e5cc10a8b7c5f6a7b8f14758a448df7706d0d35dc7b688f3429657641a9f17&"
-      alt="Discord Profile Picture of YANZZ#6079"
-      class="avatar"
-      loading="lazy"
-      onerror="this.src='https://cdn-icons-png.flaticon.com/512/2111/2111370.png'"
-    />
-  </div>
-
-  <h1>!CEO YANZZ#6079</h1>
-
-  <a
-    href="https://discord.com/invite/mNGeUVcjKB"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="discord-invite"
-    aria-label="Invite link to join YANZZ's Discord Server"
-  >
-    Join My Discord Server
-  </a>
-
-  <section class="progress-section" aria-label="Skill Progress Bars">
-    <div>
-      <label><i class="fa-solid fa-code" aria-hidden="true"></i> BDFDSCRIPT 100%</label>
-      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
-    </div>
-    <div>
-      <label><i class="fa-brands fa-html5" aria-hidden="true"></i> HTML 90%</label>
-      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
-    </div>
-    <div>
-      <label><i class="fa-brands fa-js-square" aria-hidden="true"></i> JAVASCRIPT 50%</label>
-      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
-    </div>
-    <div>
-      <label><i class="fa-brands fa-python" aria-hidden="true"></i> PYTHON 44%</label>
-      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
-    </div>
-    <div>
-      <label><i class="fa-brands fa-php" aria-hidden="true"></i> PHP 7%</label>
-      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
-    </div>
-  </section>
-
-</div>
-
-<div id="alert-box" role="alert" aria-live="assertive"></div>
-
-<script>
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let stars = [];
-  let width, height;
-
-  function random(min, max) {
-    return Math.random() * (max - min) + min;
-  }
-
-  class Star {
-    constructor() {
-      this.reset();
-    }
-    reset() {
-      this.x = random(0, width);
-      this.y = random(0, height);
-      this.size = random(1, 2);
-      this.speed = random(0.5, 1.5);
-      this.length = random(80, 150);
-      this.angle = Math.PI / 4;
-      this.opacity = 0;
-      this.opacitySpeed = 0.02;
-    }
-    update() {
-      this.x += this.speed * Math.cos(this.angle);
-      this.y += this.speed * Math.sin(this.angle);
-      this.opacity += this.opacitySpeed;
-      if (this.opacity > 1) {
-        this.opacity = 1;
-        this.opacitySpeed = -this.opacitySpeed;
-      }
-      if (this.opacity < 0) this.opacitySpeed = -this.opacitySpeed;
-      if (this.x > width || this.y > height) {
-        this.reset();
-        this.x = 0;
-        this.y = random(0, height / 2);
-      }
-    }
-    draw() {
-      ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity.toFixed(2)})`;
-      ctx.lineWidth = this.size;
-      ctx.beginPath();
-      ctx.moveTo(this.x, this.y);
-      ctx.lineTo(this.x - this.length * Math.cos(this.angle), this.y - this.length * Math.sin(this.angle));
-      ctx.stroke();
-    }
-  }
-
-  function init() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-    stars = [];
-    for(let i = 0; i < 40; i++) {
-      stars.push(new Star());
-    }
-  }
-
-  let lastTime = 0;
-  const fpsInterval = 1000 / 165;
-  let animationId;
-
-  function animate(time = 0) {
-    animationId = requestAnimationFrame(animate);
-    const elapsed = time - lastTime;
-    if(elapsed > fpsInterval) {
-      lastTime = time - (elapsed % fpsInterval);
-      ctx.clearRect(0, 0, width, height);
-      stars.forEach(star => {
-        star.update();
-        star.draw();
-      });
-    }
-  }
-
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      init();
-    }, 250);
-  });
-
-  document.addEventListener('visibilitychange', () => {
-    if(document.hidden) {
-      cancelAnimationFrame(animationId);
-    } else {
-      animate();
-    }
-  });
-
-  function animateProgressBar(bar, targetPercent, duration = 1500) {
-    let start = null;
-    const step = timestamp => {
-      if (!start) start = timestamp;
-      const progress = timestamp - start;
-      const percent = Math.min((progress / duration) * targetPercent, targetPercent);
-      bar.style.width = percent + '%';
-      bar.setAttribute('data-progress', Math.floor(percent));
-      if (progress < duration) {
-        requestAnimationFrame(step);
-      } else {
-        bar.style.width = targetPercent + '%';
-        bar.setAttribute('data-progress', targetPercent);
-      }
-    };
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => requestAnimationFrame(step));
-    } else {
-      requestAnimationFrame(step);
-    }
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    init();
-    animate();
-
-    document.querySelectorAll('.progress-section > div').forEach(section => {
-      const bar = section.querySelector('.progress-bar > div');
-      const label = section.querySelector('label').textContent;
-      const match = label.match(/(\d+)%/);
-      if (match) {
-        const targetPercent = parseInt(match[1], 10);
-        animateProgressBar(bar, targetPercent);
-      }
-    });
-  });
-
-  function showAlert(message) {
-    const alertBox = document.getElementById('alert-box');
-    alertBox.textContent = message;
-    alertBox.classList.add('show');
-    clearTimeout(alertBox.hideTimeout);
-    alertBox.hideTimeout = setTimeout(() => {
-      alertBox.classList.remove('show');
-    }, 3000);
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (
-      e.key === 'F12' ||
-      (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key.toUpperCase())) ||
-      (e.ctrlKey && e.key.toUpperCase() === 'U')
-    ) {
-      e.preventDefault();
-      showAlert('This function is disabled.');
-    }
-  });
-
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    showAlert('Right click is disabled');
-  });
-</script>
-
-</body>
+</body>  
+</html><!DOCTYPE html>  
+<html lang="en">  
+<head>  
+<meta charset="UTF-8" />  
+<meta name="viewport" content="width=device-width, initial-scale=1" />  
+<title>Profile</title>  
+<link  
+  rel="stylesheet"  
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"  
+/>  
+<style> * {  
+  margin: 0;   
+  padding: 0;   
+  box-sizing: border-box;  
+}  
+html, body {  
+  height: 100%;  
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
+  background: #0a0f23;  
+  color: #e6f0ff;  
+  user-select: none;  
+  overflow: hidden;  
+  font-size: calc(12px + 0.8vw);  
+}  
+body {  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  min-height: 100vh;  
+  margin: 0;  
+  padding: 0;  
+}  
+  
+#bg-canvas {  
+  position: fixed;  
+  top: 0; left: 0;  
+  width: 100vw;  
+  height: 100vh;  
+  z-index: 0;  
+  background: transparent;  
+  pointer-events: none;  
+}  
+  
+.profile-container {  
+  width: 90vw;  
+  max-width: 650px;  
+  max-height: 85vh;  
+  padding: 2.5rem 2rem;  
+  background: rgba(230, 240, 255, 0.18);  
+  border-radius: 16px;  
+  box-shadow:  
+    0 0 15px rgba(102, 178, 255, 0.4),  
+    0 10px 30px rgba(102, 178, 255, 0.2);  
+  overflow: visible;  
+  text-align: center;  
+  user-select: text;  
+  backdrop-filter: blur(14px) saturate(120%);  
+  border: 2px solid rgba(102, 178, 255, 0.45);  
+  z-index: 15;  
+  display: flex;  
+  flex-direction: column;  
+  opacity: 1;  
+  transition:  
+    opacity 1.5s ease-in-out,  
+    transform 0.3s ease;  
+  will-change: opacity, transform;  
+  cursor: default;  
+}  
+.profile-container:hover {  
+  transform: scale(1.02);  
+  box-shadow:  
+    0 0 25px rgba(102, 178, 255, 0.7),  
+    0 15px 40px rgba(102, 178, 255, 0.35);  
+}  
+  
+.banner {  
+  width: 100%;  
+  height: 200px;  
+  background: url('https://cdn.discordapp.com/attachments/1243485467945734154/1388502783581360250/5bd049f40335bee726c0286f0a33c8ad.jpg?ex=6861377c&is=685fe5fc&hm=496035bd5b593b3ad30a2625eaa04174f14ca7eb12fcb23ea63f9f88f83eef1f&') no-repeat center/cover;  
+  filter: none;  
+  border-radius: 12px 12px 0 0;  
+  transition: filter 0.3s ease;  
+}  
+.banner:hover {  
+  filter: brightness(1.1) saturate(1.1);  
+}  
+  
+.avatar-wrapper {  
+  position: relative;  
+  width: 140px;  
+  height: 140px;  
+  margin: -70px auto 1rem auto;  
+  border-radius: 50%;  
+  overflow: hidden;  
+  border: 4px solid #e6f0ff;  
+  box-shadow: 0 0 20px #66b2ffaa;  
+  background: #0a0f23;  
+  transition: filter 0.3s ease, transform 0.3s ease;  
+  z-index: 20;  
+  animation: avatar-pulse 4s ease-in-out infinite;  
+  cursor: default;  
+}  
+.avatar-wrapper:hover {  
+  filter: drop-shadow(0 0 30px #99ccff);  
+  transform: scale(1.1);  
+  animation-play-state: paused;  
+}  
+.avatar {  
+  width: 100%;  
+  height: 100%;  
+  object-fit: cover;  
+  border-radius: 50%;  
+  display: block;  
+}  
+  
+@keyframes avatar-pulse {  
+  0%, 100% { box-shadow: 0 0 20px #66b2ffaa; }  
+  50% { box-shadow: 0 0 35px #99ccffcc; }  
+}  
+  
+h1 {  
+  margin-top: 0;  
+  margin-bottom: 1.25rem;  
+  font-size: clamp(1.8rem, 4vw, 2.4rem);  
+  letter-spacing: 1.4px;  
+  color: #e6f0ff;  
+  text-shadow: 0 0 12px #99ccff;  
+  user-select: text;  
+}  
+  
+a.discord-invite {  
+  display: inline-block;  
+  margin: 0 0 2rem 0;  
+  color: #cce5ff;  
+  text-decoration: none;  
+  font-weight: 600;  
+  border: 2px solid #66b2ff;  
+  padding: 12px 24px;  
+  border-radius: 14px;  
+  box-shadow: 0 0 18px #66b2ffaa;  
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;  
+  user-select: none;  
+  cursor: pointer;  
+}  
+a.discord-invite:hover {  
+  background: #66b2ff;  
+  color: #0a0f23;  
+  box-shadow: 0 0 40px #3399ffcc;  
+  transform: scale(1.05);  
+}  
+  
+.progress-section {  
+  position: relative;  
+  transform: translateY(-29px);  
+  margin: 0 50px 50px 50px;  
+  text-align: left;  
+  flex-grow: 1;  
+  display: flex;  
+  flex-direction: column;  
+  justify-content: flex-end;  
+}  
+.progress-section label {  
+  font-weight: 700;  
+  margin-bottom: 0.5rem;  
+  display: block;  
+  color: #aaddff;  
+  text-shadow: 0 0 8px #3399ffcc;  
+  letter-spacing: 0.03em;  
+  user-select: none;  
+  transition: color 0.3s ease;  
+}  
+.progress-section label:hover {  
+  color: #66b2ff;  
+  cursor: default;  
+}  
+.progress-bar {  
+  background: rgba(230, 240, 255, 0.1);  
+  border-radius: 14px;  
+  overflow: hidden;  
+  margin-bottom: 1rem;  
+  height: 20px;  
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.3);  
+}  
+.progress-bar > div {  
+  height: 100%;  
+  background: #3399ff;  
+  width: 0;  
+  border-radius: 14px;  
+  box-shadow: 0 0 12px #3399ffcc;  
+  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);  
+  position: relative;  
+}  
+.progress-bar > div::after {  
+  content: attr(data-progress) '%';  
+  position: absolute;  
+  right: 12px;  
+  top: 50%;  
+  transform: translateY(-50%);  
+  color: #ffffff;  
+  font-weight: 700;  
+  font-size: 0.9rem;  
+  letter-spacing: 0.05em;  
+  text-shadow:  
+    0 0 6px rgba(51, 153, 255, 0.8),  
+    0 0 10px rgba(51, 153, 255, 0.6);  
+  user-select: none;  
+  pointer-events: none;  
+  white-space: nowrap;  
+}  
+@media (max-width: 480px) {  
+  .progress-bar > div::after {  
+    font-size: 0.75rem;  
+    right: 8px;  
+  }  
+}  
+  
+#alert-box {  
+  position: fixed;  
+  top: 20%;  
+  left: 50%;  
+  transform: translate(-50%, -50%) scale(0);  
+  background: rgba(30, 42, 120, 0.85);  
+  color: #e6f0ff;  
+  padding: 1rem 2rem;  
+  border-radius: 12px;  
+  box-shadow: 0 0 20px #3399ffcc;  
+  font-weight: 600;  
+  font-size: 1.2rem;  
+  z-index: 9999;  
+  user-select: none;  
+  pointer-events: none;  
+  transition: transform 0.3s ease, opacity 0.3s ease;  
+  opacity: 0;  
+  max-width: 90vw;  
+  text-align: center;  
+  white-space: nowrap;  
+}  
+  
+#alert-box.show {  
+  transform: translate(-50%, -50%) scale(1);  
+  opacity: 1;  
+  pointer-events: auto;  
+}  
+  
+@media (max-width: 480px) {  
+  .profile-container {  
+    width: 100vw;  
+    height: 100vh;  
+    max-height: none;  
+    padding: 1rem;  
+    background: rgba(230, 240, 255, 0.15);  
+    border-radius: 0;  
+    border-width: 1px;  
+    backdrop-filter: blur(12px);  
+    border: 1.5px solid rgba(102, 178, 255, 0.3);  
+  }  
+  .banner {  
+    height: 150px;  
+    border-radius: 0;  
+  }  
+  .avatar-wrapper {  
+    width: 110px;  
+    height: 110px;  
+    margin: -55px auto 0.75rem auto;  
+    border-radius: 50%;  
+    border-width: 3px;  
+    box-shadow: 0 0 15px #66b2ffaa;  
+  }  
+  h1 {  
+    font-size: 1.6rem;  
+    margin-bottom: 1rem;  
+  }  
+  a.discord-invite {  
+    padding: 10px 20px;  
+    font-size: 1rem;  
+  }  
+  .progress-section {  
+    margin: 0 1rem 1.5rem 1rem;  
+    top: 0;  
+  }  
+</style>  
+</head>  
+  
+</body><body>  
+  
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>  
+  
+  <main class="profile-container" role="main" aria-label="Discord Profile of YANZZ#6079">  
+  
+    <div class="banner" aria-hidden="true"></div>  
+  
+    <div class="avatar-wrapper" aria-label="Profile Picture of YANZZ#6079" role="img" aria-describedby="profileName">  
+      <img  
+        src="https://cdn.discordapp.com/attachments/1243485467945734154/1387708265047261194/bf2314975e73df3478004c1986b6a437.jpg?ex=6860f688&is=685fa508&hm=a0e5cc10a8b7c5f6a7b8f14758a448df7706d0d35dc7b688f3429657641a9f17&"  
+        alt="Discord Profile Picture of YANZZ#6079"  
+        class="avatar"  
+        loading="lazy"  
+        onerror="this.src='https://cdn-icons-png.flaticon.com/512/2111/2111370.png'"  
+      />  
+    </div>  
+  
+    <h1 id="profileName">!CEO YANZZ#6079</h1>  
+  
+    <a  
+      href="https://discord.com/invite/mNGeUVcjKB"  
+      target="_blank"  
+      rel="noopener noreferrer"  
+      class="discord-invite"  
+      aria-label="Invite link to join YANZZ's Discord Server"  
+    >  
+      Join My Discord Server  
+    </a>  
+  
+    <section class="progress-section" aria-label="Skill Progress Bars">  
+      <div>  
+        <label for="bdfdscript-progress"><i class="fa-solid fa-code" aria-hidden="true"></i> BDFDSCRIPT 100%</label>  
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" id="bdfdscript-progress">  
+          <div style="width: 0;" data-progress="0"></div>  
+        </div>  
+      </div>  
+      <div>  
+        <label for="html-progress"><i class="fa-brands fa-html5" aria-hidden="true"></i> HTML 95%</label>  
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="90" id="html-progress">  
+          <div style="width: 0;" data-progress="0"></div>  
+        </div>  
+      </div>  
+      <div>  
+        <label for="js-progress"><i class="fa-brands fa-js-square" aria-hidden="true"></i> JAVASCRIPT 55%</label>  
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" id="js-progress">  
+          <div style="width: 0;" data-progress="0"></div>  
+        </div>  
+      </div>  
+      <div>  
+        <label for="python-progress"><i class="fa-brands fa-python" aria-hidden="true"></i> PYTHON 44%</label>  
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="44" id="python-progress">  
+          <div style="width: 0;" data-progress="0"></div>  
+        </div>  
+      </div>  
+      <div>  
+        <label for="php-progress"><i class="fa-brands fa-php" aria-hidden="true"></i> PHP 7%</label>  
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="7" id="php-progress">  
+          <div style="width: 0;" data-progress="0"></div>  
+        </div>  
+      </div>  
+       </div>  
+      <div>  
+        <label for="php-progress"><i class="fa-brands fa-java"></i> Java 10%</label>  
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="7" id="Java-progress">  
+          <div style="width: 0;" data-progress="0"></div>  
+        </div>  
+      </div>  
+    </section>  
+  
+  </main>  
+  
+  <div id="alert-box" role="alert" aria-live="assertive" aria-atomic="true"></div>  
+  
+</body>  
+</html>  
+<script>  
+  const canvas = document.getElementById('bg-canvas');  
+  const ctx = canvas.getContext('2d');  
+  let stars = [];  
+  let width, height;  
+  
+  function random(min, max) {  
+    return Math.random() * (max - min) + min;  
+  }  
+  
+  class Star {  
+    constructor() {  
+      this.reset();  
+    }  
+    reset() {  
+      this.x = random(0, width);  
+      this.y = random(0, height);  
+      this.size = random(1, 2);  
+      this.speed = random(0.5, 1.5);  
+      this.length = random(80, 150);  
+      this.angle = Math.PI / 4;  
+      this.opacity = 0;  
+      this.opacitySpeed = 0.02;  
+    }  
+    update() {  
+      this.x += this.speed * Math.cos(this.angle);  
+      this.y += this.speed * Math.sin(this.angle);  
+      this.opacity += this.opacitySpeed;  
+      if (this.opacity >= 1 || this.opacity <= 0) this.opacitySpeed *= -1;  
+  
+      if (this.x > width || this.y > height) {  
+        this.reset();  
+        this.x = 0;  
+        this.y = random(0, height / 2);  
+      }  
+    }  
+    draw() {  
+      ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity.toFixed(2)})`;  
+      ctx.lineWidth = this.size;  
+      ctx.beginPath();  
+      ctx.moveTo(this.x, this.y);  
+      ctx.lineTo(  
+        this.x - this.length * Math.cos(this.angle),  
+        this.y - this.length * Math.sin(this.angle)  
+      );  
+      ctx.stroke();  
+    }  
+  }  
+  
+  function init() {  
+    width = window.innerWidth;  
+    height = window.innerHeight;  
+    canvas.width = width * devicePixelRatio;  
+    canvas.height = height * devicePixelRatio;  
+    canvas.style.width = width + 'px';  
+    canvas.style.height = height + 'px';  
+    ctx.scale(devicePixelRatio, devicePixelRatio);  
+    stars = [];  
+    for (let i = 0; i < 40; i++) {  
+      stars.push(new Star());  
+    }  
+  }  
+  
+  let lastTime = 0;  
+  const fpsInterval = 1000 / 165;  
+  let animationId;  
+  
+  function animate(time = 0) {  
+    animationId = requestAnimationFrame(animate);  
+    const elapsed = time - lastTime;  
+    if (elapsed > fpsInterval) {  
+      lastTime = time - (elapsed % fpsInterval);  
+      ctx.clearRect(0, 0, width, height);  
+      stars.forEach(star => {  
+        star.update();  
+        star.draw();  
+      });  
+    }  
+  }  
+  
+  let resizeTimeout;  
+  window.addEventListener('resize', () => {  
+    clearTimeout(resizeTimeout);  
+    resizeTimeout = setTimeout(init, 250);  
+  });  
+  
+  document.addEventListener('visibilitychange', () => {  
+    if (document.hidden) {  
+      cancelAnimationFrame(animationId);  
+    } else {  
+      animate();  
+    }  
+  });  
+  
+  function animateProgressBar(bar, targetPercent, duration = 1500) {  
+    let start = null;  
+    const step = timestamp => {  
+      if (!start) start = timestamp;  
+      const elapsed = timestamp - start;  
+      const percent = Math.min((elapsed / duration) * targetPercent, targetPercent);  
+      bar.style.width = percent + '%';  
+      bar.setAttribute('data-progress', Math.floor(percent));  
+      bar.setAttribute('aria-valuenow', Math.floor(percent));  
+      if (elapsed < duration) {  
+        requestAnimationFrame(step);  
+      } else {  
+        bar.style.width = targetPercent + '%';  
+        bar.setAttribute('data-progress', targetPercent);  
+        bar.setAttribute('aria-valuenow', targetPercent);  
+      }  
+    };  
+    requestAnimationFrame(step);  
+  }  
+  
+  window.addEventListener('DOMContentLoaded', () => {  
+    init();  
+    animate();  
+    document.querySelectorAll('.progress-section > div').forEach(section => {  
+      const bar = section.querySelector('.progress-bar > div');  
+      const label = section.querySelector('label').textContent;  
+      const match = label.match(/(\d+)%/);  
+      if (match) {  
+        const targetPercent = parseInt(match[1], 10);  
+        animateProgressBar(bar, targetPercent);  
+      }  
+    });  
+  });  
+  
+  function showAlert(message) {  
+    const alertBox = document.getElementById('alert-box');  
+    alertBox.textContent = message;  
+    alertBox.classList.add('show');  
+    clearTimeout(alertBox.hideTimeout);  
+    alertBox.hideTimeout = setTimeout(() => {  
+      alertBox.classList.remove('show');  
+    }, 3000);  
+  }  
+  
+  window.addEventListener('error', e => {  
+    showAlert(`Error: ${e.message} at ${e.filename}:${e.lineno}`);  
+  });  
+  
+  window.addEventListener('unhandledrejection', e => {  
+    showAlert(`Promise Rejection: ${e.reason}`);  
+  });  
+  
+  document.addEventListener('keydown', e => {  
+    if (  
+      e.key === 'F12' ||  
+      (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key.toUpperCase())) ||  
+      (e.ctrlKey && e.key.toUpperCase() === 'U')  
+    ) {  
+      e.preventDefault();  
+      showAlert('This function is disabled.');  
+    }  
+  });  
+  
+  document.addEventListener('contextmenu', e => {  
+    e.preventDefault();  
+    showAlert('Right click is disabled');  
+  });  
+</script>  
+  
+</body>  
 </html>
