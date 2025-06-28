@@ -342,6 +342,7 @@
     }
   }
 
+  // ควบคุม frame rate 60fps แบบ smooth
   let lastTime = 0;
   const fpsInterval = 1000 / 60;
   let animationId;
@@ -359,6 +360,7 @@
     }
   }
 
+  // ดีเลย์ resize debounce
   let resizeTimeout;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
@@ -367,6 +369,7 @@
     }, 250);
   });
 
+  // หยุด animation เมื่อไม่เห็นหน้าเว็บ (เช่น สลับแท็บ)
   document.addEventListener('visibilitychange', () => {
     if(document.hidden) {
       cancelAnimationFrame(animationId);
@@ -379,6 +382,7 @@
     init();
     animate();
 
+    // progress bar animation ลื่น
     document.querySelectorAll('.progress-bar > div').forEach(bar => {
       const width = bar.style.width;
       bar.style.width = '0';
@@ -398,6 +402,7 @@
     }, 3000);
   }
 
+  // ป้องกัน F12, Ctrl+Shift+I/J/C/K, Ctrl+U และคลิกขวา
   document.addEventListener('keydown', function(e) {
     if (
       e.key === 'F12' ||
