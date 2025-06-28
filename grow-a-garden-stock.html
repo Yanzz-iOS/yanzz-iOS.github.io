@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Grow A Garden Stock</title>
+<title>Grow A Garden Stock Viewer</title>
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -97,11 +97,26 @@
   .item:hover {
     background: #d7e6fc;
   }
-  .item span.emoji {
-    font-size: 32px;
-    flex-shrink: 0;
+  .item img {
     width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #c8dafc;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px rgba(74, 144, 226, 0.5);
+  }
+  .item .emoji {
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
     text-align: center;
+    border-radius: 12px;
+    background: #c8dafc;
+    box-shadow: 0 0 6px rgba(74, 144, 226, 0.5);
+    flex-shrink: 0;
+    user-select: none;
   }
   .item span.name {
     flex-grow: 1;
@@ -133,19 +148,10 @@
 
 <script>
   const API = 'https://test-hub.kys.gay/api/grow/garden/stock';
+  const PLACEHOLDER_IMG = 'https://via.placeholder.com/44?text=No+Img';
 
   let data = {}, current = '__all__';
   let countdowns = {};
-
-  // ลบ honey_shop ออกจากนี้เลย
-  const categoryEmojis = {
-    cosmetics: "🎨",
-    eggs: "🥚",
-    gear: "🛠️",
-    honey: "🍯",
-    seeds: "🌱",
-    __all__: "📦"
-  };
 
   function cap(s) {
     return s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' ');
@@ -173,13 +179,90 @@
     return `${h > 0 ? h + 'h ' : ''}${m > 0 ? m + 'm ' : ''}${s}s`;
   }
 
+  function loadImage(url, altText) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.src = url;
+      img.alt = altText;
+      img.width = 44;
+      img.height = 44;
+      img.style.objectFit = 'contain';
+      img.style.borderRadius = '12px';
+      img.style.backgroundColor = '#c8dafc';
+      img.style.boxShadow = '0 0 6px rgba(74, 144, 226, 0.5)';
+
+      img.onload = () => resolve(img);
+      img.onerror = () => {
+        console.warn('Image failed to load:', url);
+        const placeholder = new Image();
+        placeholder.src = PLACEHOLDER_IMG;
+        placeholder.alt = 'No Image';
+        placeholder.width = 44;
+        placeholder.height = 44;
+        placeholder.style.objectFit = 'contain';
+        placeholder.style.borderRadius = '12px';
+        placeholder.style.backgroundColor = '#c8dafc';
+        placeholder.style.boxShadow = '0 0 6px rgba(74, 144, 226, 0.5)';
+        resolve(placeholder);
+      };
+    });
+  }
+
+  // อิโมจิทั้งหมดที่หาได้จากชื่อสินค้าในเว็บ
+  function getEmojiByName(name) {
+    name = name.toLowerCase();
+
+    if (name.includes("carrot")) return "🥕";
+    if (name.includes("strawberry")) return "🍓";
+    if (name.includes("blueberry")) return "🫐";
+    if (name.includes("banana")) return "🍌";
+    if (name.includes("tomato")) return "🍅";
+    if (name.includes("watermelon")) return "🍉";
+    if (name.includes("egg")) return "🥚";
+    if (name.includes("campfire")) return "🔥";
+    if (name.includes("tv")) return "📺";
+    if (name.includes("watering")) return "💧";
+    if (name.includes("bee")) return "🐝";
+    if (name.includes("spray")) return "🧴";
+    if (name.includes("wrench")) return "🔧";
+    if (name.includes("trowel")) return "🔨";
+    if (name.includes("sprinkler")) return "💦";
+    if (name.includes("tool")) return "🛠️";
+    if (name.includes("harvest")) return "🌾";
+    if (name.includes("flower")) return "🌸";
+    if (name.includes("lavender")) return "🌿";
+    if (name.includes("sign")) return "📦";
+    if (name.includes("hammock")) return "🛏️";
+    if (name.includes("wood")) return "🪵";
+    if (name.includes("stone")) return "🪨";
+    if (name.includes("table")) return "🪑";
+    if (name.includes("tile")) return "⬜";
+    if (name.includes("rake")) return "🧹";
+    if (name.includes("compost")) return "♻️";
+    if (name.includes("shovel")) return "⛏️";
+    if (name.includes("cooler")) return "🧊";
+    if (name.includes("long")) return "📏";
+    if (name.includes("medium")) return "📐";
+    if (name.includes("sign crate")) return "📦";
+    if (name.includes("mini tv")) return "📺";
+    if (name.includes("favorite")) return "⭐";
+    if (name.includes("recall")) return "🔄";
+    if (name.includes("common")) return "🔰";
+    if (name.includes("advanced")) return "🚀";
+    if (name.includes("cleaning")) return "🧼";
+    if (name.includes("lamp")) return "💡";
+    if (name.includes("path")) return "🛤️";
+
+    return "❓";
+  }
+
   function buildTabs() {
-    // กรอง honey_shop ออก
-    const keysRaw = Object.keys(data).filter(k => data[k]?.items && k !== 'honey_shop');
-    const keys = ['__all__', ...keysRaw];
+    const keys = ['__all__', ...Object.keys(data).filter(k => data[k]?.items)];
     const tabs = document.getElementById('tabs');
     tabs.innerHTML = '';
     keys.forEach(k => {
+      if (k === "honey_shop") return;
+
       const t = document.createElement('div');
       t.className = 'tab';
       t.textContent = k === '__all__' ? 'All' : cap(k);
@@ -195,6 +278,8 @@
   }
 
   async function renderCategory(cat) {
+    if (cat === "honey_shop") return;
+
     const cont = document.getElementById('content');
     let div = cont.querySelector(`.category[data-cat="${cat}"]`);
     const items = data[cat]?.items || [];
@@ -223,11 +308,22 @@
       const it = document.createElement('div');
       it.className = 'item';
 
-      // แสดง emoji ตามหมวดหมู่ ป้องกัน honey_shop ด้วย fallback
-      const emojiSpan = document.createElement('span');
-      emojiSpan.className = 'emoji';
-      emojiSpan.textContent = categoryEmojis[cat] || "📦";
-      it.appendChild(emojiSpan);
+      if (i.image_url) {
+        const img = await loadImage(i.image_url, i.name);
+        if (img.src === PLACEHOLDER_IMG) {
+          const emojiDiv = document.createElement('div');
+          emojiDiv.className = 'emoji';
+          emojiDiv.textContent = getEmojiByName(i.name);
+          it.appendChild(emojiDiv);
+        } else {
+          it.appendChild(img);
+        }
+      } else {
+        const emojiDiv = document.createElement('div');
+        emojiDiv.className = 'emoji';
+        emojiDiv.textContent = getEmojiByName(i.name);
+        it.appendChild(emojiDiv);
+      }
 
       const nameSpan = document.createElement('span');
       nameSpan.className = 'name';
@@ -253,15 +349,11 @@
     const cont = document.getElementById('content');
     cont.innerHTML = '';
     if (current === '__all__') {
-      // กรอง honey_shop ออก
-      const cats = Object.keys(data).filter(k => data[k]?.items && k !== 'honey_shop');
-      for (const cat of cats) {
+      for (const cat of Object.keys(data).filter(k => data[k]?.items && k !== "honey_shop")) {
         await renderCategory(cat);
       }
     } else {
-      if (current !== 'honey_shop') {
-        await renderCategory(current);
-      }
+      await renderCategory(current);
     }
     document.getElementById('status').textContent = `Last updated: ${data.current_time_eest || ''}`;
   }
@@ -277,7 +369,7 @@
   }
 
   async function refreshCategoryIfNeeded(cat) {
-    if (!data[cat] || cat === 'honey_shop') return; // ป้องกัน honey_shop รีเฟรช
+    if (!data[cat]) return;
 
     if (countdowns[cat] <= 0) {
       try {
@@ -326,6 +418,9 @@
     try {
       const r = await fetch(API);
       data = await r.json();
+
+      if (data.honey_shop) delete data.honey_shop;
+
       buildTabs();
       await render();
       startCountdowns();
