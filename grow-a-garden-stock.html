@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Grow A Garden Stock Viewer</title>
+<title>Grow A Garden</title>
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -208,56 +208,7 @@
     });
   }
 
-  // อิโมจิทั้งหมดที่หาได้จากชื่อสินค้าในเว็บ
-  function getEmojiByName(name) {
-    name = name.toLowerCase();
-
-    if (name.includes("carrot")) return "🥕";
-    if (name.includes("strawberry")) return "🍓";
-    if (name.includes("blueberry")) return "🫐";
-    if (name.includes("banana")) return "🍌";
-    if (name.includes("tomato")) return "🍅";
-    if (name.includes("watermelon")) return "🍉";
-    if (name.includes("egg")) return "🥚";
-    if (name.includes("campfire")) return "🔥";
-    if (name.includes("tv")) return "📺";
-    if (name.includes("watering")) return "💧";
-    if (name.includes("bee")) return "🐝";
-    if (name.includes("spray")) return "🧴";
-    if (name.includes("wrench")) return "🔧";
-    if (name.includes("trowel")) return "🔨";
-    if (name.includes("sprinkler")) return "💦";
-    if (name.includes("tool")) return "🛠️";
-    if (name.includes("harvest")) return "🌾";
-    if (name.includes("flower")) return "🌸";
-    if (name.includes("lavender")) return "🌿";
-    if (name.includes("sign")) return "📦";
-    if (name.includes("hammock")) return "🛏️";
-    if (name.includes("wood")) return "🪵";
-    if (name.includes("stone")) return "🪨";
-    if (name.includes("table")) return "🪑";
-    if (name.includes("tile")) return "⬜";
-    if (name.includes("rake")) return "🧹";
-    if (name.includes("compost")) return "♻️";
-    if (name.includes("shovel")) return "⛏️";
-    if (name.includes("cooler")) return "🧊";
-    if (name.includes("long")) return "📏";
-    if (name.includes("medium")) return "📐";
-    if (name.includes("sign crate")) return "📦";
-    if (name.includes("mini tv")) return "📺";
-    if (name.includes("favorite")) return "⭐";
-    if (name.includes("recall")) return "🔄";
-    if (name.includes("common")) return "🔰";
-    if (name.includes("advanced")) return "🚀";
-    if (name.includes("cleaning")) return "🧼";
-    if (name.includes("lamp")) return "💡";
-    if (name.includes("path")) return "🛤️";
-    if (name.includes("pricklypear")) return "🏜️";
-    if (name.includes("comb")) return "🪹";
-    if (name.includes("torch")) return "🔦";
-    return "❓";
-  }
-
+  
   function buildTabs() {
     const keys = ['__all__', ...Object.keys(data).filter(k => data[k]?.items)];
     const tabs = document.getElementById('tabs');
@@ -267,7 +218,75 @@
 
       const t = document.createElement('div');
       t.className = 'tab';
-      t.textContent = k === '__all__' ? 'All' : cap(k);
+      t.textContent = k === '__all__' ? 'All' :function getEmojiByName(name) {
+  name = name.toLowerCase();
+
+  if (name.includes("carrot")) return "🥕";
+  if (name.includes("strawberry")) return "🍓";
+  if (name.includes("blueberry")) return "🫐";
+  if (name.includes("banana")) return "🍌";
+  if (name.includes("tomato")) return "🍅";
+  if (name.includes("watermelon")) return "🍉";
+  if (name.includes("lemon")) return "🍋";
+  if (name.includes("peach")) return "🍑";
+  if (name.includes("grape")) return "🍇";
+  if (name.includes("avocado")) return "🥑";
+  if (name.includes("corn")) return "🌽";
+  if (name.includes("mushroom")) return "🍄";
+  if (name.includes("onion")) return "🧅";
+  if (name.includes("garlic")) return "🧄";
+  if (name.includes("potato")) return "🥔";
+  if (name.includes("eggplant")) return "🍆";
+  if (name.includes("egg")) return "🥚";
+  if (name.includes("campfire")) return "🔥";
+  if (name.includes("torch")) return "🔦";
+  if (name.includes("hammock")) return "🛏️";
+  if (name.includes("mini tv") || name.includes("tv")) return "📺";
+  if (name.includes("cooler")) return "🧊";
+  if (name.includes("sign crate")) return "📦";
+  if (name.includes("sign")) return "🪧";
+  if (name.includes("flower")) return "🌸";
+  if (name.includes("vine")) return "🌿";
+  if (name.includes("bee")) return "🐝";
+  if (name.includes("butterfly")) return "🦋";
+  if (name.includes("bird")) return "🐦";
+  if (name.includes("cat")) return "🐱";
+  if (name.includes("dog")) return "🐶";
+  if (name.includes("cow")) return "🐄";
+  if (name.includes("chicken")) return "🐔";
+  if (name.includes("pricklypear")) return "🏜️";
+  if (name.includes("wrench")) return "🔧";
+  if (name.includes("trowel")) return "🔨";
+  if (name.includes("shovel")) return "⛏️";
+  if (name.includes("rake")) return "🧹";
+  if (name.includes("tool")) return "🛠️";
+  if (name.includes("watering")) return "💧";
+  if (name.includes("spray")) return "🧴";
+  if (name.includes("sprinkler")) return "💦";
+  if (name.includes("lamp")) return "💡";
+  if (name.includes("recall")) return "🔄";
+  if (name.includes("favorite")) return "⭐";
+  if (name.includes("wood")) return "🪵";
+  if (name.includes("stone")) return "🪨";
+  if (name.includes("table")) return "🪑";
+  if (name.includes("tile")) return "⬜";
+  if (name.includes("brick")) return "🧱";
+  if (name.includes("path")) return "🛤️";
+  if (name.includes("flooring")) return "🧱";
+  if (name.includes("pillar")) return "🗿";
+  if (name.includes("pad")) return "🟫";
+  if (name.includes("stack")) return "📚";
+  if (name.includes("compost")) return "♻️";
+  if (name.includes("comb")) return "🍯";
+  if (name.includes("cleaning")) return "🧼";
+  if (name.includes("common")) return "🔰";
+  if (name.includes("advanced")) return "🚀";
+  if (name.includes("long")) return "📏";
+  if (name.includes("medium")) return "📐";
+  if (name.includes("small")) return "🔹";
+
+  return "❓";
+      } cap(k);
       if (current === k) t.classList.add('active');
       t.onclick = () => {
         current = k;
