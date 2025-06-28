@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+</body>
+</html><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -132,7 +133,7 @@
   }
 
   .progress-section {
-    margin: 0 3rem 2rem 3rem;
+    margin: -2rem 4rem 3rem 4rem;
     text-align: left;
     flex-grow: 1;
     display: flex;
@@ -158,9 +159,23 @@
     height: 100%;
     background: #3399ff;
     width: 0;
-    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 14px;
     box-shadow: 0 0 12px #3399ffcc;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+  /* แสดงตัวเลขเปอร์เซ็นต์บน progress bar */
+  .progress-bar > div::after {
+    content: attr(data-progress) '%';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-shadow: 0 0 5px #3399ffcc;
+    user-select: none;
   }
 
   #alert-box {
@@ -258,23 +273,23 @@
   <section class="progress-section" aria-label="Skill Progress Bars">
     <div>
       <label><i class="fa-solid fa-code" aria-hidden="true"></i> BDFDSCRIPT 100%</label>
-      <div class="progress-bar"><div style="width: 100%;"></div></div>
+      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-html5" aria-hidden="true"></i> HTML 81%</label>
-      <div class="progress-bar"><div style="width: 81%;"></div></div>
+      <label><i class="fa-brands fa-html5" aria-hidden="true"></i> HTML 90%</label>
+      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-js-square" aria-hidden="true"></i> JAVASCRIPT 46%</label>
-      <div class="progress-bar"><div style="width: 46%;"></div></div>
+      <label><i class="fa-brands fa-js-square" aria-hidden="true"></i> JAVASCRIPT 50%</label>
+      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-python" aria-hidden="true"></i> PYTHON 46%</label>
-      <div class="progress-bar"><div style="width: 46%;"></div></div>
+      <label><i class="fa-brands fa-python" aria-hidden="true"></i> PYTHON 44%</label>
+      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
     </div>
     <div>
       <label><i class="fa-brands fa-php" aria-hidden="true"></i> PHP 7%</label>
-      <div class="progress-bar"><div style="width: 7%;"></div></div>
+      <div class="progress-bar"><div style="width: 0;" data-progress="0"></div></div>
     </div>
   </section>
 
@@ -342,9 +357,8 @@
     }
   }
 
-  // ควบคุม frame rate 60fps แบบ smooth
   let lastTime = 0;
-  const fpsInterval = 1000 / 60;
+  const fpsInterval = 1000 / 165;
   let animationId;
 
   function animate(time = 0) {
@@ -360,7 +374,6 @@
     }
   }
 
-  // ดีเลย์ resize debounce
   let resizeTimeout;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
@@ -369,7 +382,6 @@
     }, 250);
   });
 
-  // หยุด animation เมื่อไม่เห็นหน้าเว็บ (เช่น สลับแท็บ)
   document.addEventListener('visibilitychange', () => {
     if(document.hidden) {
       cancelAnimationFrame(animationId);
@@ -378,17 +390,40 @@
     }
   });
 
+  function animateProgressBar(bar, targetPercent, duration = 1500) {
+    let start = null;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = timestamp - start;
+      const percent = Math.min((progress / duration) * targetPercent, targetPercent);
+      bar.style.width = percent + '%';
+      bar.setAttribute('data-progress', Math.floor(percent));
+      if (progress < duration) {
+        requestAnimationFrame(step);
+      } else {
+        bar.style.width = targetPercent + '%';
+        bar.setAttribute('data-progress', targetPercent);
+      }
+    };
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => requestAnimationFrame(step));
+    } else {
+      requestAnimationFrame(step);
+    }
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
     init();
     animate();
 
-    // progress bar animation ลื่น
-    document.querySelectorAll('.progress-bar > div').forEach(bar => {
-      const width = bar.style.width;
-      bar.style.width = '0';
-      setTimeout(() => {
-        bar.style.width = width;
-      }, 150);
+    document.querySelectorAll('.progress-section > div').forEach(section => {
+      const bar = section.querySelector('.progress-bar > div');
+      const label = section.querySelector('label').textContent;
+      const match = label.match(/(\d+)%/);
+      if (match) {
+        const targetPercent = parseInt(match[1], 10);
+        animateProgressBar(bar, targetPercent);
+      }
     });
   });
 
@@ -402,7 +437,6 @@
     }, 3000);
   }
 
-  // ป้องกัน F12, Ctrl+Shift+I/J/C/K, Ctrl+U และคลิกขวา
   document.addEventListener('keydown', function(e) {
     if (
       e.key === 'F12' ||
