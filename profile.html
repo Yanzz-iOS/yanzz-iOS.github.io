@@ -43,11 +43,10 @@
   .profile-container {
     width: 100vw;
     max-width: 600px;
-    height: auto;
     max-height: 90vh;
     padding: 2rem 1.5rem;
     background: rgba(230, 240, 255, 0.15);
-    border-radius: 0;
+    border-radius: 12px;
     box-shadow: 0 0 30px rgba(102, 178, 255, 0.5);
     overflow: visible;
     text-align: center;
@@ -66,6 +65,7 @@
     height: 200px;
     background: url('https://cdn.discordapp.com/attachments/1243485467945734154/1388502783581360250/5bd049f40335bee726c0286f0a33c8ad.jpg?ex=6861377c&is=685fe5fc&hm=496035bd5b593b3ad30a2625eaa04174f14ca7eb12fcb23ea63f9f88f83eef1f&') no-repeat center/cover;
     filter: none;
+    border-radius: 12px 12px 0 0;
   }
 
   .avatar-wrapper {
@@ -201,6 +201,7 @@
     }
     .banner {
       height: 140px;
+      border-radius: 0;
     }
     .avatar-wrapper {
       width: 110px;
@@ -226,13 +227,13 @@
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
 
 <div class="profile-container" role="main" aria-label="Discord Profile of YANZZ#6079">
 
   <div class="banner" aria-hidden="true"></div>
 
-  <div class="avatar-wrapper" aria-label="Profile Picture">
+  <div class="avatar-wrapper" aria-label="Profile Picture of YANZZ#6079">
     <img
       src="https://cdn.discordapp.com/attachments/1243485467945734154/1387708265047261194/bf2314975e73df3478004c1986b6a437.jpg?ex=6860f688&is=685fa508&hm=a0e5cc10a8b7c5f6a7b8f14758a448df7706d0d35dc7b688f3429657641a9f17&"
       alt="Discord Profile Picture of YANZZ#6079"
@@ -254,28 +255,28 @@
     Join My Discord Server
   </a>
 
-  <div class="progress-section" aria-label="Skill Progress Bars">
+  <section class="progress-section" aria-label="Skill Progress Bars">
     <div>
-      <label><i class="fa-solid fa-code"></i> BDFDSCRIPT 100%</label>
+      <label><i class="fa-solid fa-code" aria-hidden="true"></i> BDFDSCRIPT 100%</label>
       <div class="progress-bar"><div style="width: 100%;"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-html5"></i> HTML 81%</label>
-      <div class="progress-bar"><div style="width: 80%;"></div></div>
+      <label><i class="fa-brands fa-html5" aria-hidden="true"></i> HTML 81%</label>
+      <div class="progress-bar"><div style="width: 81%;"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-js-square"></i> JAVASCRIPT 46%</label>
-      <div class="progress-bar"><div style="width: 45%;"></div></div>
+      <label><i class="fa-brands fa-js-square" aria-hidden="true"></i> JAVASCRIPT 46%</label>
+      <div class="progress-bar"><div style="width: 46%;"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-python"></i> PYTHON 46%</label>
-      <div class="progress-bar"><div style="width: 40%;"></div></div>
+      <label><i class="fa-brands fa-python" aria-hidden="true"></i> PYTHON 46%</label>
+      <div class="progress-bar"><div style="width: 46%;"></div></div>
     </div>
     <div>
-      <label><i class="fa-brands fa-php"></i> PHP 7%</label>
-      <div class="progress-bar"><div style="width: 6%;"></div></div>
+      <label><i class="fa-brands fa-php" aria-hidden="true"></i> PHP 7%</label>
+      <div class="progress-bar"><div style="width: 7%;"></div></div>
     </div>
-  </div>
+  </section>
 
 </div>
 
@@ -321,7 +322,7 @@
       }
     }
     draw() {
-      ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
+      ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity.toFixed(2)})`;
       ctx.lineWidth = this.size;
       ctx.beginPath();
       ctx.moveTo(this.x, this.y);
@@ -341,21 +342,51 @@
     }
   }
 
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-    stars.forEach(star => {
-      star.update();
-      star.draw();
-    });
-    requestAnimationFrame(animate);
+  let lastTime = 0;
+  const fpsInterval = 1000 / 60;
+  let animationId;
+
+  function animate(time = 0) {
+    animationId = requestAnimationFrame(animate);
+    const elapsed = time - lastTime;
+    if(elapsed > fpsInterval) {
+      lastTime = time - (elapsed % fpsInterval);
+      ctx.clearRect(0, 0, width, height);
+      stars.forEach(star => {
+        star.update();
+        star.draw();
+      });
+    }
   }
 
+  let resizeTimeout;
   window.addEventListener('resize', () => {
-    init();
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      init();
+    }, 250);
   });
 
-  init();
-  animate();
+  document.addEventListener('visibilitychange', () => {
+    if(document.hidden) {
+      cancelAnimationFrame(animationId);
+    } else {
+      animate();
+    }
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    init();
+    animate();
+
+    document.querySelectorAll('.progress-bar > div').forEach(bar => {
+      const width = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => {
+        bar.style.width = width;
+      }, 150);
+    });
+  });
 
   function showAlert(message) {
     const alertBox = document.getElementById('alert-box');
@@ -381,16 +412,6 @@
   document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     showAlert('Right click is disabled');
-  });
-
-  window.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.progress-bar > div').forEach(bar => {
-      const width = bar.style.width;
-      bar.style.width = '0';
-      setTimeout(() => {
-        bar.style.width = width;
-      }, 100);
-    });
   });
 </script>
 
