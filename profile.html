@@ -80,7 +80,8 @@ body {
   background: url('https://cdn.discordapp.com/attachments/1243485467945734154/1388502783581360250/5bd049f40335bee726c0286f0a33c8ad.jpg?ex=6861377c&is=685fe5fc&hm=496035bd5b593b3ad30a2625eaa04174f14ca7eb12fcb23ea63f9f88f83eef1f&') no-repeat center/cover;  
   filter: none;  
   border-radius: 12px 12px 0 0;  
-  transition: filter 0.3s ease;  
+  transition: filter 0.3s ease;
+  flex-shrink: 0;
 }  
 .banner:hover {  
   filter: brightness(1.1) saturate(1.1);  
@@ -152,7 +153,7 @@ a.discord-invite:hover {
   
 .progress-section {  
   position: relative;  
-  transform: translateY(-50px);  
+  transform: translateY(-35px);  
   margin: 0 50px 50px 50px;  
   text-align: left;  
   flex-grow: 1;  
